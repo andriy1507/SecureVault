@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- One autofill suggestion, styled like the app's list rows. Only RemoteViews-safe views. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/autofill_background"
+    android:gravity="center_vertical"
+    android:minHeight="@dimen/autofill_row_min_height"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/autofill_padding_horizontal"
+    android:paddingTop="@dimen/autofill_padding_vertical"
+    android:paddingEnd="@dimen/autofill_padding_horizontal"
+    android:paddingBottom="@dimen/autofill_padding_vertical">
+
+    <ImageView
+        android:id="@+id/autofill_icon"
+        android:layout_width="@dimen/autofill_icon_container"
+        android:layout_height="@dimen/autofill_icon_container"
+        android:background="@drawable/autofill_icon_background"
+        android:importantForAccessibility="no"
+        android:padding="@dimen/autofill_icon_padding"
+        android:src="@drawable/ic_autofill_shield" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/autofill_text_gap"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/autofill_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-medium"
+            android:singleLine="true"
+            android:textColor="@color/autofill_title"
+            android:textSize="@dimen/autofill_title_size" />
+
+        <TextView
+            android:id="@+id/autofill_subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="@color/autofill_subtitle"
+            android:textSize="@dimen/autofill_subtitle_size" />
+    </LinearLayout>
+</LinearLayout>

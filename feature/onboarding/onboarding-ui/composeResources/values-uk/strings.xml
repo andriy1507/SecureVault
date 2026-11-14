@@ -1,0 +1,43 @@
+<resources>
+    <string name="app_title">Vault</string>
+    <string name="welcome_tagline">Ваші паролі з наскрізним шифруванням.\nБез email і номера телефону — лише анонімний ID.</string>
+    <string name="welcome_create_title">Створити акаунт</string>
+    <string name="welcome_create_subtitle">Отримати новий ID і ключ відновлення</string>
+    <string name="welcome_legal_prefix">Продовжуючи, ви приймаєте </string>
+    <string name="welcome_legal_terms">Умови використання</string>
+    <string name="welcome_legal_and"> і </string>
+    <string name="welcome_legal_privacy">Політику конфіденційності</string>
+
+    <string name="device_not_secure_title">Спершу встановіть блокування екрана</string>
+    <string name="device_not_secure_body">Vault розблоковується PIN-кодом, графічним ключем, паролем або біометрією телефона. Без блокування екрана будь-хто з вашим телефоном зможе його відкрити.</string>
+    <string name="device_not_secure_open_settings">Відкрити налаштування</string>
+    <string name="device_not_secure_retry">Блокування встановлено, продовжити</string>
+
+    <string name="create_title">Створення акаунта</string>
+    <string name="create_id_title">Це ваш ID акаунта</string>
+    <string name="create_id_body">Він анонімний — без email і телефону. Він знадобиться, щоб увійти на інших пристроях.</string>
+    <string name="create_id_label">ID акаунта</string>
+
+    <string name="create_key_title">Збережіть ключ відновлення</string>
+    <string name="create_key_body">Запишіть ці слова (%1$d) і зберігайте їх офлайн.</string>
+    <string name="create_key_save_txt">Зберегти як .txt</string>
+    <string name="create_key_warning">Це єдиний спосіб відновити сховище, якщо ви втратите всі пристрої. Ми не зможемо відновити його за вас.</string>
+    <string name="create_key_saved_check">Я зберіг(-ла) ключ відновлення</string>
+    <string name="create_key_copy_label">Ключ відновлення</string>
+    <string name="create_key_file_saved">Ключ відновлення збережено</string>
+    <string name="create_key_file_failed">Файл не збережено</string>
+    <string name="recovery_file_name">vault-recovery-key-%1$s.txt</string>
+    <string name="recovery_file_content">Ключ відновлення Vault\n\nID акаунта: %1$s\n\n%2$s\n\nЗберігайте цей файл офлайн і нікому не показуйте. Будь-хто з цими словами може відкрити ваше сховище.\n</string>
+    <string name="recovery_word_line">%1$d. %2$s</string>
+
+    <string name="confirm_title">Підтвердьте ключ</string>
+    <string name="confirm_body">Торкніться правильних слів, щоб переконатися, що ви його зберегли.</string>
+    <string name="confirm_word_label">Слово №%1$d</string>
+    <string name="confirm_finish">Завершити</string>
+    <string name="cd_clear_word">Очистити слово</string>
+
+    <string name="error_unlock_needed">Для захисту сховища потрібне розблокування телефона.</string>
+    <string name="error_create_failed">Не вдалося створити сховище: %1$s</string>
+    <string name="error_words_dont_match">Слова не збігаються. Перевірте ключ відновлення і спробуйте ще раз.</string>
+    <string name="error_finish_failed">Не вдалося завершити налаштування: %1$s</string>
+</resources>

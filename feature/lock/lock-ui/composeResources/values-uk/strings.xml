@@ -1,0 +1,8 @@
+<resources>
+    <string name="lock_title">Сховище заблоковано</string>
+    <string name="lock_hint">Розблокуйте блокуванням екрана телефона</string>
+    <string name="lock_unlock">Розблокувати</string>
+    <string name="lock_error_key_invalidated">Блокування екрана або біометрію змінено, тому ключ цього пристрою знищено. Відновіть доступ ключем відновлення.</string>
+    <string name="lock_error_failed">Не вдалося розблокувати: %1$s</string>
+    <string name="account_id_mask">••••</string>
+</resources>

@@ -1,0 +1,43 @@
+<resources>
+    <string name="app_title">Vault</string>
+    <string name="welcome_tagline">Your passwords, end-to-end encrypted.\nNo email, no phone number — just an anonymous ID.</string>
+    <string name="welcome_create_title">Create new account</string>
+    <string name="welcome_create_subtitle">Get a new ID and recovery key</string>
+    <string name="welcome_legal_prefix">By continuing you agree to the </string>
+    <string name="welcome_legal_terms">Terms of Service</string>
+    <string name="welcome_legal_and"> and </string>
+    <string name="welcome_legal_privacy">Privacy Policy</string>
+
+    <string name="device_not_secure_title">Set a screen lock first</string>
+    <string name="device_not_secure_body">Vault uses your phone's PIN, pattern, password or biometrics to unlock. Without a screen lock anyone holding the phone could open it.</string>
+    <string name="device_not_secure_open_settings">Open settings</string>
+    <string name="device_not_secure_retry">I've set a lock, continue</string>
+
+    <string name="create_title">Create account</string>
+    <string name="create_id_title">This is your account ID</string>
+    <string name="create_id_body">It's anonymous — no email or phone. You'll need it to sign in on other devices.</string>
+    <string name="create_id_label">Account ID</string>
+
+    <string name="create_key_title">Save your recovery key</string>
+    <string name="create_key_body">Write these %1$d words down and keep them offline.</string>
+    <string name="create_key_save_txt">Save as .txt</string>
+    <string name="create_key_warning">This is the only way to restore your vault if you lose all devices. We can't recover it for you.</string>
+    <string name="create_key_saved_check">I've saved my recovery key</string>
+    <string name="create_key_copy_label">Recovery key</string>
+    <string name="create_key_file_saved">Recovery key saved</string>
+    <string name="create_key_file_failed">The file wasn't saved</string>
+    <string name="recovery_file_name">vault-recovery-key-%1$s.txt</string>
+    <string name="recovery_file_content">Vault recovery key\n\nAccount ID: %1$s\n\n%2$s\n\nKeep this file offline and private. Anyone with these words can open your vault.\n</string>
+    <string name="recovery_word_line">%1$d. %2$s</string>
+
+    <string name="confirm_title">Confirm your key</string>
+    <string name="confirm_body">Tap the correct words to make sure you saved it.</string>
+    <string name="confirm_word_label">Word #%1$d</string>
+    <string name="confirm_finish">Finish</string>
+    <string name="cd_clear_word">Clear word</string>
+
+    <string name="error_unlock_needed">Phone unlock is needed to protect your vault.</string>
+    <string name="error_create_failed">Couldn't create the vault: %1$s</string>
+    <string name="error_words_dont_match">Those words don't match. Check your recovery key and try again.</string>
+    <string name="error_finish_failed">Couldn't finish setup: %1$s</string>
+</resources>

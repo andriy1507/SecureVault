@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Only for scanning 2FA QR codes; frames are decoded on the device. -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+
+    <!-- allowBackup=false: hardware-sealed keys can't be restored anyway; use the recovery phrase. -->
+    <application
+            android:name=".SecureVaultApplication"
+            android:allowBackup="false"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:localeConfig="@xml/locales_config"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:supportsRtl="true"
+            android:theme="@style/Theme.SecureVault">
+        <activity
+                android:exported="true"
+                android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Autofill: only the system (BIND_AUTOFILL_SERVICE) can bind the service. -->
+        <service
+                android:name=".autofill.SecureVaultAutofillService"
+                android:exported="true"
+                android:label="@string/app_name"
+                android:permission="android.permission.BIND_AUTOFILL_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.autofill.AutofillService" />
+            </intent-filter>
+            <meta-data
+                    android:name="android.autofill"
+                    android:resource="@xml/autofill_service" />
+        </service>
+
+        <!-- Started only through our own PendingIntents, never from outside. -->
+        <activity
+                android:name=".autofill.AutofillAuthActivity"
+                android:exported="false"
+                android:excludeFromRecents="true"
+                android:taskAffinity=""
+                android:theme="@style/Theme.SecureVault.Autofill" />
+        <activity
+                android:name=".autofill.AutofillSaveActivity"
+                android:exported="false"
+                android:excludeFromRecents="true"
+                android:taskAffinity=""
+                android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <!-- Passkeys: Settings › Passwords, passkeys & accounts (Android 14+). -->
+        <service
+                android:name=".passkey.VaultCredentialProviderService"
+                android:enabled="true"
+                android:exported="true"
+                android:icon="@mipmap/ic_launcher"
+                android:label="@string/app_name"
+                android:permission="android.permission.BIND_CREDENTIAL_PROVIDER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.credentials.CredentialProviderService" />
+            </intent-filter>
+            <meta-data
+                    android:name="android.credentials.provider"
+                    android:resource="@xml/credential_provider" />
+        </service>
+        <activity
+                android:name=".passkey.PasskeyCreateActivity"
+                android:exported="false"
+                android:excludeFromRecents="true"
+                android:taskAffinity=""
+                android:theme="@style/Theme.SecureVault.Autofill" />
+        <activity
+                android:name=".passkey.PasskeySignInActivity"
+                android:exported="false"
+                android:excludeFromRecents="true"
+                android:taskAffinity=""
+                android:theme="@style/Theme.SecureVault.Autofill" />
+        <activity
+                android:name=".passkey.PasskeyUnlockActivity"
+                android:exported="false"
+                android:excludeFromRecents="true"
+                android:taskAffinity=""
+                android:theme="@style/Theme.SecureVault.Autofill" />
+    </application>
+
+</manifest>

@@ -1,0 +1,8 @@
+<resources>
+    <string name="lock_title">Vault is locked</string>
+    <string name="lock_hint">Unlock with your phone's screen lock</string>
+    <string name="lock_unlock">Unlock</string>
+    <string name="lock_error_key_invalidated">Your screen lock or biometrics changed, so this device's key was destroyed. Restore with your recovery key.</string>
+    <string name="lock_error_failed">Unlock failed: %1$s</string>
+    <string name="account_id_mask">••••</string>
+</resources>

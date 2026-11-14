@@ -1,0 +1,17 @@
+product:
+  type: kmp/lib
+  platforms: [ android, iosArm64, iosSimulatorArm64 ]
+
+dependencies:
+  - //feature/vault/vault-domain: exported
+  - //core/core-data
+  - $kotlin.serialization.json
+  - $libs.cryptography.core
+  - $libs.cryptography.provider.optimal
+
+test-dependencies:
+  - $libs.kotlinx.coroutines.test
+
+settings:
+  kotlin:
+    serialization: enabled

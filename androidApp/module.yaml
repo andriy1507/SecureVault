@@ -1,0 +1,26 @@
+product: android/app
+
+dependencies:
+  - //shared
+  - //feature/generator/generator-domain
+  - //core/core-ui
+  - $libs.androidx.activity.compose
+  - $libs.androidx.fragment
+  - $libs.androidx.credentials
+  - $libs.koin.core
+  - $compose.material3
+  - $compose.preview
+  - $compose.uiTooling
+
+settings:
+  compose: enabled
+  android:
+    namespace: dev.spaceapps.secvault
+    applicationId: dev.spaceapps.secvault
+    minSdk: 30
+    versionCode: 100
+    versionName: 1.0.0
+    resourcePackaging:
+      excludes:
+        - META-INF/AL2.0
+        - META-INF/LGPL2.1

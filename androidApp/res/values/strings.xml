@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">SecureVault</string>
+
+    <!-- Autofill -->
+    <string name="autofill_unlock">Unlock Vault</string>
+    <string name="autofill_unlock_subtitle">Fill a saved login</string>
+    <string name="autofill_strong_password">Use strong password</string>
+    <string name="autofill_strong_password_subtitle">Created by Vault</string>
+    <string name="autofill_saved">Saved “%1$s” to Vault</string>
+    <string name="autofill_updated">Updated “%1$s” in Vault</string>
+    <string name="autofill_not_saved">Not saved</string>
+    <string name="autofill_create_vault_first">Create your vault in Vault first</string>
+    <string name="autofill_save_failed">Couldn\'t save: %1$s</string>
+    <string name="autofill_no_vault">Open Vault and create your vault first.</string>
+    <string name="autofill_key_invalidated">Your screen lock changed. Open Vault to restore access.</string>
+    <string name="autofill_unlock_failed">Couldn\'t unlock: %1$s</string>
+    <string name="autofill_no_login">No saved login for %1$s</string>
+    <string name="autofill_choose_login">Choose a login for %1$s</string>
+    <string name="autofill_no_login_hint">Sign in with your password and Android will offer to save it, or add this app or site as a website of a login.</string>
+    <string name="autofill_cancel">Cancel</string>
+    <string name="autofill_close">Close</string>
+    <string name="autofill_sheet_title">Vault</string>
+    <string name="autofill_unlock_failed_title">Couldn\'t open Vault</string>
+    <!-- Passkeys -->
+    <string name="passkey_account_name">Vault</string>
+    <string name="passkey_create_description">Save the passkey in your vault</string>
+    <string name="passkey_unlock_action">Unlock Vault</string>
+    <string name="passkey_saved">Passkey for %1$s saved to Vault</string>
+    <string name="passkey_exists">This account already has a passkey in Vault</string>
+    <string name="passkey_blocked">Blocked: this app or site doesn\'t match the passkey\'s website</string>
+    <string name="passkey_failed">Passkey error: %1$s</string>
+    <string name="passkey_none">No passkeys in Vault for this site</string>
+</resources>

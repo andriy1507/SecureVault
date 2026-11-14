@@ -1,0 +1,41 @@
+product:
+  type: kmp/lib
+  platforms: [ android, iosArm64, iosSimulatorArm64 ]
+
+dependencies:
+  - //core/core-data: exported
+  - //core/core-ui
+  - //feature/onboarding/onboarding-presentation
+  - //feature/onboarding/onboarding-ui
+  - //feature/lock/lock-presentation
+  - //feature/lock/lock-ui
+  - //feature/autofill/autofill-domain: exported
+  - //feature/vault/vault-data
+  - //feature/vault/vault-presentation
+  - //feature/vault/vault-ui
+  - //feature/generator/generator-data
+  - //feature/generator/generator-presentation
+  - //feature/generator/generator-ui
+  - //feature/settings/settings-data
+  - //feature/settings/settings-presentation
+  - //feature/settings/settings-ui
+  - //feature/legal/legal-ui
+  - $compose.components.resources
+  - $compose.preview
+  - $compose.hotReload.runtimeApi
+  - $libs.koin.core: exported
+  - $libs.koin.core.viewmodel
+  - $libs.koin.compose
+  - $libs.koin.compose.viewmodel
+
+dependencies@android:
+  - $compose.uiTooling
+  - $libs.androidx.activity.compose
+
+settings:
+  compose:
+    enabled: true
+    resources:
+      packageName: dev.spaceapps.secvault.resources
+      # Generate public accessors so other modules (and previews) can use Res.*
+      exposedAccessors: true

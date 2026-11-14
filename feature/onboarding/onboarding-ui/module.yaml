@@ -1,0 +1,15 @@
+product:
+  type: kmp/lib
+  platforms: [ android, iosArm64, iosSimulatorArm64 ]
+
+dependencies:
+  - //feature/onboarding/onboarding-presentation
+  - //core/core-ui
+  - $libs.koin.compose.viewmodel
+
+settings:
+  compose:
+    enabled: true
+    resources:
+      packageName: dev.spaceapps.secvault.feature.onboarding.resources
+      exposedAccessors: true

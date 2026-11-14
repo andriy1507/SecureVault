@@ -1,0 +1,24 @@
+<resources>
+    <string name="action_ok">OK</string>
+    <string name="action_cancel">Скасувати</string>
+    <string name="action_continue">Продовжити</string>
+    <string name="action_copy">Копіювати</string>
+    <string name="action_save">Зберегти</string>
+    <string name="action_delete">Видалити</string>
+    <string name="action_close">Закрити</string>
+    <string name="action_back">Назад</string>
+    <string name="action_done">Готово</string>
+    <string name="action_undo">Скасувати</string>
+    <string name="action_retry">Повторити</string>
+    <string name="cd_biometric">Розблокувати біометрією</string>
+    <string name="cd_show">Показати</string>
+    <string name="cd_hide">Сховати</string>
+    <string name="cd_more">Інші дії</string>
+    <string name="copied_clears_in">%1$s скопійовано · очиститься за %2$d с</string>
+    <string name="copied">%1$s скопійовано</string>
+    <string name="strength_weak">Слабкий</string>
+    <string name="strength_fair">Середній</string>
+    <string name="strength_strong">Надійний</string>
+    <string name="strength_very_strong">Дуже надійний</string>
+    <string name="error_unexpected">Щось пішло не так: %1$s</string>
+</resources>

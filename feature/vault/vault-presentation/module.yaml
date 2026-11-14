@@ -1,0 +1,8 @@
+product:
+  type: kmp/lib
+  platforms: [ android, iosArm64, iosSimulatorArm64 ]
+
+dependencies:
+  - //feature/vault/vault-domain: exported
+  - //feature/generator/generator-domain: exported
+  - //core/core-presentation: exported

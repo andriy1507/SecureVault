@@ -1,0 +1,13 @@
+product:
+  type: kmp/lib
+  platforms: [ android, iosArm64, iosSimulatorArm64 ]
+
+dependencies:
+  - //core/core-ui
+
+settings:
+  compose:
+    enabled: true
+    resources:
+      packageName: dev.spaceapps.secvault.feature.legal.resources
+      exposedAccessors: true

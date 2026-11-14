@@ -1,0 +1,48 @@
+product:
+  type: kmp/lib
+  platforms: [ android, iosArm64, iosSimulatorArm64 ]
+
+dependencies:
+  - //core/core-domain: exported
+  - $libs.cryptography.core
+  - $libs.cryptography.provider.optimal
+  - $libs.androidx.datastore.preferences.core
+  - $libs.okio
+  - $libs.koin.core: exported
+  - $libs.androidx.room3.runtime: exported
+  - $libs.androidx.sqlite.bundled
+
+dependencies@android:
+  - $libs.androidx.biometric
+  - $libs.androidx.fragment
+
+test-dependencies:
+  - $libs.kotlinx.coroutines.test
+
+settings:
+  android:
+    # Keystore per-use auth with BIOMETRIC_STRONG | DEVICE_CREDENTIAL needs API 30
+    minSdk: 30
+  kotlin:
+    freeCompilerArgs:
+      - -Xexpect-actual-classes
+    ksp:
+      processors:
+        - $libs.androidx.room3.compiler
+
+# KSP runs per platform, so each writes its own schema copy (see Kotlin Toolchain Room docs)
+settings@android:
+  kotlin:
+    ksp:
+      processorOptions:
+        room.schemaLocation: ./schemas/android
+settings@iosArm64:
+  kotlin:
+    ksp:
+      processorOptions:
+        room.schemaLocation: ./schemas/iosArm64
+settings@iosSimulatorArm64:
+  kotlin:
+    ksp:
+      processorOptions:
+        room.schemaLocation: ./schemas/iosSimulatorArm64

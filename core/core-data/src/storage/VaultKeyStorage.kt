@@ -1,0 +1,68 @@
+package dev.spaceapps.secvault.core.data.storage
+
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
+import kotlinx.coroutines.flow.first
+import okio.Path.Companion.toPath
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
+
+const val VAULT_DATASTORE_FILE = "vault_keys.preferences_pb"
+const val SETTINGS_DATASTORE_FILE = "settings.preferences_pb"
+
+/** Koin qualifier of the app settings DataStore (the unqualified one holds the vault keys). */
+const val SETTINGS_DATASTORE = "settings_datastore"
+
+fun createVaultDataStore(absolutePath: String): DataStore<Preferences> =
+    PreferenceDataStoreFactory.createWithPath(produceFile = { absolutePath.toPath() })
+
+/** Persists only ciphertext and public data. */
+@OptIn(ExperimentalEncodingApi::class)
+class VaultKeyStorage(private val dataStore: DataStore<Preferences>) {
+
+    class Stored(
+        val accountId: String?,
+        val sealedBundle: ByteArray?,
+        val recoveryBlob: ByteArray?,
+        val recoveryConfirmed: Boolean,
+    )
+
+    suspend fun read(): Stored {
+        val prefs = dataStore.data.first()
+        return Stored(
+            accountId = prefs[ACCOUNT_ID],
+            sealedBundle = prefs[SEALED_BUNDLE]?.let(Base64::decode),
+            recoveryBlob = prefs[RECOVERY_BLOB]?.let(Base64::decode),
+            recoveryConfirmed = prefs[RECOVERY_CONFIRMED] ?: false,
+        )
+    }
+
+    suspend fun saveNewVault(accountId: String, sealedBundle: ByteArray, recoveryBlob: ByteArray) {
+        dataStore.edit {
+            it.clear()
+            it[ACCOUNT_ID] = accountId
+            it[SEALED_BUNDLE] = Base64.encode(sealedBundle)
+            it[RECOVERY_BLOB] = Base64.encode(recoveryBlob)
+            it[RECOVERY_CONFIRMED] = false
+        }
+    }
+
+    suspend fun setRecoveryConfirmed() {
+        dataStore.edit { it[RECOVERY_CONFIRMED] = true }
+    }
+
+    suspend fun clear() {
+        dataStore.edit { it.clear() }
+    }
+
+    private companion object {
+        val ACCOUNT_ID = stringPreferencesKey("account_id")
+        val SEALED_BUNDLE = stringPreferencesKey("sealed_bundle")
+        val RECOVERY_BLOB = stringPreferencesKey("recovery_blob")
+        val RECOVERY_CONFIRMED = booleanPreferencesKey("recovery_confirmed")
+    }
+}

@@ -1,0 +1,31 @@
+<resources>
+    <!-- Autofill -->
+    <string name="autofill_unlock">Розблокувати Vault</string>
+    <string name="autofill_unlock_subtitle">Заповнити збережений логін</string>
+    <string name="autofill_strong_password">Надійний пароль</string>
+    <string name="autofill_strong_password_subtitle">Створено у Vault</string>
+    <string name="autofill_saved">«%1$s» збережено у Vault</string>
+    <string name="autofill_updated">«%1$s» оновлено у Vault</string>
+    <string name="autofill_not_saved">Не збережено</string>
+    <string name="autofill_create_vault_first">Спершу створіть сховище у Vault</string>
+    <string name="autofill_save_failed">Не вдалося зберегти: %1$s</string>
+    <string name="autofill_no_vault">Відкрийте Vault і спершу створіть сховище.</string>
+    <string name="autofill_key_invalidated">Блокування екрана змінено. Відкрийте Vault, щоб відновити доступ.</string>
+    <string name="autofill_unlock_failed">Не вдалося розблокувати: %1$s</string>
+    <string name="autofill_no_login">Немає збереженого логіна для %1$s</string>
+    <string name="autofill_choose_login">Виберіть логін для %1$s</string>
+    <string name="autofill_no_login_hint">Увійдіть зі своїм паролем, і Android запропонує його зберегти, або додайте цей застосунок чи сайт як вебсайт логіна.</string>
+    <string name="autofill_cancel">Скасувати</string>
+    <string name="autofill_close">Закрити</string>
+    <string name="autofill_sheet_title">Vault</string>
+    <string name="autofill_unlock_failed_title">Не вдалося відкрити Vault</string>
+    <!-- Passkeys -->
+    <string name="passkey_account_name">Vault</string>
+    <string name="passkey_create_description">Зберегти ключ доступу у сховищі</string>
+    <string name="passkey_unlock_action">Розблокувати Vault</string>
+    <string name="passkey_saved">Ключ доступу для %1$s збережено у Vault</string>
+    <string name="passkey_exists">Для цього акаунта вже є ключ доступу у Vault</string>
+    <string name="passkey_blocked">Заблоковано: цей застосунок чи сайт не відповідає вебсайту ключа</string>
+    <string name="passkey_failed">Помилка ключа доступу: %1$s</string>
+    <string name="passkey_none">У Vault немає ключів доступу для цього сайту</string>
+</resources>

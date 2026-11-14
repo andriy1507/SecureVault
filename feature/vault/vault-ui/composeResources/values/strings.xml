@@ -1,0 +1,161 @@
+<resources>
+    <string name="vault_title">Vault</string>
+    <string name="search_hint">Search vault</string>
+    <string name="cd_sort">Sort</string>
+    <string name="cd_search">Search</string>
+    <string name="cd_clear_search">Clear search</string>
+    <string name="cd_copy">Copy</string>
+    <string name="cd_open">Open</string>
+    <string name="cd_favorite">Favorite</string>
+    <string name="cd_edit">Edit</string>
+    <string name="cd_remove">Remove</string>
+    <string name="cd_restore">Restore</string>
+    <string name="cd_empty_trash">Empty trash</string>
+    <string name="cd_generate">Generate</string>
+    <string name="menu_trash">Trash</string>
+    <string name="menu_lock">Lock vault</string>
+
+    <string name="filter_all">All</string>
+    <string name="filter_logins">Logins</string>
+    <string name="filter_cards">Cards</string>
+    <string name="filter_notes">Notes</string>
+    <string name="section_favorites">Favorites</string>
+    <string name="section_all_items">All items</string>
+    <string name="section_results">Results</string>
+    <string name="new_item">New item</string>
+
+    <string name="subtitle_card">Card · exp %1$s</string>
+    <string name="subtitle_card_no_expiry">Card</string>
+    <string name="subtitle_note">Secure note</string>
+    <string name="card_masked">•••• %1$s</string>
+
+    <string name="empty_title">Your vault is empty</string>
+    <string name="empty_body">Add your first password, card or secure note.</string>
+    <string name="no_results_title">No results for “%1$s”</string>
+    <string name="no_results_body">Check the spelling or try a different word.</string>
+    <string name="no_results_add">Add “%1$s”</string>
+    <string name="filter_empty_logins_title">No logins yet</string>
+    <string name="filter_empty_logins_body">Save a website or app password, and Vault can fill it in for you.</string>
+    <string name="filter_empty_logins_add">Add login</string>
+    <string name="filter_empty_cards_title">No cards yet</string>
+    <string name="filter_empty_cards_body">Keep payment cards here, encrypted on this device.</string>
+    <string name="filter_empty_cards_add">Add card</string>
+    <string name="filter_empty_notes_title">No notes yet</string>
+    <string name="filter_empty_notes_body">Secure notes are for anything private: Wi-Fi passwords, codes, documents.</string>
+    <string name="filter_empty_notes_add">Add note</string>
+
+    <string name="sheet_add_title">Add to vault</string>
+    <string name="type_login">Login</string>
+    <string name="type_login_desc">Username, password, 2FA</string>
+    <string name="type_card">Card</string>
+    <string name="type_card_desc">Payment card</string>
+    <string name="type_note">Secure note</string>
+    <string name="type_note_desc">Free text</string>
+    <string name="type_note_short">Note</string>
+
+    <string name="sheet_sort_title">Sort by</string>
+    <string name="sort_name">Name (A–Z)</string>
+    <string name="sort_date_added">Date added</string>
+    <string name="sort_last_modified">Last modified</string>
+
+    <string name="action_copy_username">Copy username</string>
+    <string name="action_copy_password">Copy password</string>
+    <string name="action_copy_totp">Copy TOTP code</string>
+    <string name="action_copy_card_number">Copy number</string>
+    <string name="action_copy_cvv">Copy CVV</string>
+    <string name="action_copy_note">Copy note</string>
+    <string name="action_open_website">Open website</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_add_favorite">Add to favorites</string>
+    <string name="action_remove_favorite">Remove from favorites</string>
+    <string name="action_delete">Delete</string>
+
+    <string name="trash_dialog_title">Delete “%1$s”?</string>
+    <string name="trash_dialog_text">It will be moved to trash and permanently deleted after %1$d days.</string>
+    <string name="trashed_snackbar">“%1$s” moved to trash</string>
+    <string name="restored_snackbar">“%1$s” restored</string>
+    <string name="saved_snackbar">Saved</string>
+
+    <string name="field_username">Username</string>
+    <string name="field_password">Password</string>
+    <string name="field_totp_code">One-time code</string>
+    <string name="field_website">Website</string>
+    <string name="field_notes">Notes</string>
+    <string name="field_card_number">Number</string>
+    <string name="field_cardholder">Cardholder name</string>
+    <string name="field_expiry">Expiry</string>
+    <string name="field_cvv">CVV</string>
+    <string name="field_history">Password</string>
+    <string name="field_name">Name</string>
+    <string name="field_card_name">Card name</string>
+    <string name="field_title">Title</string>
+    <string name="field_note">Note</string>
+    <string name="field_totp_secret">TOTP secret (optional)</string>
+    <string name="field_website_extra">Also autofill on</string>
+    <string name="field_expiry_hint">MM/YY</string>
+    <string name="card_error_number">Check the card number</string>
+    <string name="card_error_expiry">Enter month and year</string>
+    <string name="card_error_cvv">Enter all %1$d digits</string>
+    <string name="card_expired">This card has expired</string>
+
+    <string name="detail_subtitle">%1$s · edited %2$s</string>
+    <string name="edited_today">today</string>
+    <string name="edited_yesterday">yesterday</string>
+    <string name="edited_days_ago">%1$d days ago</string>
+    <string name="history_title">Password history</string>
+    <string name="history_count">%1$d previous passwords</string>
+    <string name="history_changed">Changed %1$s</string>
+    <string name="not_found">This item no longer exists.</string>
+
+    <string name="edit_new_login">New login</string>
+    <string name="edit_new_card">New card</string>
+    <string name="edit_new_note">New note</string>
+    <string name="edit_login">Edit login</string>
+    <string name="edit_card">Edit card</string>
+    <string name="edit_note">Edit note</string>
+    <string name="edit_generate">Generate</string>
+    <string name="edit_favorite">Add to favorites</string>
+    <string name="edit_delete">Delete item</string>
+    <string name="edit_delete_subtitle">Moves to trash for %1$d days</string>
+    <string name="error_title_required">Name is required</string>
+    <string name="error_save_failed">Couldn't save: %1$s</string>
+    <string name="card_preview_number_placeholder">•••• •••• •••• ••••</string>
+    <string name="card_preview_name_placeholder">CARDHOLDER</string>
+    <string name="card_preview_expiry_placeholder">MM/YY</string>
+
+    <string name="trash_title">Trash</string>
+    <string name="trash_info">Items are permanently deleted after %1$d days.</string>
+    <string name="trash_deleted_today">Deleted today · %1$d days left</string>
+    <string name="trash_deleted_days_ago">Deleted %1$d days ago · %2$d days left</string>
+    <string name="trash_empty_title">Trash is empty</string>
+    <string name="trash_empty_body">Deleted items stay here for %1$d days.</string>
+    <string name="trash_empty_dialog_title">Empty trash?</string>
+    <string name="trash_empty_dialog_text">All items in the trash will be deleted permanently. This can't be undone.</string>
+    <string name="trash_delete_dialog_title">Delete “%1$s” forever?</string>
+    <string name="trash_delete_dialog_text">This can't be undone.</string>
+    <string name="trash_delete_forever">Delete forever</string>
+    <string name="trash_empty_action">Empty</string>
+
+    <string name="filter_codes">2FA codes</string>
+    <string name="type_code">2FA code</string>
+    <string name="type_code_desc">Scan a QR code from a website</string>
+    <string name="codes_empty_title">No 2FA codes yet</string>
+    <string name="codes_empty_body">When a website shows a QR code to set up two-factor authentication, scan it here instead of Google Authenticator.</string>
+    <string name="codes_scan">Scan QR code</string>
+    <string name="cd_copy_code">Copy code</string>
+
+    <string name="scan_title">Scan QR code</string>
+    <string name="scan_hint">Open the website's two-factor setup page and point the camera at its QR code</string>
+    <string name="scan_not_otp">That QR code isn't a 2FA setup code. Try another one.</string>
+    <string name="scan_manual">Enter key manually</string>
+    <string name="cd_torch">Flashlight</string>
+    <string name="scan_permission_title">Camera access needed</string>
+    <string name="scan_permission_body">Vault needs the camera to read 2FA QR codes. Images are decoded on this device and never stored.</string>
+    <string name="scan_permission_allow">Allow camera</string>
+    <string name="cd_scan">Scan QR code</string>
+    <string name="passkeys_title">Passkeys</string>
+    <string name="passkey_subtitle">%1$s · created %2$s</string>
+    <string name="cd_delete_passkey">Delete passkey</string>
+    <string name="passkey_delete_title">Delete passkey?</string>
+    <string name="passkey_delete_text">You won't be able to sign in to %1$s with this passkey anymore. Remove it in that site's account settings too.</string>
+</resources>

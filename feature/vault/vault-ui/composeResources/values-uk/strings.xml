@@ -1,0 +1,161 @@
+<resources>
+    <string name="vault_title">Сховище</string>
+    <string name="search_hint">Пошук у сховищі</string>
+    <string name="cd_sort">Сортування</string>
+    <string name="cd_search">Пошук</string>
+    <string name="cd_clear_search">Очистити пошук</string>
+    <string name="cd_copy">Копіювати</string>
+    <string name="cd_open">Відкрити</string>
+    <string name="cd_favorite">Обране</string>
+    <string name="cd_edit">Редагувати</string>
+    <string name="cd_remove">Прибрати</string>
+    <string name="cd_restore">Відновити</string>
+    <string name="cd_empty_trash">Очистити кошик</string>
+    <string name="cd_generate">Згенерувати</string>
+    <string name="menu_trash">Кошик</string>
+    <string name="menu_lock">Заблокувати сховище</string>
+
+    <string name="filter_all">Усі</string>
+    <string name="filter_logins">Логіни</string>
+    <string name="filter_cards">Картки</string>
+    <string name="filter_notes">Нотатки</string>
+    <string name="section_favorites">Обране</string>
+    <string name="section_all_items">Усі елементи</string>
+    <string name="section_results">Результати</string>
+    <string name="new_item">Додати</string>
+
+    <string name="subtitle_card">Картка · до %1$s</string>
+    <string name="subtitle_card_no_expiry">Картка</string>
+    <string name="subtitle_note">Захищена нотатка</string>
+    <string name="card_masked">•••• %1$s</string>
+
+    <string name="empty_title">Сховище порожнє</string>
+    <string name="empty_body">Додайте перший пароль, картку або захищену нотатку.</string>
+    <string name="no_results_title">Нічого не знайдено за «%1$s»</string>
+    <string name="no_results_body">Перевірте написання або спробуйте інше слово.</string>
+    <string name="no_results_add">Додати «%1$s»</string>
+    <string name="filter_empty_logins_title">Ще немає логінів</string>
+    <string name="filter_empty_logins_body">Збережіть пароль від сайту чи застосунку, і Vault заповнюватиме його за вас.</string>
+    <string name="filter_empty_logins_add">Додати логін</string>
+    <string name="filter_empty_cards_title">Ще немає карток</string>
+    <string name="filter_empty_cards_body">Зберігайте платіжні картки тут, зашифрованими на цьому пристрої.</string>
+    <string name="filter_empty_cards_add">Додати картку</string>
+    <string name="filter_empty_notes_title">Ще немає нотаток</string>
+    <string name="filter_empty_notes_body">Захищені нотатки — для всього приватного: паролів Wi-Fi, кодів, документів.</string>
+    <string name="filter_empty_notes_add">Додати нотатку</string>
+
+    <string name="sheet_add_title">Додати у сховище</string>
+    <string name="type_login">Логін</string>
+    <string name="type_login_desc">Імʼя користувача, пароль, 2FA</string>
+    <string name="type_card">Картка</string>
+    <string name="type_card_desc">Платіжна картка</string>
+    <string name="type_note">Захищена нотатка</string>
+    <string name="type_note_desc">Довільний текст</string>
+    <string name="type_note_short">Нотатка</string>
+
+    <string name="sheet_sort_title">Сортувати за</string>
+    <string name="sort_name">Назвою (А–Я)</string>
+    <string name="sort_date_added">Датою додавання</string>
+    <string name="sort_last_modified">Датою зміни</string>
+
+    <string name="action_copy_username">Копіювати імʼя користувача</string>
+    <string name="action_copy_password">Копіювати пароль</string>
+    <string name="action_copy_totp">Копіювати код 2FA</string>
+    <string name="action_copy_card_number">Копіювати номер</string>
+    <string name="action_copy_cvv">Копіювати CVV</string>
+    <string name="action_copy_note">Копіювати нотатку</string>
+    <string name="action_open_website">Відкрити вебсайт</string>
+    <string name="action_edit">Редагувати</string>
+    <string name="action_add_favorite">Додати в обране</string>
+    <string name="action_remove_favorite">Прибрати з обраного</string>
+    <string name="action_delete">Видалити</string>
+
+    <string name="trash_dialog_title">Видалити «%1$s»?</string>
+    <string name="trash_dialog_text">Елемент буде переміщено в кошик і назавжди видалено через %1$d дн.</string>
+    <string name="trashed_snackbar">«%1$s» переміщено в кошик</string>
+    <string name="restored_snackbar">«%1$s» відновлено</string>
+    <string name="saved_snackbar">Збережено</string>
+
+    <string name="field_username">Імʼя користувача</string>
+    <string name="field_password">Пароль</string>
+    <string name="field_totp_code">Одноразовий код</string>
+    <string name="field_website">Вебсайт</string>
+    <string name="field_notes">Нотатки</string>
+    <string name="field_card_number">Номер</string>
+    <string name="field_cardholder">Імʼя власника</string>
+    <string name="field_expiry">Термін дії</string>
+    <string name="field_cvv">CVV</string>
+    <string name="field_history">Пароль</string>
+    <string name="field_name">Назва</string>
+    <string name="field_card_name">Назва картки</string>
+    <string name="field_title">Назва</string>
+    <string name="field_note">Нотатка</string>
+    <string name="field_totp_secret">Секрет TOTP (необовʼязково)</string>
+    <string name="field_website_extra">Також заповнювати на</string>
+    <string name="field_expiry_hint">ММ/РР</string>
+    <string name="card_error_number">Перевірте номер картки</string>
+    <string name="card_error_expiry">Введіть місяць і рік</string>
+    <string name="card_error_cvv">Введіть усі цифри (%1$d)</string>
+    <string name="card_expired">Термін дії картки минув</string>
+
+    <string name="detail_subtitle">%1$s · змінено %2$s</string>
+    <string name="edited_today">сьогодні</string>
+    <string name="edited_yesterday">учора</string>
+    <string name="edited_days_ago">%1$d дн. тому</string>
+    <string name="history_title">Історія паролів</string>
+    <string name="history_count">Попередніх паролів: %1$d</string>
+    <string name="history_changed">Змінено %1$s</string>
+    <string name="not_found">Цього елемента більше немає.</string>
+
+    <string name="edit_new_login">Новий логін</string>
+    <string name="edit_new_card">Нова картка</string>
+    <string name="edit_new_note">Нова нотатка</string>
+    <string name="edit_login">Редагувати логін</string>
+    <string name="edit_card">Редагувати картку</string>
+    <string name="edit_note">Редагувати нотатку</string>
+    <string name="edit_generate">Згенерувати</string>
+    <string name="edit_favorite">Додати в обране</string>
+    <string name="edit_delete">Видалити елемент</string>
+    <string name="edit_delete_subtitle">Переміщується в кошик на %1$d дн.</string>
+    <string name="error_title_required">Вкажіть назву</string>
+    <string name="error_save_failed">Не вдалося зберегти: %1$s</string>
+    <string name="card_preview_number_placeholder">•••• •••• •••• ••••</string>
+    <string name="card_preview_name_placeholder">ВЛАСНИК КАРТКИ</string>
+    <string name="card_preview_expiry_placeholder">ММ/РР</string>
+
+    <string name="trash_title">Кошик</string>
+    <string name="trash_info">Елементи видаляються назавжди через %1$d дн.</string>
+    <string name="trash_deleted_today">Видалено сьогодні · залишилось днів: %1$d</string>
+    <string name="trash_deleted_days_ago">Видалено %1$d дн. тому · залишилось днів: %2$d</string>
+    <string name="trash_empty_title">Кошик порожній</string>
+    <string name="trash_empty_body">Видалені елементи зберігаються тут %1$d дн.</string>
+    <string name="trash_empty_dialog_title">Очистити кошик?</string>
+    <string name="trash_empty_dialog_text">Усі елементи в кошику буде видалено назавжди. Цю дію не можна скасувати.</string>
+    <string name="trash_delete_dialog_title">Видалити «%1$s» назавжди?</string>
+    <string name="trash_delete_dialog_text">Цю дію не можна скасувати.</string>
+    <string name="trash_delete_forever">Видалити назавжди</string>
+    <string name="trash_empty_action">Очистити</string>
+
+    <string name="filter_codes">Коди 2FA</string>
+    <string name="type_code">Код 2FA</string>
+    <string name="type_code_desc">Відскануйте QR-код із сайту</string>
+    <string name="codes_empty_title">Ще немає кодів 2FA</string>
+    <string name="codes_empty_body">Коли сайт показує QR-код для налаштування двофакторної автентифікації, відскануйте його тут замість Google Authenticator.</string>
+    <string name="codes_scan">Сканувати QR-код</string>
+    <string name="cd_copy_code">Копіювати код</string>
+
+    <string name="scan_title">Сканувати QR-код</string>
+    <string name="scan_hint">Відкрийте на сайті сторінку налаштування двофакторної автентифікації і наведіть камеру на QR-код</string>
+    <string name="scan_not_otp">Цей QR-код не для налаштування 2FA. Спробуйте інший.</string>
+    <string name="scan_manual">Ввести ключ вручну</string>
+    <string name="cd_torch">Ліхтарик</string>
+    <string name="scan_permission_title">Потрібен доступ до камери</string>
+    <string name="scan_permission_body">Vault використовує камеру, щоб читати QR-коди 2FA. Зображення обробляються на цьому пристрої і ніде не зберігаються.</string>
+    <string name="scan_permission_allow">Дозволити камеру</string>
+    <string name="cd_scan">Сканувати QR-код</string>
+    <string name="passkeys_title">Ключі доступу</string>
+    <string name="passkey_subtitle">%1$s · створено %2$s</string>
+    <string name="cd_delete_passkey">Видалити ключ доступу</string>
+    <string name="passkey_delete_title">Видалити ключ доступу?</string>
+    <string name="passkey_delete_text">Ви більше не зможете входити на %1$s з цим ключем. Видаліть його також у налаштуваннях акаунта на сайті.</string>
+</resources>

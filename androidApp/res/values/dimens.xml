@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Autofill suggestion row: matches ListRow (16dp padding, 40dp avatar, 56dp min height). -->
+    <dimen name="autofill_row_min_height">56dp</dimen>
+    <dimen name="autofill_padding_horizontal">16dp</dimen>
+    <dimen name="autofill_padding_vertical">8dp</dimen>
+    <dimen name="autofill_icon_container">40dp</dimen>
+    <dimen name="autofill_icon_padding">8dp</dimen>
+    <dimen name="autofill_icon_radius">12dp</dimen>
+    <dimen name="autofill_text_gap">16dp</dimen>
+    <dimen name="autofill_title_size">16sp</dimen>
+    <dimen name="autofill_subtitle_size">14sp</dimen>
+</resources>

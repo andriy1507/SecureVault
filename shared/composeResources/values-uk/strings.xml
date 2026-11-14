@@ -1,0 +1,8 @@
+<resources>
+    <string name="tab_vault">Сховище</string>
+    <string name="tab_generator">Генератор</string>
+    <string name="tab_settings">Налаштування</string>
+    <string name="version_format">%1$s (%2$s)</string>
+    <string name="trashed_snackbar">«%1$s» переміщено в кошик</string>
+    <string name="undo">Скасувати</string>
+</resources>

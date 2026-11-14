@@ -1,0 +1,7 @@
+product:
+  type: kmp/lib
+  platforms: [ android, iosArm64, iosSimulatorArm64 ]
+
+dependencies:
+  - //feature/generator/generator-domain: exported
+  - $libs.koin.core

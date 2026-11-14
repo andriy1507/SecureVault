@@ -1,0 +1,47 @@
+<resources>
+    <string name="settings_title">Settings</string>
+    <string name="account_id_title">Your account ID</string>
+    <string name="copy_id">Copy ID</string>
+    <string name="account_id_label">Account ID</string>
+
+    <string name="section_autofill">Autofill</string>
+    <string name="autofill">Autofill</string>
+    <string name="autofill_subtitle">Choose Vault as your autofill service</string>
+
+    <string name="section_appearance">Appearance</string>
+    <string name="theme">Theme</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_system">System default</string>
+    <string name="dynamic_color">Dynamic color</string>
+    <string name="dynamic_color_subtitle">Use wallpaper colors</string>
+
+    <string name="section_security">Security</string>
+    <string name="auto_lock">Auto-lock</string>
+    <string name="auto_lock_immediately">Immediately</string>
+    <string name="auto_lock_1_min">After 1 minute</string>
+    <string name="auto_lock_5_min">After 5 minutes</string>
+    <string name="auto_lock_15_min">After 15 minutes</string>
+    <string name="auto_lock_device">When phone locks</string>
+    <string name="clear_clipboard">Clear clipboard</string>
+    <string name="clear_10_s">After 10 seconds</string>
+    <string name="clear_30_s">After 30 seconds</string>
+    <string name="clear_1_min">After 1 minute</string>
+    <string name="clear_never">Never</string>
+    <string name="block_screenshots">Block screenshots</string>
+    <string name="block_screenshots_subtitle">Also hides the app in recent apps</string>
+    <string name="lock_now">Lock vault now</string>
+
+    <string name="section_about">About</string>
+    <string name="version">Version</string>
+    <string name="terms">Terms of Service</string>
+    <string name="privacy">Privacy Policy</string>
+
+    <string name="section_danger">Danger zone</string>
+    <string name="delete_account">Delete account</string>
+    <string name="delete_account_subtitle">Permanently erase your vault from this device</string>
+    <string name="delete_account_title">Delete account?</string>
+    <string name="delete_account_text">Your vault will be permanently erased from this device. This can’t be undone.\n\nType %1$s to confirm.</string>
+    <string name="passkeys">Passkeys</string>
+    <string name="passkeys_subtitle">Choose Vault to save and use passkeys</string>
+</resources>

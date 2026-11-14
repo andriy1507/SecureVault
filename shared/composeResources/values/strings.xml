@@ -1,0 +1,8 @@
+<resources>
+    <string name="tab_vault">Vault</string>
+    <string name="tab_generator">Generator</string>
+    <string name="tab_settings">Settings</string>
+    <string name="version_format">%1$s (%2$s)</string>
+    <string name="trashed_snackbar">“%1$s” moved to trash</string>
+    <string name="undo">Undo</string>
+</resources>

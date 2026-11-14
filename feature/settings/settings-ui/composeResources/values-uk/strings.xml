@@ -1,0 +1,47 @@
+<resources>
+    <string name="settings_title">Налаштування</string>
+    <string name="account_id_title">Ваш ID акаунта</string>
+    <string name="copy_id">Копіювати ID</string>
+    <string name="account_id_label">ID акаунта</string>
+
+    <string name="section_autofill">Автозаповнення</string>
+    <string name="autofill">Автозаповнення</string>
+    <string name="autofill_subtitle">Виберіть Vault службою автозаповнення</string>
+
+    <string name="section_appearance">Вигляд</string>
+    <string name="theme">Тема</string>
+    <string name="theme_light">Світла</string>
+    <string name="theme_dark">Темна</string>
+    <string name="theme_system">Як у системі</string>
+    <string name="dynamic_color">Динамічні кольори</string>
+    <string name="dynamic_color_subtitle">Кольори шпалер</string>
+
+    <string name="section_security">Безпека</string>
+    <string name="auto_lock">Автоблокування</string>
+    <string name="auto_lock_immediately">Одразу</string>
+    <string name="auto_lock_1_min">Через 1 хвилину</string>
+    <string name="auto_lock_5_min">Через 5 хвилин</string>
+    <string name="auto_lock_15_min">Через 15 хвилин</string>
+    <string name="auto_lock_device">Коли блокується телефон</string>
+    <string name="clear_clipboard">Очищати буфер обміну</string>
+    <string name="clear_10_s">Через 10 секунд</string>
+    <string name="clear_30_s">Через 30 секунд</string>
+    <string name="clear_1_min">Через 1 хвилину</string>
+    <string name="clear_never">Ніколи</string>
+    <string name="block_screenshots">Блокувати знімки екрана</string>
+    <string name="block_screenshots_subtitle">Також ховає застосунок у недавніх</string>
+    <string name="lock_now">Заблокувати зараз</string>
+
+    <string name="section_about">Про застосунок</string>
+    <string name="version">Версія</string>
+    <string name="terms">Умови використання</string>
+    <string name="privacy">Політика конфіденційності</string>
+
+    <string name="section_danger">Небезпечна зона</string>
+    <string name="delete_account">Видалити акаунт</string>
+    <string name="delete_account_subtitle">Назавжди стерти сховище з цього пристрою</string>
+    <string name="delete_account_title">Видалити акаунт?</string>
+    <string name="delete_account_text">Сховище буде назавжди стерто з цього пристрою. Цю дію не можна скасувати.\n\nВведіть %1$s для підтвердження.</string>
+    <string name="passkeys">Ключі доступу</string>
+    <string name="passkeys_subtitle">Виберіть Vault, щоб зберігати й використовувати ключі доступу</string>
+</resources>

@@ -1,0 +1,19 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Machine- and session-specific IDE state
+/caches/
+/libraries/
+/modules.xml
+/tasks.xml
+/usage.statistics.xml
+/dictionaries/
+/deploymentTargetSelector.xml
+/deviceManager.xml
+/AndroidProjectSystem.xml
+/assetWizardSettings.xml
+/navEditor.xml
+/androidTestResultsUserPreferences.xml
+/appInsightsSettings.xml
+/other.xml
+/*.iml

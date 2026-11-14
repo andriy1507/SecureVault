@@ -1,0 +1,27 @@
+product:
+  type: kmp/lib
+  platforms: [ android, iosArm64, iosSimulatorArm64 ]
+
+dependencies:
+  - $compose.runtime: exported
+  - $compose.foundation: exported
+  - $compose.material3: exported
+  - $compose.ui: exported
+  - $compose.components.resources: exported
+  - $libs.compose.material.icons.extended: exported
+  - $libs.androidx.lifecycle.runtime.compose: exported
+  - $libs.androidx.lifecycle.viewmodel.compose: exported
+
+dependencies@android:
+  - $libs.androidx.activity.compose
+  - $libs.androidx.camera.camera2
+  - $libs.androidx.camera.lifecycle
+  - $libs.androidx.camera.view
+  - $libs.zxing.core
+
+settings:
+  compose:
+    enabled: true
+    resources:
+      packageName: dev.spaceapps.secvault.core.ui.resources
+      exposedAccessors: true

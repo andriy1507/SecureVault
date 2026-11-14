@@ -1,0 +1,9 @@
+product:
+  type: kmp/lib
+  platforms: [ android, iosArm64, iosSimulatorArm64 ]
+
+dependencies:
+  - //feature/vault/vault-domain: exported
+
+test-dependencies:
+  - $libs.kotlinx.coroutines.test

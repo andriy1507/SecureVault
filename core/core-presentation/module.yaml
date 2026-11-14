@@ -1,0 +1,7 @@
+product:
+  type: kmp/lib
+  platforms: [ android, iosArm64, iosSimulatorArm64 ]
+
+dependencies:
+  - $libs.androidx.lifecycle.viewmodel: exported
+  - $libs.kotlinx.coroutines.core: exported

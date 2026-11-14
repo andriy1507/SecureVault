@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Window background before Compose draws; matches Palette.LightSurface / Palette.DarkSurface. -->
+    <color name="window_background">#FBF8FF</color>
+
+    <!-- Autofill suggestions (RemoteViews can't use the Compose theme); Palette light values. -->
+    <color name="autofill_background">#EFEDF4</color>      <!-- surfaceContainer -->
+    <color name="autofill_title">#1B1B21</color>           <!-- onSurface -->
+    <color name="autofill_subtitle">#46464F</color>        <!-- onSurfaceVariant -->
+    <color name="autofill_icon_container">#DEE0FF</color> <!-- primaryContainer -->
+    <color name="autofill_icon">#00105C</color>            <!-- onPrimaryContainer -->
+</resources>
