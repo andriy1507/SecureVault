@@ -2,10 +2,10 @@ package dev.spaceapps.secvault.navigation
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
@@ -29,17 +29,17 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.SaveableStateHolder
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import dev.spaceapps.secvault.core.ui.navigation.PlatformBackHandler
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import dev.spaceapps.secvault.core.ui.components.LocalSnackbarHostState
+import dev.spaceapps.secvault.core.ui.navigation.PlatformBackHandler
 import dev.spaceapps.secvault.feature.generator.ui.GeneratorScreen
 import dev.spaceapps.secvault.feature.legal.ui.LegalDocument
 import dev.spaceapps.secvault.feature.legal.ui.LegalScreen
@@ -64,15 +64,25 @@ import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-internal enum class Tab(val label: StringResource, val icon: ImageVector, val selectedIcon: ImageVector) {
+internal enum class Tab(
+    val label: StringResource,
+    val icon: ImageVector,
+    val selectedIcon: ImageVector,
+) {
     Vault(Res.string.tab_vault, Icons.Outlined.Lock, Icons.Filled.Lock),
     Generator(Res.string.tab_generator, Icons.Outlined.Password, Icons.Filled.Password),
     Settings(Res.string.tab_settings, Icons.Outlined.Settings, Icons.Filled.Settings),
 }
 
 private sealed interface Route {
-    data class Tabs(val tab: Tab) : Route
-    data class ItemDetail(val id: String) : Route
+    data class Tabs(
+        val tab: Tab,
+    ) : Route
+
+    data class ItemDetail(
+        val id: String,
+    ) : Route
+
     /** [id] == null: a new item of [type], optionally prefilled (search text, scanned 2FA code). */
     data class ItemEdit(
         val id: String?,
@@ -83,19 +93,29 @@ private sealed interface Route {
     ) : Route {
         override fun toString() = "ItemEdit(id=$id)"
     }
+
     data object ScanCode : Route
+
     data object Trash : Route
-    data class Legal(val document: LegalDocument) : Route
+
+    data class Legal(
+        val document: LegalDocument,
+    ) : Route
 }
 
 /** One back stack entry; [key] identifies its saved UI state (scroll positions, text fields). */
-private class Entry(val route: Route, val key: String)
+private class Entry(
+    val route: Route,
+    val key: String,
+)
 
 /**
  * Back stack of the unlocked app. The root is always the tab screen.
  * [onRemoved] is called with the key of every pushed entry that leaves the stack, so its saved state is dropped.
  */
-private class BackStack(private val onRemoved: (String) -> Unit) {
+private class BackStack(
+    private val onRemoved: (String) -> Unit,
+) {
     private var nextId = 0
     val entries = mutableStateListOf(Entry(Route.Tabs(Tab.Vault), ROOT_KEY))
     val top: Entry get() = entries.last()
@@ -142,7 +162,10 @@ private fun tabStateKey(tab: Tab) = "tab-${tab.name}"
  * and each pushed screen's store when that screen closes, so decrypted data never outlives its screen.
  */
 @Composable
-internal fun VaultNavHost(onLock: () -> Unit, settingsPlatform: SettingsPlatform) {
+internal fun VaultNavHost(
+    onLock: () -> Unit,
+    settingsPlatform: SettingsPlatform,
+) {
     // Keeps each screen's rememberSaveable state (e.g. list scroll position) while it is covered
     // by another screen or tab, and restores it on back.
     val saveableState = rememberSaveableStateHolder()
@@ -151,7 +174,10 @@ internal fun VaultNavHost(onLock: () -> Unit, settingsPlatform: SettingsPlatform
     val scope = rememberCoroutineScope()
     val restoreFromTrash = koinInject<RestoreFromTrashUseCase>()
 
-    fun onTrashed(id: String, title: String) {
+    fun onTrashed(
+        id: String,
+        title: String,
+    ) {
         stack.popToRoot()
         scope.launch {
             snackbar.currentSnackbarData?.dismiss()
@@ -194,6 +220,7 @@ internal fun VaultNavHost(onLock: () -> Unit, settingsPlatform: SettingsPlatform
                         )
                     },
                 )
+
                 else -> Box(Modifier.fillMaxSize()) {
                     key(entry.key) {
                         saveableState.SaveableStateProvider(entry.key) {
@@ -208,7 +235,11 @@ internal fun VaultNavHost(onLock: () -> Unit, settingsPlatform: SettingsPlatform
 }
 
 @Composable
-private fun PushedScreen(route: Route, stack: BackStack, onTrashed: (String, String) -> Unit) {
+private fun PushedScreen(
+    route: Route,
+    stack: BackStack,
+    onTrashed: (String, String) -> Unit,
+) {
     when (route) {
         is Route.ItemDetail -> ItemDetailScreen(
             itemId = route.id,
@@ -217,6 +248,7 @@ private fun PushedScreen(route: Route, stack: BackStack, onTrashed: (String, Str
             onEdit = { stack.push(Route.ItemEdit(it)) },
             onTrashed = onTrashed,
         )
+
         is Route.ItemEdit -> ItemEditScreen(
             itemId = route.id,
             newType = route.type,
@@ -227,13 +259,17 @@ private fun PushedScreen(route: Route, stack: BackStack, onTrashed: (String, Str
             onSaved = { id, isNew -> if (isNew) stack.replaceTop(Route.ItemDetail(id)) else stack.pop() },
             onTrashed = onTrashed,
         )
+
         Route.Trash -> TrashScreen(onBack = stack::pop)
+
         Route.ScanCode -> ScanCodeScreen(
             onFound = { stack.replaceTop(Route.ItemEdit(null, ItemType.Login, it.issuer, it.account, it.secret)) },
             onEnterManually = { stack.replaceTop(Route.ItemEdit(null, ItemType.Login)) },
             onClose = stack::pop,
         )
+
         is Route.Legal -> LegalScreen(route.document, onBack = stack::pop)
+
         is Route.Tabs -> Unit
     }
 }

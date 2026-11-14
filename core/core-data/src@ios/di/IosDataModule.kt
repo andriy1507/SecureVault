@@ -17,12 +17,15 @@ import platform.Foundation.NSFileManager
 import platform.Foundation.NSUserDomainMask
 
 /** [guard] is implemented in Swift (Secure Enclave) and adapted in the iosApp module. */
-fun iosDataModule(guard: HardwareKeyGuard): Module = module {
-    single { guard }
-    single { createVaultDataStore("${applicationSupportDir()}/$VAULT_DATASTORE_FILE") }
-    single(named(SETTINGS_DATASTORE)) { createVaultDataStore("${applicationSupportDir()}/$SETTINGS_DATASTORE_FILE") }
-    single { Room.databaseBuilder<AppDatabase>(name = "${applicationSupportDir()}/$VAULT_DB_FILE") }
-}
+fun iosDataModule(guard: HardwareKeyGuard): Module =
+    module {
+        single { guard }
+        single { createVaultDataStore("${applicationSupportDir()}/$VAULT_DATASTORE_FILE") }
+        single(
+            named(SETTINGS_DATASTORE),
+        ) { createVaultDataStore("${applicationSupportDir()}/$SETTINGS_DATASTORE_FILE") }
+        single { Room.databaseBuilder<AppDatabase>(name = "${applicationSupportDir()}/$VAULT_DB_FILE") }
+    }
 
 @OptIn(ExperimentalForeignApi::class)
 private fun applicationSupportDir(): String {

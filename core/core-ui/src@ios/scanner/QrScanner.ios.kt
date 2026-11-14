@@ -35,20 +35,23 @@ import platform.AVFoundation.torchMode
 import platform.CoreGraphics.CGRectMake
 import platform.QuartzCore.CATransaction
 import platform.UIKit.UIView
+import platform.darwin.DISPATCH_QUEUE_PRIORITY_DEFAULT
 import platform.darwin.NSObject
 import platform.darwin.dispatch_async
 import platform.darwin.dispatch_get_global_queue
 import platform.darwin.dispatch_get_main_queue
-import platform.darwin.DISPATCH_QUEUE_PRIORITY_DEFAULT
 
 @Composable
 actual fun rememberCameraPermission(): CameraPermission {
     var granted by remember {
-        mutableStateOf(AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo) == AVAuthorizationStatusAuthorized)
+        mutableStateOf(
+            AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo) == AVAuthorizationStatusAuthorized,
+        )
     }
     return remember(granted) {
         object : CameraPermission {
             override val granted: Boolean = granted
+
             override fun request() {
                 AVCaptureDevice.requestAccessForMediaType(AVMediaTypeVideo) { ok ->
                     dispatch_async(dispatch_get_main_queue()) { granted = ok }
@@ -59,7 +62,9 @@ actual fun rememberCameraPermission(): CameraPermission {
 }
 
 /** UIView that keeps its preview layer sized to its bounds. */
-private class PreviewContainer(val previewLayer: AVCaptureVideoPreviewLayer) : UIView(frame = CGRectMake(0.0, 0.0, 0.0, 0.0)) {
+private class PreviewContainer(
+    val previewLayer: AVCaptureVideoPreviewLayer,
+) : UIView(frame = CGRectMake(0.0, 0.0, 0.0, 0.0)) {
     init {
         layer.addSublayer(previewLayer)
     }
@@ -73,10 +78,17 @@ private class PreviewContainer(val previewLayer: AVCaptureVideoPreviewLayer) : U
     }
 }
 
-private class MetadataDelegate(private val onText: (String) -> Unit) : NSObject(), AVCaptureMetadataOutputObjectsDelegateProtocol {
+private class MetadataDelegate(
+    private val onText: (String) -> Unit,
+) : NSObject(),
+    AVCaptureMetadataOutputObjectsDelegateProtocol {
     private var delivered = false
 
-    override fun captureOutput(output: AVCaptureOutput, didOutputMetadataObjects: List<*>, fromConnection: AVCaptureConnection) {
+    override fun captureOutput(
+        output: AVCaptureOutput,
+        didOutputMetadataObjects: List<*>,
+        fromConnection: AVCaptureConnection,
+    ) {
         if (delivered) return
         val code = didOutputMetadataObjects.firstOrNull() as? AVMetadataMachineReadableCodeObject ?: return
         val text = code.stringValue ?: return
@@ -86,7 +98,11 @@ private class MetadataDelegate(private val onText: (String) -> Unit) : NSObject(
 }
 
 @Composable
-actual fun QrScannerView(torchOn: Boolean, onResult: (String) -> Unit, modifier: Modifier) {
+actual fun QrScannerView(
+    torchOn: Boolean,
+    onResult: (String) -> Unit,
+    modifier: Modifier,
+) {
     val callback = rememberUpdatedState(onResult)
     val session = remember { AVCaptureSession() }
     val device = remember { AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo) }
@@ -102,7 +118,9 @@ actual fun QrScannerView(torchOn: Boolean, onResult: (String) -> Unit, modifier:
             output.metadataObjectTypes = listOf(AVMetadataObjectTypeQRCode)
         }
         // startRunning blocks: keep it off the main thread.
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT.toLong(), 0u)) { session.startRunning() }
+        dispatch_async(
+            dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT.toLong(), 0u),
+        ) { session.startRunning() }
         onDispose { session.stopRunning() }
     }
     LaunchedEffect(torchOn) {
@@ -114,7 +132,10 @@ actual fun QrScannerView(torchOn: Boolean, onResult: (String) -> Unit, modifier:
     }
     UIKitView(
         factory = {
-            val layer = AVCaptureVideoPreviewLayer(session = session).apply { videoGravity = AVLayerVideoGravityResizeAspectFill }
+            val layer = AVCaptureVideoPreviewLayer(session = session).apply {
+                videoGravity =
+                    AVLayerVideoGravityResizeAspectFill
+            }
             PreviewContainer(layer)
         },
         modifier = modifier,

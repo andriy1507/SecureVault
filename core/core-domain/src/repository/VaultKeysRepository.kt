@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.StateFlow
 
 /** Owns the vault keys: creation, sealing in hardware, unlocking and locking. */
 interface VaultKeysRepository {
-
     val lockState: StateFlow<LockState>
 
     /** Reads storage and updates [lockState]. Call on app start. */

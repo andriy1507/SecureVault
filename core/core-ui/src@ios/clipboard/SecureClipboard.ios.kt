@@ -14,7 +14,11 @@ private const val PLAIN_TEXT_UTI = "public.utf8-plain-text"
 actual fun rememberSecureClipboard(): SecureClipboard = remember { IosSecureClipboard() }
 
 private class IosSecureClipboard : SecureClipboard {
-    override fun copy(text: String, sensitive: Boolean, clearAfterSeconds: Int?) {
+    override fun copy(
+        text: String,
+        sensitive: Boolean,
+        clearAfterSeconds: Int?,
+    ) {
         val options = buildMap<Any?, Any?> {
             put(UIPasteboardOptionLocalOnly, true)
             // The system removes the item itself at the expiration date, even if the app is suspended.
@@ -22,6 +26,9 @@ private class IosSecureClipboard : SecureClipboard {
                 put(UIPasteboardOptionExpirationDate, NSDate.dateWithTimeIntervalSinceNow(clearAfterSeconds.toDouble()))
             }
         }
-        UIPasteboard.generalPasteboard.setItems(items = listOf(mapOf<Any?, Any?>(PLAIN_TEXT_UTI to text)), options = options)
+        UIPasteboard.generalPasteboard.setItems(
+            items = listOf(mapOf<Any?, Any?>(PLAIN_TEXT_UTI to text)),
+            options = options,
+        )
     }
 }

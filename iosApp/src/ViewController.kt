@@ -7,6 +7,7 @@ import platform.UIKit.UIViewController
 private var koinStarted = false
 
 /** Called once from Swift with the Secure Enclave implementation. */
+@Suppress("ktlint:standard:function-naming", "FunctionNaming")
 fun ViewController(keyGuard: NativeKeyGuard): UIViewController {
     if (!koinStarted) {
         initKoin(iosDataModule(IosHardwareKeyGuard(keyGuard)))

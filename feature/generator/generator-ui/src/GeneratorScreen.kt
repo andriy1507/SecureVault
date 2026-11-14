@@ -59,6 +59,8 @@ import dev.spaceapps.secvault.core.ui.components.StrengthLevel
 import dev.spaceapps.secvault.core.ui.components.StrengthMeter
 import dev.spaceapps.secvault.core.ui.components.SwitchRow
 import dev.spaceapps.secvault.core.ui.components.TonalButton
+import dev.spaceapps.secvault.core.ui.resources.Res as CoreRes
+import dev.spaceapps.secvault.core.ui.resources.action_copy
 import dev.spaceapps.secvault.core.ui.theme.Dimens
 import dev.spaceapps.secvault.feature.generator.domain.model.GeneratedValue
 import dev.spaceapps.secvault.feature.generator.domain.model.GeneratorMode
@@ -117,18 +119,16 @@ import dev.spaceapps.secvault.feature.generator.resources.username_words
 import dev.spaceapps.secvault.feature.generator.resources.username_words_example
 import dev.spaceapps.secvault.feature.generator.resources.words
 import dev.spaceapps.secvault.feature.generator.resources.words_range
-import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.StringResource
-import org.jetbrains.compose.resources.getString
-import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
 import kotlin.math.roundToInt
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.ExperimentalTime
-import dev.spaceapps.secvault.core.ui.resources.Res as CoreRes
-import dev.spaceapps.secvault.core.ui.resources.action_copy
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 private val MODES = listOf(
     GeneratorMode.Password to Res.string.mode_password,
@@ -151,12 +151,13 @@ private val GeneratorMode.copyLabel: StringResource
         GeneratorMode.Username -> Res.string.copied_label_username
     }
 
-private fun PasswordStrength.toLevel(): StrengthLevel = when (this) {
-    PasswordStrength.Weak -> StrengthLevel.Weak
-    PasswordStrength.Fair -> StrengthLevel.Fair
-    PasswordStrength.Strong -> StrengthLevel.Strong
-    PasswordStrength.VeryStrong -> StrengthLevel.VeryStrong
-}
+private fun PasswordStrength.toLevel(): StrengthLevel =
+    when (this) {
+        PasswordStrength.Weak -> StrengthLevel.Weak
+        PasswordStrength.Fair -> StrengthLevel.Fair
+        PasswordStrength.Strong -> StrengthLevel.Strong
+        PasswordStrength.VeryStrong -> StrengthLevel.VeryStrong
+    }
 
 /** 02 · Generator, 39 · passphrase, 40 · username, 41 · history sheet. */
 @Composable
@@ -167,7 +168,11 @@ fun GeneratorScreen(viewModel: GeneratorViewModel = koinViewModel()) {
     CollectEffects(viewModel.effects) { effect ->
         when (effect) {
             is Effect.Copy -> scope.launch {
-                copy.copy(effect.text, sensitive = effect.mode != GeneratorMode.Username, label = getString(effect.mode.copyLabel))
+                copy.copy(
+                    effect.text,
+                    sensitive = effect.mode != GeneratorMode.Username,
+                    label = getString(effect.mode.copyLabel),
+                )
             }
         }
     }
@@ -176,7 +181,10 @@ fun GeneratorScreen(viewModel: GeneratorViewModel = koinViewModel()) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun GeneratorContent(state: State, onIntent: (Intent) -> Unit) {
+internal fun GeneratorContent(
+    state: State,
+    onIntent: (Intent) -> Unit,
+) {
     Scaffold(
         topBar = {
             AppTopBar(stringResource(Res.string.generator_title)) {
@@ -187,7 +195,10 @@ internal fun GeneratorContent(state: State, onIntent: (Intent) -> Unit) {
         },
     ) { padding ->
         Column(
-            Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState())
+            Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .verticalScroll(rememberScrollState())
                 .padding(start = Dimens.screenPadding, end = Dimens.screenPadding, bottom = Dimens.dp24),
             verticalArrangement = Arrangement.spacedBy(Dimens.dp12),
         ) {
@@ -202,9 +213,14 @@ internal fun GeneratorContent(state: State, onIntent: (Intent) -> Unit) {
             }
             ResultBox(state)
             Row(horizontalArrangement = Arrangement.spacedBy(Dimens.dp8)) {
-                TonalButton(stringResource(Res.string.regenerate), { onIntent(Intent.Regenerate) }, Modifier.weight(1f), Icons.Filled.Refresh)
+                TonalButton(stringResource(Res.string.regenerate), {
+                    onIntent(Intent.Regenerate)
+                }, Modifier.weight(1f), Icons.Filled.Refresh)
                 FilledIconTextButton(
-                    stringResource(CoreRes.string.action_copy), { onIntent(Intent.Copy) }, Modifier.weight(1f), Icons.Outlined.ContentCopy,
+                    stringResource(CoreRes.string.action_copy),
+                    { onIntent(Intent.Copy) },
+                    Modifier.weight(1f),
+                    Icons.Outlined.ContentCopy,
                 )
             }
             SectionHeader(stringResource(Res.string.options))
@@ -230,9 +246,17 @@ internal fun GeneratorContent(state: State, onIntent: (Intent) -> Unit) {
 
 @Composable
 private fun ResultBox(state: State) {
-    Surface(shape = RoundedCornerShape(Dimens.radiusExtraLarge), color = MaterialTheme.colorScheme.surfaceContainerHigh) {
+    Surface(
+        shape = RoundedCornerShape(Dimens.radiusExtraLarge),
+        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+    ) {
         Column(
-            Modifier.fillMaxWidth().padding(start = Dimens.dp20, end = Dimens.dp20, top = Dimens.dp28, bottom = Dimens.dp20),
+            Modifier.fillMaxWidth().padding(
+                start = Dimens.dp20,
+                end = Dimens.dp20,
+                top = Dimens.dp28,
+                bottom = Dimens.dp20,
+            ),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(Dimens.dp20),
         ) {
@@ -248,21 +272,39 @@ private fun ResultBox(state: State) {
 }
 
 @Composable
-private fun Stepper(value: Int, range: IntRange, onChange: (Int) -> Unit) {
+private fun Stepper(
+    value: Int,
+    range: IntRange,
+    onChange: (Int) -> Unit,
+) {
     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Dimens.dp4)) {
-        val colors = IconButtonDefaults.filledTonalIconButtonColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHighest)
-        FilledTonalIconButton(onClick = { onChange(value - 1) }, enabled = value > range.first, colors = colors, modifier = Modifier.size(Dimens.dp40)) {
+        val colors = IconButtonDefaults.filledTonalIconButtonColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+        )
+        FilledTonalIconButton(onClick = {
+            onChange(value - 1)
+        }, enabled = value > range.first, colors = colors, modifier = Modifier.size(Dimens.dp40)) {
             Icon(Icons.Filled.Remove, stringResource(Res.string.cd_decrease))
         }
-        Text("$value", style = MaterialTheme.typography.titleLarge, textAlign = TextAlign.Center, modifier = Modifier.widthIn(min = Dimens.dp40))
-        FilledTonalIconButton(onClick = { onChange(value + 1) }, enabled = value < range.last, colors = colors, modifier = Modifier.size(Dimens.dp40)) {
+        Text(
+            "$value",
+            style = MaterialTheme.typography.titleLarge,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.widthIn(min = Dimens.dp40),
+        )
+        FilledTonalIconButton(onClick = {
+            onChange(value + 1)
+        }, enabled = value < range.last, colors = colors, modifier = Modifier.size(Dimens.dp40)) {
             Icon(Icons.Filled.Add, stringResource(Res.string.cd_increase))
         }
     }
 }
 
 @Composable
-private fun PasswordOptionsGroup(options: PasswordOptions, onIntent: (Intent) -> Unit) {
+private fun PasswordOptionsGroup(
+    options: PasswordOptions,
+    onIntent: (Intent) -> Unit,
+) {
     fun change(o: PasswordOptions) = onIntent(Intent.PasswordOptionsChanged(o))
     val range = PasswordOptions.MIN_LENGTH..PasswordOptions.MAX_LENGTH
     ListGroup {
@@ -280,22 +322,54 @@ private fun PasswordOptionsGroup(options: PasswordOptions, onIntent: (Intent) ->
         ListDivider()
         // At least one character set stays on.
         val enabledSets = listOf(options.uppercase, options.lowercase, options.digits, options.symbols).count { it }
+
         fun canTurnOff(current: Boolean) = !current || enabledSets > 1
-        SwitchRow(stringResource(Res.string.uppercase), options.uppercase, { if (canTurnOff(options.uppercase)) change(options.copy(uppercase = it)) },
-            subtitle = stringResource(Res.string.uppercase_desc))
-        SwitchRow(stringResource(Res.string.lowercase), options.lowercase, { if (canTurnOff(options.lowercase)) change(options.copy(lowercase = it)) },
-            subtitle = stringResource(Res.string.lowercase_desc))
-        SwitchRow(stringResource(Res.string.numbers), options.digits, { if (canTurnOff(options.digits)) change(options.copy(digits = it)) },
-            subtitle = stringResource(Res.string.numbers_desc))
-        SwitchRow(stringResource(Res.string.symbols), options.symbols, { if (canTurnOff(options.symbols)) change(options.copy(symbols = it)) },
-            subtitle = stringResource(Res.string.symbols_desc))
-        SwitchRow(stringResource(Res.string.avoid_ambiguous), options.avoidAmbiguous, { change(options.copy(avoidAmbiguous = it)) },
-            subtitle = stringResource(Res.string.avoid_ambiguous_desc))
+        SwitchRow(
+            stringResource(Res.string.uppercase),
+            options.uppercase,
+            {
+                if (canTurnOff(options.uppercase)) change(options.copy(uppercase = it))
+            },
+            subtitle = stringResource(Res.string.uppercase_desc),
+        )
+        SwitchRow(
+            stringResource(Res.string.lowercase),
+            options.lowercase,
+            {
+                if (canTurnOff(options.lowercase)) change(options.copy(lowercase = it))
+            },
+            subtitle = stringResource(Res.string.lowercase_desc),
+        )
+        SwitchRow(
+            stringResource(Res.string.numbers),
+            options.digits,
+            {
+                if (canTurnOff(options.digits)) change(options.copy(digits = it))
+            },
+            subtitle = stringResource(Res.string.numbers_desc),
+        )
+        SwitchRow(
+            stringResource(Res.string.symbols),
+            options.symbols,
+            {
+                if (canTurnOff(options.symbols)) change(options.copy(symbols = it))
+            },
+            subtitle = stringResource(Res.string.symbols_desc),
+        )
+        SwitchRow(
+            stringResource(Res.string.avoid_ambiguous),
+            options.avoidAmbiguous,
+            { change(options.copy(avoidAmbiguous = it)) },
+            subtitle = stringResource(Res.string.avoid_ambiguous_desc),
+        )
     }
 }
 
 @Composable
-private fun PassphraseOptionsGroup(options: PassphraseOptions, onIntent: (Intent) -> Unit) {
+private fun PassphraseOptionsGroup(
+    options: PassphraseOptions,
+    onIntent: (Intent) -> Unit,
+) {
     fun change(o: PassphraseOptions) = onIntent(Intent.PassphraseOptionsChanged(o))
     val range = PassphraseOptions.MIN_WORDS..PassphraseOptions.MAX_WORDS
     ListGroup {
@@ -312,12 +386,17 @@ private fun PassphraseOptionsGroup(options: PassphraseOptions, onIntent: (Intent
             onClick = { onIntent(Intent.ShowSeparatorDialog(true)) },
         )
         SwitchRow(stringResource(Res.string.capitalize), options.capitalize, { change(options.copy(capitalize = it)) })
-        SwitchRow(stringResource(Res.string.include_number), options.includeNumber, { change(options.copy(includeNumber = it)) })
+        SwitchRow(stringResource(Res.string.include_number), options.includeNumber, {
+            change(options.copy(includeNumber = it))
+        })
     }
 }
 
 @Composable
-private fun UsernameOptionsGroup(selected: UsernameType, onIntent: (Intent) -> Unit) {
+private fun UsernameOptionsGroup(
+    selected: UsernameType,
+    onIntent: (Intent) -> Unit,
+) {
     ListGroup {
         Text(
             stringResource(Res.string.username_type),
@@ -329,8 +408,11 @@ private fun UsernameOptionsGroup(selected: UsernameType, onIntent: (Intent) -> U
             Triple(UsernameType.RandomCharacters, Res.string.username_chars, Res.string.username_chars_example),
         ).forEach { (type, title, example) ->
             Row(
-                Modifier.fillMaxWidth()
-                    .selectable(selected = type == selected, role = Role.RadioButton, onClick = { onIntent(Intent.UsernameTypeChanged(type)) })
+                Modifier
+                    .fillMaxWidth()
+                    .selectable(selected = type == selected, role = Role.RadioButton, onClick = {
+                        onIntent(Intent.UsernameTypeChanged(type))
+                    })
                     .heightIn(min = Dimens.dp56)
                     .padding(horizontal = Dimens.dp16),
                 verticalAlignment = Alignment.CenterVertically,
@@ -353,15 +435,24 @@ private fun UsernameOptionsGroup(selected: UsernameType, onIntent: (Intent) -> U
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun HistorySheet(history: List<GeneratedValue>, onIntent: (Intent) -> Unit) {
+private fun HistorySheet(
+    history: List<GeneratedValue>,
+    onIntent: (Intent) -> Unit,
+) {
     ModalBottomSheet(onDismissRequest = { onIntent(Intent.ShowHistory(false)) }) {
         Row(
             Modifier.fillMaxWidth().padding(start = Dimens.dp24, end = Dimens.dp12),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(stringResource(Res.string.history_title), style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
+            Text(
+                stringResource(Res.string.history_title),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.weight(1f),
+            )
             if (history.isNotEmpty()) {
-                TextButton(onClick = { onIntent(Intent.ClearHistory) }) { Text(stringResource(Res.string.history_clear)) }
+                TextButton(
+                    onClick = { onIntent(Intent.ClearHistory) },
+                ) { Text(stringResource(Res.string.history_clear)) }
             }
         }
         if (history.isEmpty()) {
@@ -394,7 +485,15 @@ private fun timeAgo(epochMillis: Long): String {
     val elapsed = Clock.System.now().toEpochMilliseconds() - epochMillis
     return when {
         elapsed < 1.minutes.inWholeMilliseconds -> stringResource(Res.string.history_just_now)
-        elapsed < 1.hours.inWholeMilliseconds -> stringResource(Res.string.history_minutes_ago, (elapsed / 1.minutes.inWholeMilliseconds).toInt())
+
+        elapsed < 1.hours.inWholeMilliseconds -> stringResource(
+            Res.string.history_minutes_ago,
+            (
+                elapsed /
+                    1.minutes.inWholeMilliseconds
+            ).toInt(),
+        )
+
         else -> stringResource(Res.string.history_hours_ago, (elapsed / 1.hours.inWholeMilliseconds).toInt())
     }
 }

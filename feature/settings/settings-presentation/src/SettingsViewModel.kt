@@ -21,7 +21,6 @@ class SettingsViewModel(
     private val lockNow: LockNowUseCase,
     private val deleteAccount: DeleteAccountUseCase,
 ) : MviViewModel<Intent, State, Effect>(State()) {
-
     init {
         viewModelScope.launch { observeSettings().collect { setState { copy(settings = it) } } }
         viewModelScope.launch {
@@ -33,17 +32,26 @@ class SettingsViewModel(
     override fun handleIntent(intent: Intent) {
         when (intent) {
             Intent.CopyId -> currentState.accountId.takeIf { it.isNotEmpty() }?.let { sendEffect(Effect.CopyId(it)) }
+
             is Intent.ShowDialog -> setState { copy(dialog = intent.dialog, deleteConfirmation = "") }
+
             is Intent.ThemeChosen -> update { it.copy(theme = intent.theme) }
+
             is Intent.DynamicColorChanged -> update { it.copy(dynamicColor = intent.enabled) }
+
             is Intent.AutoLockChosen -> update { it.copy(autoLock = intent.autoLock) }
+
             is Intent.ClipboardClearChosen -> update { it.copy(clipboardClear = intent.clear) }
+
             is Intent.BlockScreenshotsChanged -> update { it.copy(blockScreenshots = intent.enabled) }
+
             is Intent.DeleteConfirmationChanged -> setState { copy(deleteConfirmation = intent.text) }
+
             Intent.ConfirmDeleteAccount -> if (currentState.canDelete) {
                 setState { copy(isDeleting = true) }
                 viewModelScope.launch { deleteAccount() } // lock state becomes NoVault; the app shows Welcome
             }
+
             Intent.LockNow -> lockNow()
         }
     }

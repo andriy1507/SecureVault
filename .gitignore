@@ -75,3 +75,6 @@ ehthumbs.db
 desktop.ini
 $RECYCLE.BIN/
 *~
+
+# ── Lint tool cache (ktlint/detekt jars) ──
+.lint-cache/

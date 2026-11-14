@@ -26,6 +26,7 @@ import dev.spaceapps.secvault.core.ui.components.BottomActions
 import dev.spaceapps.secvault.core.ui.components.ErrorText
 import dev.spaceapps.secvault.core.ui.components.HeroMessage
 import dev.spaceapps.secvault.core.ui.components.PrimaryButton
+import dev.spaceapps.secvault.core.ui.resources.Res as CoreRes
 import dev.spaceapps.secvault.core.ui.resources.cd_biometric
 import dev.spaceapps.secvault.core.ui.theme.Dimens
 import dev.spaceapps.secvault.feature.lock.presentation.LockContract.Error
@@ -41,7 +42,6 @@ import dev.spaceapps.secvault.feature.lock.resources.lock_title
 import dev.spaceapps.secvault.feature.lock.resources.lock_unlock
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import dev.spaceapps.secvault.core.ui.resources.Res as CoreRes
 
 private const val ID_SEPARATOR = "-"
 
@@ -55,7 +55,10 @@ fun LockScreen(viewModel: LockViewModel = koinViewModel()) {
 
 /** 15 · Unlock — phone unlock (device credential / biometrics) via the system prompt. */
 @Composable
-internal fun LockContent(state: State, onIntent: (Intent) -> Unit) {
+internal fun LockContent(
+    state: State,
+    onIntent: (Intent) -> Unit,
+) {
     Column(Modifier.fillMaxSize().safeDrawingPadding()) {
         Column(Modifier.weight(1f).fillMaxWidth(), verticalArrangement = Arrangement.Center) {
             HeroMessage(
@@ -96,14 +99,21 @@ internal fun LockContent(state: State, onIntent: (Intent) -> Unit) {
         }
         if (!state.keyInvalidated) {
             BottomActions {
-                PrimaryButton(stringResource(Res.string.lock_unlock), { onIntent(Intent.Unlock) }, enabled = !state.isUnlocking)
+                PrimaryButton(
+                    stringResource(Res.string.lock_unlock),
+                    { onIntent(Intent.Unlock) },
+                    enabled = !state.isUnlocking,
+                )
             }
         }
     }
 }
 
 /** "7F3A-91C2-E04B-D58E" → "7F3A-••••-••••-D58E". IDs without groups are shown as they are. */
-private fun maskAccountId(id: String, mask: String): String {
+private fun maskAccountId(
+    id: String,
+    mask: String,
+): String {
     val groups = id.split(ID_SEPARATOR)
     if (groups.size < 3) return id
     return (listOf(groups.first()) + List(groups.size - 2) { mask } + groups.last()).joinToString(ID_SEPARATOR)

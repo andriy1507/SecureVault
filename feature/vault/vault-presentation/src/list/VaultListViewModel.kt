@@ -29,7 +29,6 @@ class VaultListViewModel(
     private val moveToTrash: MoveToTrashUseCase,
     private val generateTotp: GenerateTotpUseCase,
 ) : MviViewModel<Intent, State, Effect>(State()) {
-
     private var codesJob: Job? = null
 
     init {
@@ -61,37 +60,90 @@ class VaultListViewModel(
 
     override fun handleIntent(intent: Intent) {
         when (intent) {
-            is Intent.QueryChanged -> setState { copy(query = intent.query).recomputed() }
-            is Intent.SearchActiveChanged -> setState {
-                copy(searchActive = intent.active, query = if (intent.active) query else "").recomputed()
+            is Intent.QueryChanged -> {
+                setState { copy(query = intent.query).recomputed() }
             }
+
+            is Intent.SearchActiveChanged -> {
+                setState {
+                    copy(searchActive = intent.active, query = if (intent.active) query else "").recomputed()
+                }
+            }
+
             is Intent.FilterChanged -> {
                 setState { copy(filter = intent.filter).recomputed() }
                 updateCodeTicker()
             }
-            is Intent.SortChanged -> setState { copy(sort = intent.sort, sheet = Sheet.None).recomputed() }
-            is Intent.ItemClicked -> sendEffect(Effect.OpenItem(intent.id))
-            is Intent.ItemLongPressed -> setState { copy(sheet = Sheet.ItemActions, selected = intent.item) }
-            is Intent.QuickCopy -> withItem(intent.id) { item -> item.quickCopy()?.let { sendEffect(Effect.Copy(it)) } }
-            Intent.AddClicked -> setState { copy(sheet = Sheet.NewItemType) }
+
+            is Intent.SortChanged -> {
+                setState { copy(sort = intent.sort, sheet = Sheet.None).recomputed() }
+            }
+
+            is Intent.ItemClicked -> {
+                sendEffect(Effect.OpenItem(intent.id))
+            }
+
+            is Intent.ItemLongPressed -> {
+                setState { copy(sheet = Sheet.ItemActions, selected = intent.item) }
+            }
+
+            is Intent.QuickCopy -> {
+                withItem(intent.id) { item -> item.quickCopy()?.let { sendEffect(Effect.Copy(it)) } }
+            }
+
+            Intent.AddClicked -> {
+                setState { copy(sheet = Sheet.NewItemType) }
+            }
+
             is Intent.NewItemTypeChosen -> {
                 setState { copy(sheet = Sheet.None) }
                 sendEffect(Effect.NewItem(intent.type, ""))
             }
-            Intent.AddFromQuery -> sendEffect(Effect.NewItem(ItemType.Login, currentState.query.trim()))
-            Intent.SortClicked -> setState { copy(sheet = Sheet.Sort) }
-            Intent.DismissSheet -> setState { copy(sheet = Sheet.None) }
-            is Intent.CopyFromActions -> selected { summary ->
-                withItem(summary.id) { item ->
-                    item.valueOf(intent.field).takeIf { it.isNotEmpty() }?.let { sendEffect(Effect.Copy(CopyRequest(it, intent.field))) }
+
+            Intent.AddFromQuery -> {
+                sendEffect(Effect.NewItem(ItemType.Login, currentState.query.trim()))
+            }
+
+            Intent.SortClicked -> {
+                setState { copy(sheet = Sheet.Sort) }
+            }
+
+            Intent.DismissSheet -> {
+                setState { copy(sheet = Sheet.None) }
+            }
+
+            is Intent.CopyFromActions -> {
+                selected { summary ->
+                    withItem(summary.id) { item ->
+                        item
+                            .valueOf(
+                                intent.field,
+                            ).takeIf { it.isNotEmpty() }
+                            ?.let { sendEffect(Effect.Copy(CopyRequest(it, intent.field))) }
+                    }
                 }
             }
-            Intent.EditSelected -> selected { sendEffect(Effect.EditItem(it.id)) }
-            Intent.ToggleFavoriteSelected -> selected { viewModelScope.launch { toggleFavorite(it.id) } }
-            Intent.OpenWebsiteSelected -> selected { summary ->
-                withItem(summary.id) { item -> item.url.takeIf { it.isNotBlank() }?.let { sendEffect(Effect.OpenUrl(it)) } }
+
+            Intent.EditSelected -> {
+                selected { sendEffect(Effect.EditItem(it.id)) }
             }
-            Intent.TrashSelected -> setState { copy(sheet = Sheet.None, confirmTrash = true) }
+
+            Intent.ToggleFavoriteSelected -> {
+                selected { viewModelScope.launch { toggleFavorite(it.id) } }
+            }
+
+            Intent.OpenWebsiteSelected -> {
+                selected { summary ->
+                    withItem(
+                        summary.id,
+                    ) { item -> item.url.takeIf { it.isNotBlank() }?.let { sendEffect(Effect.OpenUrl(it)) } }
+                }
+            }
+
+            Intent.TrashSelected -> {
+                setState { copy(sheet = Sheet.None, confirmTrash = true) }
+            }
+
             Intent.ConfirmTrash -> {
                 val item = currentState.selected
                 setState { copy(confirmTrash = false, selected = null) }
@@ -102,16 +154,29 @@ class VaultListViewModel(
                     }
                 }
             }
-            Intent.DismissTrash -> setState { copy(confirmTrash = false, selected = null) }
-            Intent.TrashClicked -> sendEffect(Effect.OpenTrash)
+
+            Intent.DismissTrash -> {
+                setState { copy(confirmTrash = false, selected = null) }
+            }
+
+            Intent.TrashClicked -> {
+                sendEffect(Effect.OpenTrash)
+            }
+
             Intent.ScanCodeClicked -> {
                 setState { copy(sheet = Sheet.None) }
                 sendEffect(Effect.ScanCode)
             }
-            is Intent.CopyCode -> currentState.codes[intent.id]?.let {
-                sendEffect(Effect.Copy(CopyRequest(it.code, CopyField.Totp)))
+
+            is Intent.CopyCode -> {
+                currentState.codes[intent.id]?.let {
+                    sendEffect(Effect.Copy(CopyRequest(it.code, CopyField.Totp)))
+                }
             }
-            Intent.LockClicked -> sendEffect(Effect.Lock)
+
+            Intent.LockClicked -> {
+                sendEffect(Effect.Lock)
+            }
         }
     }
 
@@ -127,7 +192,10 @@ class VaultListViewModel(
         block(item)
     }
 
-    private fun withItem(id: String, block: (dev.spaceapps.secvault.feature.vault.domain.model.VaultItem) -> Unit) {
+    private fun withItem(
+        id: String,
+        block: (dev.spaceapps.secvault.feature.vault.domain.model.VaultItem) -> Unit,
+    ) {
         viewModelScope.launch { getItem(id)?.let(block) }
     }
 

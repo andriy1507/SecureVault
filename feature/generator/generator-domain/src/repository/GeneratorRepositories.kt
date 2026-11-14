@@ -11,6 +11,8 @@ fun interface GeneratorWordsSource {
 /** What was generated during this unlocked session. Kept only in memory. */
 interface GeneratorHistoryRepository {
     val history: StateFlow<List<GeneratedValue>>
+
     fun add(value: GeneratedValue)
+
     fun clear()
 }

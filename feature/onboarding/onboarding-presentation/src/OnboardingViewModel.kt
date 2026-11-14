@@ -25,22 +25,40 @@ class OnboardingViewModel(
     private val buildConfirmationChoices: BuildConfirmationChoicesUseCase,
     private val verifyConfirmationWords: VerifyConfirmationWordsUseCase,
 ) : MviViewModel<Intent, State, Effect>(State()) {
-
     override fun handleIntent(intent: Intent) {
         when (intent) {
             Intent.Start -> start()
+
             Intent.IdSeen -> setState { copy(step = Step.ShowPhrase, error = null) }
+
             is Intent.PhraseSavedChanged -> setState { copy(phraseSaved = intent.saved) }
+
             Intent.PhraseWrittenDown -> if (currentState.phraseSaved) startConfirmation()
+
             is Intent.ChoiceTapped -> setState {
                 val slot = answers.indexOfFirst { it == null }
-                if (slot < 0 || intent.word in answers) this
-                else copy(answers = answers.toMutableList().also { it[slot] = intent.word }, error = null)
+                if (slot < 0 || intent.word in answers) {
+                    this
+                } else {
+                    copy(answers = answers.toMutableList().also { it[slot] = intent.word }, error = null)
+                }
             }
+
             is Intent.SlotCleared -> setState {
-                copy(answers = answers.toMutableList().also { if (intent.slot in it.indices) it[intent.slot] = null }, error = null)
+                copy(
+                    answers = answers.toMutableList().also {
+                        if (intent.slot in
+                            it.indices
+                        ) {
+                            it[intent.slot] = null
+                        }
+                    },
+                    error = null,
+                )
             }
+
             Intent.SubmitConfirmation -> submit()
+
             Intent.Back -> back()
         }
     }
@@ -87,9 +105,13 @@ class OnboardingViewModel(
     private fun back() {
         setState {
             when (step) {
-                Step.ShowId, Step.DeviceNotSecure -> State() // the pending vault is replaced on the next Start
+                Step.ShowId, Step.DeviceNotSecure -> State()
+
+                // the pending vault is replaced on the next Start
                 Step.ShowPhrase -> copy(step = Step.ShowId, error = null)
+
                 Step.ConfirmPhrase -> copy(step = Step.ShowPhrase, error = null)
+
                 else -> this
             }
         }

@@ -118,7 +118,10 @@ fun AppTextField(
 
 /** Eye icon that toggles secret visibility. */
 @Composable
-fun VisibilityToggle(visible: Boolean, onToggle: () -> Unit) {
+fun VisibilityToggle(
+    visible: Boolean,
+    onToggle: () -> Unit,
+) {
     IconButton(onClick = onToggle) {
         Icon(
             if (visible) Icons.Outlined.VisibilityOff else Icons.Outlined.Visibility,

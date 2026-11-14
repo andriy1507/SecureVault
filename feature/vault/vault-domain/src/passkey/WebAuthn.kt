@@ -54,35 +54,62 @@ internal class CborWriter {
 
     fun bytes(): ByteArray = out.toByteArray()
 
-    fun int(value: Long): CborWriter = apply {
-        if (value >= 0) head(MAJOR_UNSIGNED, value) else head(MAJOR_NEGATIVE, -1 - value)
-    }
+    fun int(value: Long): CborWriter =
+        apply {
+            if (value >= 0) head(MAJOR_UNSIGNED, value) else head(MAJOR_NEGATIVE, -1 - value)
+        }
 
-    fun byteString(value: ByteArray): CborWriter = apply {
-        head(MAJOR_BYTES, value.size.toLong())
-        value.forEach { out += it }
-    }
+    fun byteString(value: ByteArray): CborWriter =
+        apply {
+            head(MAJOR_BYTES, value.size.toLong())
+            value.forEach { out += it }
+        }
 
-    fun text(value: String): CborWriter = apply {
-        val utf8 = value.encodeToByteArray()
-        head(MAJOR_TEXT, utf8.size.toLong())
-        utf8.forEach { out += it }
-    }
+    fun text(value: String): CborWriter =
+        apply {
+            val utf8 = value.encodeToByteArray()
+            head(MAJOR_TEXT, utf8.size.toLong())
+            utf8.forEach { out += it }
+        }
 
     fun mapHeader(size: Int): CborWriter = apply { head(MAJOR_MAP, size.toLong()) }
 
-    private fun head(major: Int, value: Long) {
+    private fun head(
+        major: Int,
+        value: Long,
+    ) {
         val type = major shl MAJOR_SHIFT
         when {
-            value < INLINE_LIMIT -> out += (type or value.toInt()).toByte()
-            value <= UINT8_MAX -> { out += (type or ONE_BYTE).toByte(); out += value.toByte() }
-            value <= UINT16_MAX -> { out += (type or TWO_BYTES).toByte(); bigEndian(value, 2) }
-            value <= UINT32_MAX -> { out += (type or FOUR_BYTES).toByte(); bigEndian(value, 4) }
-            else -> { out += (type or EIGHT_BYTES).toByte(); bigEndian(value, 8) }
+            value < INLINE_LIMIT -> {
+                out += (type or value.toInt()).toByte()
+            }
+
+            value <= UINT8_MAX -> {
+                out += (type or ONE_BYTE).toByte()
+                out += value.toByte()
+            }
+
+            value <= UINT16_MAX -> {
+                out += (type or TWO_BYTES).toByte()
+                bigEndian(value, 2)
+            }
+
+            value <= UINT32_MAX -> {
+                out += (type or FOUR_BYTES).toByte()
+                bigEndian(value, 4)
+            }
+
+            else -> {
+                out += (type or EIGHT_BYTES).toByte()
+                bigEndian(value, 8)
+            }
         }
     }
 
-    private fun bigEndian(value: Long, size: Int) {
+    private fun bigEndian(
+        value: Long,
+        size: Int,
+    ) {
         for (i in size - 1 downTo 0) out += (value shr (i * Byte.SIZE_BITS)).toByte()
     }
 
@@ -108,11 +135,14 @@ internal class CborWriter {
 object WebAuthn {
     /** User present. */
     const val FLAG_UP = 0x01
+
     /** User verified (device unlock or biometrics). */
     const val FLAG_UV = 0x04
+
     /** Backup eligible and backed up: the key lives in the vault (recovery key, later sync), not one device. */
     const val FLAG_BE = 0x08
     const val FLAG_BS = 0x10
+
     /** Attested credential data included (registration only). */
     const val FLAG_AT = 0x40
 
@@ -140,12 +170,18 @@ object WebAuthn {
         require(publicKeyRaw.size == UNCOMPRESSED_POINT_SIZE) { "Expected an uncompressed P-256 point" }
         val x = publicKeyRaw.copyOfRange(1, 1 + COORDINATE_SIZE)
         val y = publicKeyRaw.copyOfRange(1 + COORDINATE_SIZE, UNCOMPRESSED_POINT_SIZE)
-        return CborWriter().mapHeader(COSE_KEY_ENTRIES)
-            .int(COSE_KTY).int(COSE_KTY_EC2)
-            .int(COSE_ALG).int(COSE_ALG_ES256)
-            .int(COSE_CRV).int(COSE_CRV_P256)
-            .int(COSE_X).byteString(x)
-            .int(COSE_Y).byteString(y)
+        return CborWriter()
+            .mapHeader(COSE_KEY_ENTRIES)
+            .int(COSE_KTY)
+            .int(COSE_KTY_EC2)
+            .int(COSE_ALG)
+            .int(COSE_ALG_ES256)
+            .int(COSE_CRV)
+            .int(COSE_CRV_P256)
+            .int(COSE_X)
+            .byteString(x)
+            .int(COSE_Y)
+            .byteString(y)
             .bytes()
     }
 
@@ -174,10 +210,14 @@ object WebAuthn {
 
     /** Attestation object with "none" attestation: sites learn nothing about the device. */
     fun noneAttestation(authenticatorData: ByteArray): ByteArray =
-        CborWriter().mapHeader(ATTESTATION_ENTRIES)
-            .text("fmt").text("none")
-            .text("attStmt").mapHeader(0)
-            .text("authData").byteString(authenticatorData)
+        CborWriter()
+            .mapHeader(ATTESTATION_ENTRIES)
+            .text("fmt")
+            .text("none")
+            .text("attStmt")
+            .mapHeader(0)
+            .text("authData")
+            .byteString(authenticatorData)
             .bytes()
 
     /** Flags for every passkey we create or use: present, verified, backed up. */
@@ -185,11 +225,19 @@ object WebAuthn {
 }
 
 /** Whether a saved address belongs to [rpId]: same host or a subdomain of it. */
-internal fun matchesRpId(uri: String, rpId: String): Boolean {
-    val host = uri.trim().lowercase()
+internal fun matchesRpId(
+    uri: String,
+    rpId: String,
+): Boolean {
+    val host = uri
+        .trim()
+        .lowercase()
         .substringAfter("://")
-        .substringBefore('/').substringBefore('?').substringBefore('#')
-        .substringAfter('@').substringBefore(':')
+        .substringBefore('/')
+        .substringBefore('?')
+        .substringBefore('#')
+        .substringAfter('@')
+        .substringBefore(':')
         .removePrefix("www.")
     val rp = rpId.lowercase().removePrefix("www.")
     return host.isNotEmpty() && (host == rp || host.endsWith(".$rp") || rp.endsWith(".$host"))

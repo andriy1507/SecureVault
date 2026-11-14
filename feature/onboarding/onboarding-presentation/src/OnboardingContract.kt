@@ -5,7 +5,6 @@ import dev.spaceapps.secvault.core.presentation.mvi.UiIntent
 import dev.spaceapps.secvault.core.presentation.mvi.UiState
 
 object OnboardingContract {
-
     enum class Step { Welcome, DeviceNotSecure, Creating, ShowId, ShowPhrase, ConfirmPhrase, Finishing }
 
     /** Steps shown with the "1 / 2 / 3" progress bar of the create-account flow. */
@@ -14,9 +13,16 @@ object OnboardingContract {
     /** What went wrong; the UI turns it into a string resource. */
     sealed interface Error {
         data object UnlockNeeded : Error
-        data class CreateFailed(val reason: String?) : Error
+
+        data class CreateFailed(
+            val reason: String?,
+        ) : Error
+
         data object WordsDontMatch : Error
-        data class FinishFailed(val reason: String?) : Error
+
+        data class FinishFailed(
+            val reason: String?,
+        ) : Error
     }
 
     data class State(
@@ -40,12 +46,25 @@ object OnboardingContract {
     sealed interface Intent : UiIntent {
         /** "Create new account" tapped, or retry after setting a device lock. */
         data object Start : Intent
+
         data object IdSeen : Intent
-        data class PhraseSavedChanged(val saved: Boolean) : Intent
+
+        data class PhraseSavedChanged(
+            val saved: Boolean,
+        ) : Intent
+
         data object PhraseWrittenDown : Intent
-        data class ChoiceTapped(val word: String) : Intent
-        data class SlotCleared(val slot: Int) : Intent
+
+        data class ChoiceTapped(
+            val word: String,
+        ) : Intent
+
+        data class SlotCleared(
+            val slot: Int,
+        ) : Intent
+
         data object SubmitConfirmation : Intent
+
         data object Back : Intent
     }
 

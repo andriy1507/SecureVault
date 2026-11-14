@@ -23,7 +23,11 @@ import org.jetbrains.compose.resources.stringResource
 internal actual fun rememberAppVersion(): String {
     val context = LocalContext.current
     val info = remember(context) { context.packageManager.getPackageInfo(context.packageName, 0) }
-    return stringResource(Res.string.version_format, info.versionName.orEmpty(), PackageInfoCompat.getLongVersionCode(info).toString())
+    return stringResource(
+        Res.string.version_format,
+        info.versionName.orEmpty(),
+        PackageInfoCompat.getLongVersionCode(info).toString(),
+    )
 }
 
 @Composable
@@ -46,17 +50,24 @@ internal actual fun DeviceLockEffect(onLocked: () -> Unit) {
     val callback = rememberUpdatedState(onLocked)
     DisposableEffect(context) {
         val receiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) = callback.value()
+            override fun onReceive(
+                context: Context,
+                intent: Intent,
+            ) = callback.value()
         }
         ContextCompat.registerReceiver(
-            context, receiver, IntentFilter(Intent.ACTION_SCREEN_OFF), ContextCompat.RECEIVER_NOT_EXPORTED,
+            context,
+            receiver,
+            IntentFilter(Intent.ACTION_SCREEN_OFF),
+            ContextCompat.RECEIVER_NOT_EXPORTED,
         )
         onDispose { context.unregisterReceiver(receiver) }
     }
 }
 
-private tailrec fun Context.findActivity(): Activity? = when (this) {
-    is Activity -> this
-    is ContextWrapper -> baseContext.findActivity()
-    else -> null
-}
+private tailrec fun Context.findActivity(): Activity? =
+    when (this) {
+        is Activity -> this
+        is ContextWrapper -> baseContext.findActivity()
+        else -> null
+    }

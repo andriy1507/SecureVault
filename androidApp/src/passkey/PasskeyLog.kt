@@ -13,7 +13,10 @@ internal object PasskeyLog {
         Log.i(TAG, message)
     }
 
-    fun failed(step: String, error: Throwable) {
+    fun failed(
+        step: String,
+        error: Throwable,
+    ) {
         Log.w(TAG, "$step failed: ${error::class.simpleName}: ${error.message}")
     }
 }

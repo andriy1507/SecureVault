@@ -6,7 +6,9 @@ import kotlinx.coroutines.flow.Flow
 enum class AppTheme { System, Light, Dark }
 
 /** When the unlocked vault locks itself after the app goes to the background. */
-enum class AutoLock(val delaySeconds: Int?) {
+enum class AutoLock(
+    val delaySeconds: Int?,
+) {
     Immediately(0),
     OneMinute(60),
     FiveMinutes(5 * 60),
@@ -17,7 +19,9 @@ enum class AutoLock(val delaySeconds: Int?) {
 }
 
 /** How long copied secrets stay on the clipboard. */
-enum class ClipboardClear(val seconds: Int?) {
+enum class ClipboardClear(
+    val seconds: Int?,
+) {
     TenSeconds(10),
     ThirtySeconds(30),
     OneMinute(60),
@@ -35,28 +39,41 @@ data class AppSettings(
 
 interface SettingsRepository {
     val settings: Flow<AppSettings>
+
     suspend fun update(transform: (AppSettings) -> AppSettings)
+
     suspend fun reset()
 }
 
-class ObserveSettingsUseCase(private val repository: SettingsRepository) {
+class ObserveSettingsUseCase(
+    private val repository: SettingsRepository,
+) {
     operator fun invoke(): Flow<AppSettings> = repository.settings
 }
 
-class UpdateSettingsUseCase(private val repository: SettingsRepository) {
+class UpdateSettingsUseCase(
+    private val repository: SettingsRepository,
+) {
     suspend operator fun invoke(transform: (AppSettings) -> AppSettings) = repository.update(transform)
 }
 
-class GetAccountIdForSettingsUseCase(private val keys: VaultKeysRepository) {
+class GetAccountIdForSettingsUseCase(
+    private val keys: VaultKeysRepository,
+) {
     suspend operator fun invoke(): String? = keys.accountId()
 }
 
-class LockNowUseCase(private val keys: VaultKeysRepository) {
+class LockNowUseCase(
+    private val keys: VaultKeysRepository,
+) {
     operator fun invoke() = keys.lock()
 }
 
 /** Erases the vault from this device and resets the app to its first-run state. */
-class DeleteAccountUseCase(private val keys: VaultKeysRepository, private val settings: SettingsRepository) {
+class DeleteAccountUseCase(
+    private val keys: VaultKeysRepository,
+    private val settings: SettingsRepository,
+) {
     suspend operator fun invoke() {
         keys.deleteVault()
         settings.reset()

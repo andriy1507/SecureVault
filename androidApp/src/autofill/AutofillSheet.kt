@@ -44,8 +44,15 @@ import dev.spaceapps.secvault.feature.vault.domain.model.VaultItem
 /** What the autofill window shows. Unlocking shows nothing: only the system unlock prompt is visible. */
 internal sealed interface AutofillScreen {
     data object Unlocking : AutofillScreen
-    data class Picker(val targetTitle: String, val items: List<VaultItem>) : AutofillScreen
-    data class Message(val text: String) : AutofillScreen
+
+    data class Picker(
+        val targetTitle: String,
+        val items: List<VaultItem>,
+    ) : AutofillScreen
+
+    data class Message(
+        val text: String,
+    ) : AutofillScreen
 }
 
 /**
@@ -58,7 +65,11 @@ internal fun AutofillSheet(screen: AutofillScreen, onPick: (VaultItem) -> Unit, 
     if (screen == AutofillScreen.Unlocking) return
     val noRipple = remember { MutableInteractionSource() }
     Box(
-        Modifier.fillMaxSize().statusBarsPadding().clickable(interactionSource = noRipple, indication = null, onClick = onCancel),
+        Modifier.fillMaxSize().statusBarsPadding().clickable(
+            interactionSource = noRipple,
+            indication = null,
+            onClick = onCancel,
+        ),
         contentAlignment = Alignment.BottomCenter,
     ) {
         Surface(
@@ -74,6 +85,7 @@ internal fun AutofillSheet(screen: AutofillScreen, onPick: (VaultItem) -> Unit, 
                 BottomSheetDefaults.DragHandle(Modifier.align(Alignment.CenterHorizontally))
                 when (screen) {
                     is AutofillScreen.Picker -> Picker(screen, onPick)
+
                     is AutofillScreen.Message -> HeroMessage(
                         icon = Icons.Filled.ErrorOutline,
                         title = stringResource(R.string.autofill_unlock_failed_title),
@@ -81,10 +93,13 @@ internal fun AutofillSheet(screen: AutofillScreen, onPick: (VaultItem) -> Unit, 
                         iconContainerColor = MaterialTheme.colorScheme.errorContainer,
                         iconContentColor = MaterialTheme.colorScheme.onErrorContainer,
                     )
+
                     AutofillScreen.Unlocking -> Unit
                 }
                 AppTextButton(
-                    text = stringResource(if (screen is AutofillScreen.Message) R.string.autofill_close else R.string.autofill_cancel),
+                    text = stringResource(
+                        if (screen is AutofillScreen.Message) R.string.autofill_close else R.string.autofill_cancel,
+                    ),
                     onClick = onCancel,
                     modifier = Modifier.align(Alignment.End),
                 )
@@ -94,7 +109,10 @@ internal fun AutofillSheet(screen: AutofillScreen, onPick: (VaultItem) -> Unit, 
 }
 
 @Composable
-private fun Picker(screen: AutofillScreen.Picker, onPick: (VaultItem) -> Unit) {
+private fun Picker(
+    screen: AutofillScreen.Picker,
+    onPick: (VaultItem) -> Unit,
+) {
     val empty = screen.items.isEmpty()
     SheetHeader(
         stringResource(if (empty) R.string.autofill_no_login else R.string.autofill_choose_login, screen.targetTitle),
@@ -136,7 +154,11 @@ private fun SheetHeader(subtitle: String) {
         )
         Column {
             Text(stringResource(R.string.autofill_sheet_title), style = MaterialTheme.typography.titleMedium)
-            Text(subtitle, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(
+                subtitle,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
         }
     }
 }

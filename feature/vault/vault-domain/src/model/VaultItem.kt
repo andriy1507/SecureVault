@@ -3,7 +3,10 @@ package dev.spaceapps.secvault.feature.vault.domain.model
 enum class ItemType { Login, Card, Note }
 
 /** A previous password of a login, kept when the password is changed. */
-data class PasswordHistoryEntry(val password: String, val changedAt: Long) {
+data class PasswordHistoryEntry(
+    val password: String,
+    val changedAt: Long,
+) {
     override fun toString() = "PasswordHistoryEntry(changedAt=$changedAt)"
 }
 
@@ -60,22 +63,23 @@ data class VaultItemSummary(
 /** Digits of a card number shown when masked. */
 const val CARD_VISIBLE_DIGITS = 4
 
-fun VaultItem.toSummary() = VaultItemSummary(
-    id = id,
-    type = type,
-    title = title,
-    subtitle = when (type) {
-        ItemType.Login -> username.ifBlank { url }
-        ItemType.Card -> cardExpiry
-        ItemType.Note -> ""
-    },
-    cardLastDigits = cardNumber.filter { it.isDigit() }.takeLast(CARD_VISIBLE_DIGITS),
-    hasTotp = totpSecret.isNotBlank(),
-    favorite = favorite,
-    createdAt = createdAt,
-    updatedAt = updatedAt,
-    trashedAt = trashedAt,
-)
+fun VaultItem.toSummary() =
+    VaultItemSummary(
+        id = id,
+        type = type,
+        title = title,
+        subtitle = when (type) {
+            ItemType.Login -> username.ifBlank { url }
+            ItemType.Card -> cardExpiry
+            ItemType.Note -> ""
+        },
+        cardLastDigits = cardNumber.filter { it.isDigit() }.takeLast(CARD_VISIBLE_DIGITS),
+        hasTotp = totpSecret.isNotBlank(),
+        favorite = favorite,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        trashedAt = trashedAt,
+    )
 
 /** What the user typed in the editor. */
 data class ItemDraft(
@@ -96,11 +100,22 @@ data class ItemDraft(
     override fun toString() = "ItemDraft(type=$type)" // no secrets in logs
 }
 
-fun VaultItem.toDraft() = ItemDraft(
-    type = type, title = title, username = username, password = password, url = url, notes = notes,
-    favorite = favorite, uris = uris, totpSecret = totpSecret, cardholderName = cardholderName,
-    cardNumber = cardNumber, cardExpiry = cardExpiry, cardCvv = cardCvv,
-)
+fun VaultItem.toDraft() =
+    ItemDraft(
+        type = type,
+        title = title,
+        username = username,
+        password = password,
+        url = url,
+        notes = notes,
+        favorite = favorite,
+        uris = uris,
+        totpSecret = totpSecret,
+        cardholderName = cardholderName,
+        cardNumber = cardNumber,
+        cardExpiry = cardExpiry,
+        cardCvv = cardCvv,
+    )
 
 /** List filters (chips on the vault screen). Codes: items with a 2FA secret, shown with live codes. */
 enum class ItemFilter { All, Logins, Cards, Notes, Codes }
@@ -108,6 +123,10 @@ enum class ItemFilter { All, Logins, Cards, Notes, Codes }
 enum class ItemSort { Name, DateAdded, LastModified }
 
 /** A one-time code and how long it stays valid. */
-data class TotpCode(val code: String, val periodSeconds: Int, val secondsRemaining: Int) {
+data class TotpCode(
+    val code: String,
+    val periodSeconds: Int,
+    val secondsRemaining: Int,
+) {
     override fun toString() = "TotpCode(period=$periodSeconds)"
 }

@@ -32,7 +32,10 @@ import dev.spaceapps.secvault.core.ui.theme.Dimens
 
 /** Rounded container that groups list rows ("Autofill & sync", "Security"…). */
 @Composable
-fun ListGroup(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
+fun ListGroup(
+    modifier: Modifier = Modifier,
+    content: @Composable ColumnScope.() -> Unit,
+) {
     Surface(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(Dimens.radiusLarge),
@@ -171,10 +174,16 @@ fun ItemAvatar(
     size: androidx.compose.ui.unit.Dp = Dimens.avatar,
     large: Boolean = false,
 ) {
-    Surface(modifier = modifier.size(size), shape = CircleShape, color = colors.container, contentColor = colors.content) {
+    Surface(
+        modifier = modifier.size(size),
+        shape = CircleShape,
+        color = colors.container,
+        contentColor = colors.content,
+    ) {
         Box(contentAlignment = Alignment.Center) {
             when {
                 icon != null -> Icon(icon, contentDescription = null)
+
                 letter != null -> Text(
                     letter,
                     style = if (large) MaterialTheme.typography.titleLarge else MaterialTheme.typography.titleMedium,
@@ -185,9 +194,15 @@ fun ItemAvatar(
 }
 
 /** Picks a stable avatar color for a title, so an item keeps its color between launches. */
-fun avatarColorFor(key: String, palette: List<ColorPair>): ColorPair =
-    palette[(key.lowercase().hashCode() and Int.MAX_VALUE) % palette.size]
+fun avatarColorFor(
+    key: String,
+    palette: List<ColorPair>,
+): ColorPair = palette[(key.lowercase().hashCode() and Int.MAX_VALUE) % palette.size]
 
 /** First letter of a title, uppercase, or null when it has none. */
 fun avatarLetter(title: String): String? =
-    title.trim().firstOrNull { it.isLetterOrDigit() }?.uppercaseChar()?.toString()
+    title
+        .trim()
+        .firstOrNull { it.isLetterOrDigit() }
+        ?.uppercaseChar()
+        ?.toString()

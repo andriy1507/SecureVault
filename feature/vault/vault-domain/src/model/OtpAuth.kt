@@ -1,7 +1,11 @@
 package dev.spaceapps.secvault.feature.vault.domain.model
 
 /** What a 2FA QR code tells us: who issued it, for which account, and the secret (kept as the full URI). */
-data class OtpAuthInfo(val issuer: String, val account: String, val secret: String) {
+data class OtpAuthInfo(
+    val issuer: String,
+    val account: String,
+    val secret: String,
+) {
     override fun toString() = "OtpAuthInfo(issuer=$issuer)" // never log the secret
 }
 
@@ -26,9 +30,15 @@ object OtpAuthUri {
         val afterScheme = uri.substring(SCHEME.length)
         if (!afterScheme.startsWith(TOTP_TYPE, ignoreCase = true)) return null
         val label = decode(afterScheme.substring(TOTP_TYPE.length).substringBefore('?'))
-        val params = afterScheme.substringAfter('?', "").split('&')
-            .mapNotNull { part -> part.split('=', limit = 2).takeIf { it.size == 2 }?.let { it[0].lowercase() to decode(it[1]) } }
-            .toMap()
+        val params = afterScheme
+            .substringAfter('?', "")
+            .split('&')
+            .mapNotNull { part ->
+                part.split('=', limit = 2).takeIf { it.size == 2 }?.let {
+                    it[0].lowercase() to
+                        decode(it[1])
+                }
+            }.toMap()
         if (params[PARAM_SECRET].isNullOrBlank()) return null
         val labelIssuer = label.substringBefore(ISSUER_SEPARATOR, "").trim()
         val account = label.substringAfter(ISSUER_SEPARATOR).trim()

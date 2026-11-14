@@ -40,7 +40,10 @@ class CreatedPasskey(
 )
 
 /** A passkey offered at sign-in, with the login it belongs to. */
-data class PasskeyMatch(val item: VaultItem, val passkey: Passkey)
+data class PasskeyMatch(
+    val item: VaultItem,
+    val passkey: Passkey,
+)
 
 /** What goes back to the website after sign-in. */
 class PasskeyAssertion(
@@ -89,7 +92,9 @@ class CreatePasskeyUseCase(
         val item = if (login != null) {
             login.copy(
                 username = login.username.ifBlank { request.userName },
-                passkeys = login.passkeys.filterNot { it.rpId == request.rpId && it.userHandle == userHandle } + passkey,
+                passkeys = login.passkeys.filterNot {
+                    it.rpId == request.rpId && it.userHandle == userHandle
+                } + passkey,
                 updatedAt = now,
             )
         } else {
@@ -125,10 +130,16 @@ class CreatePasskeyUseCase(
 }
 
 /** Passkeys usable on [rpId]; when the site lists [allowedCredentialIds], only those. */
-class FindPasskeysUseCase(private val repository: VaultItemRepository) {
-    suspend operator fun invoke(rpId: String, allowedCredentialIds: List<ByteArray> = emptyList()): List<PasskeyMatch> {
+class FindPasskeysUseCase(
+    private val repository: VaultItemRepository,
+) {
+    suspend operator fun invoke(
+        rpId: String,
+        allowedCredentialIds: List<ByteArray> = emptyList(),
+    ): List<PasskeyMatch> {
         val allowed = allowedCredentialIds.map(Base64Url::encode).toSet()
-        return repository.getAll()
+        return repository
+            .getAll()
             .flatMap { item -> item.passkeys.map { PasskeyMatch(item, it) } }
             .filter { it.passkey.rpId == rpId && (allowed.isEmpty() || it.passkey.credentialId in allowed) }
             .sortedByDescending { it.passkey.createdAt }
@@ -147,8 +158,11 @@ class AssertPasskeyUseCase(
         rpId: String,
         clientDataHash: ByteArray,
     ): PasskeyAssertion? {
-        val passkey = repository.get(itemId)?.takeIf { !it.isTrashed }
-            ?.passkeys?.firstOrNull { it.credentialId == credentialId && it.rpId == rpId } ?: return null
+        val passkey = repository
+            .get(itemId)
+            ?.takeIf { !it.isTrashed }
+            ?.passkeys
+            ?.firstOrNull { it.credentialId == credentialId && it.rpId == rpId } ?: return null
         val authenticatorData = WebAuthn.authenticatorData(
             rpIdHash = crypto.sha256(passkey.rpId.encodeToByteArray()),
             flags = WebAuthn.STANDARD_FLAGS,
@@ -164,9 +178,14 @@ class AssertPasskeyUseCase(
 }
 
 /** Removes one passkey from a login (the site keeps the public key, so it may still list it). */
-class DeletePasskeyUseCase(private val repository: VaultItemRepository) {
+class DeletePasskeyUseCase(
+    private val repository: VaultItemRepository,
+) {
     @OptIn(ExperimentalTime::class)
-    suspend operator fun invoke(itemId: String, credentialId: String) {
+    suspend operator fun invoke(
+        itemId: String,
+        credentialId: String,
+    ) {
         val item = repository.get(itemId) ?: return
         repository.save(
             item.copy(
@@ -177,5 +196,4 @@ class DeletePasskeyUseCase(private val repository: VaultItemRepository) {
     }
 }
 
-private fun VaultItem.matchesRp(rpId: String): Boolean =
-    (uris + url).any { it.isNotBlank() && matchesRpId(it, rpId) }
+private fun VaultItem.matchesRp(rpId: String): Boolean = (uris + url).any { it.isNotBlank() && matchesRpId(it, rpId) }

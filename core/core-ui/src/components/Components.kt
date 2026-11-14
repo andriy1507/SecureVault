@@ -38,7 +38,10 @@ val LocalSnackbarHostState = staticCompositionLocalOf<SnackbarHostState> { error
 
 /** Collects one-off MVI effects while the screen is in composition. */
 @Composable
-fun <E> CollectEffects(effects: Flow<E>, onEffect: suspend (E) -> Unit) {
+fun <E> CollectEffects(
+    effects: Flow<E>,
+    onEffect: suspend (E) -> Unit,
+) {
     LaunchedEffect(effects) { effects.collect { onEffect(it) } }
 }
 
@@ -50,7 +53,11 @@ fun FullScreenProgress(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ErrorText(message: String?, modifier: Modifier = Modifier, textAlign: TextAlign? = null) {
+fun ErrorText(
+    message: String?,
+    modifier: Modifier = Modifier,
+    textAlign: TextAlign? = null,
+) {
     if (message != null) {
         Text(
             message,
@@ -150,12 +157,20 @@ fun OutlinedIconTextButton(
 }
 
 @Composable
-fun AppTextButton(text: String, onClick: () -> Unit, modifier: Modifier = Modifier, color: Color = Color.Unspecified) {
+fun AppTextButton(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    color: Color = Color.Unspecified,
+) {
     TextButton(onClick = onClick, modifier = modifier) { Text(text, color = color) }
 }
 
 @Composable
-private fun ButtonContent(text: String, icon: ImageVector?) {
+private fun ButtonContent(
+    text: String,
+    icon: ImageVector?,
+) {
     if (icon != null) {
         Icon(icon, contentDescription = null, modifier = Modifier.size(Dimens.dp18))
         Box(Modifier.size(Dimens.dp8))
@@ -165,7 +180,10 @@ private fun ButtonContent(text: String, icon: ImageVector?) {
 
 /** Padded column for the buttons at the bottom of a screen. */
 @Composable
-fun BottomActions(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
+fun BottomActions(
+    modifier: Modifier = Modifier,
+    content: @Composable ColumnScope.() -> Unit,
+) {
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -230,7 +248,10 @@ fun HeroMessage(
 
 /** Full-size box that centers [HeroMessage]-like content vertically. */
 @Composable
-fun CenteredContent(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
+fun CenteredContent(
+    modifier: Modifier = Modifier,
+    content: @Composable ColumnScope.() -> Unit,
+) {
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -241,7 +262,11 @@ fun CenteredContent(modifier: Modifier = Modifier, content: @Composable ColumnSc
 
 /** Small primary-colored section title above a list group ("Favorites", "Security"). */
 @Composable
-fun SectionHeader(text: String, modifier: Modifier = Modifier, color: Color = MaterialTheme.colorScheme.primary) {
+fun SectionHeader(
+    text: String,
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.primary,
+) {
     Text(
         text,
         modifier = modifier.padding(start = Dimens.dp4, end = Dimens.dp4, top = Dimens.dp8),
@@ -281,12 +306,17 @@ fun AppLogo(
 ) {
     Surface(
         modifier = modifier.size(containerSize),
-        shape = androidx.compose.foundation.shape.RoundedCornerShape(cornerRadius),
+        shape = androidx.compose.foundation.shape
+            .RoundedCornerShape(cornerRadius),
         color = MaterialTheme.colorScheme.primaryContainer,
         contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
     ) {
         Box(contentAlignment = Alignment.Center) {
-            Icon(androidx.compose.material.icons.Icons.Filled.Shield, contentDescription = null, modifier = Modifier.size(iconSize))
+            Icon(
+                androidx.compose.material.icons.Icons.Filled.Shield,
+                contentDescription = null,
+                modifier = Modifier.size(iconSize),
+            )
         }
     }
 }

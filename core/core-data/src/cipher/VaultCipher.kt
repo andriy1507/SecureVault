@@ -15,13 +15,24 @@ class EncryptedRecord(
  * Throws VaultError.Locked when the vault is locked.
  */
 interface VaultCipher {
-    suspend fun encrypt(itemId: String, plaintext: ByteArray): EncryptedRecord
-    suspend fun decrypt(itemId: String, record: EncryptedRecord): ByteArray
+    suspend fun encrypt(
+        itemId: String,
+        plaintext: ByteArray,
+    ): EncryptedRecord
+
+    suspend fun decrypt(
+        itemId: String,
+        record: EncryptedRecord,
+    ): ByteArray
 }
 
-internal class VaultCipherImpl(private val session: VaultSession) : VaultCipher {
-
-    override suspend fun encrypt(itemId: String, plaintext: ByteArray): EncryptedRecord {
+internal class VaultCipherImpl(
+    private val session: VaultSession,
+) : VaultCipher {
+    override suspend fun encrypt(
+        itemId: String,
+        plaintext: ByteArray,
+    ): EncryptedRecord {
         val vaultKey = session.vaultKeyCopy()
         try {
             // Fresh item key on every save: old ciphertexts (e.g. on a server later) stay independent.
@@ -36,7 +47,10 @@ internal class VaultCipherImpl(private val session: VaultSession) : VaultCipher 
         }
     }
 
-    override suspend fun decrypt(itemId: String, record: EncryptedRecord): ByteArray {
+    override suspend fun decrypt(
+        itemId: String,
+        record: EncryptedRecord,
+    ): ByteArray {
         val vaultKey = session.vaultKeyCopy()
         try {
             val itemKey = KeyHierarchy.unwrapItemKey(vaultKey, record.wrappedItemKey, itemId)

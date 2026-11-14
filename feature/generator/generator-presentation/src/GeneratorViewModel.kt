@@ -27,7 +27,6 @@ class GeneratorViewModel(
     private val addToHistory: AddToGeneratorHistoryUseCase,
     private val clearHistory: ClearGeneratorHistoryUseCase,
 ) : MviViewModel<Intent, State, Effect>(State()) {
-
     private var generateJob: Job? = null
 
     init {
@@ -41,34 +40,59 @@ class GeneratorViewModel(
                 setState { copy(mode = intent.mode) }
                 regenerate()
             }
+
             is Intent.PasswordOptionsChanged -> {
                 setState { copy(password = intent.options) }
                 regenerate()
             }
+
             is Intent.PassphraseOptionsChanged -> {
                 setState { copy(passphrase = intent.options) }
                 regenerate()
             }
+
             is Intent.SeparatorChosen -> {
-                setState { copy(passphrase = passphrase.copy(separator = intent.separator), showSeparatorDialog = false) }
+                setState {
+                    copy(
+                        passphrase = passphrase.copy(separator = intent.separator),
+                        showSeparatorDialog = false,
+                    )
+                }
                 regenerate()
             }
+
             is Intent.UsernameTypeChanged -> {
                 setState { copy(usernameType = intent.type) }
                 regenerate()
             }
-            Intent.Regenerate -> regenerate()
-            Intent.Copy -> currentState.value.takeIf { it.isNotEmpty() }?.let { value ->
-                addToHistory(value, currentState.mode)
-                sendEffect(Effect.Copy(value, currentState.mode))
+
+            Intent.Regenerate -> {
+                regenerate()
             }
-            is Intent.CopyHistory -> currentState.history.getOrNull(intent.index)?.let { sendEffect(Effect.Copy(it.value, it.mode)) }
-            is Intent.ShowHistory -> setState { copy(showHistory = intent.show) }
+
+            Intent.Copy -> {
+                currentState.value.takeIf { it.isNotEmpty() }?.let { value ->
+                    addToHistory(value, currentState.mode)
+                    sendEffect(Effect.Copy(value, currentState.mode))
+                }
+            }
+
+            is Intent.CopyHistory -> {
+                currentState.history.getOrNull(intent.index)?.let { sendEffect(Effect.Copy(it.value, it.mode)) }
+            }
+
+            is Intent.ShowHistory -> {
+                setState { copy(showHistory = intent.show) }
+            }
+
             Intent.ClearHistory -> {
                 clearHistory()
                 setState { copy(showHistory = false) }
             }
-            is Intent.ShowSeparatorDialog -> setState { copy(showSeparatorDialog = intent.show) }
+
+            is Intent.ShowSeparatorDialog -> {
+                setState { copy(showSeparatorDialog = intent.show) }
+            }
         }
     }
 

@@ -18,8 +18,14 @@ data class PasswordOptions(
     }
 }
 
-enum class PassphraseSeparator(val value: String) {
-    Hyphen("-"), Space(" "), Period("."), Underscore("_"), Comma(",")
+enum class PassphraseSeparator(
+    val value: String,
+) {
+    Hyphen("-"),
+    Space(" "),
+    Period("."),
+    Underscore("_"),
+    Comma(","),
 }
 
 data class PassphraseOptions(
@@ -37,10 +43,13 @@ data class PassphraseOptions(
 
 enum class UsernameType { RandomWords, RandomCharacters }
 
-data class UsernameOptions(val type: UsernameType = UsernameType.RandomWords) {
+data class UsernameOptions(
+    val type: UsernameType = UsernameType.RandomWords,
+) {
     companion object {
         const val RANDOM_CHARACTERS_LENGTH = 8
         const val WORDS = 2
+
         /** Upper bound (exclusive) of the number appended to word usernames. */
         const val NUMBER_BOUND = 100
         const val SEPARATOR = "."
@@ -50,6 +59,10 @@ data class UsernameOptions(val type: UsernameType = UsernameType.RandomWords) {
 enum class PasswordStrength { Weak, Fair, Strong, VeryStrong }
 
 /** A value made in this session (cleared when the vault locks). */
-data class GeneratedValue(val value: String, val mode: GeneratorMode, val createdAt: Long) {
+data class GeneratedValue(
+    val value: String,
+    val mode: GeneratorMode,
+    val createdAt: Long,
+) {
     override fun toString() = "GeneratedValue(mode=$mode)"
 }

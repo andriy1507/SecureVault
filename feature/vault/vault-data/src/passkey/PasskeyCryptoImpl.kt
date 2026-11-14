@@ -22,8 +22,12 @@ internal class PasskeyCryptoImpl : PasskeyCrypto {
         )
     }
 
-    override suspend fun sign(privateKey: ByteArray, data: ByteArray): ByteArray =
-        ecdsa.privateKeyDecoder(EC.Curve.P256)
+    override suspend fun sign(
+        privateKey: ByteArray,
+        data: ByteArray,
+    ): ByteArray =
+        ecdsa
+            .privateKeyDecoder(EC.Curve.P256)
             .decodeFromByteArray(EC.PrivateKey.Format.DER, privateKey)
             .signatureGenerator(SHA256, ECDSA.SignatureFormat.DER)
             .generateSignature(data)

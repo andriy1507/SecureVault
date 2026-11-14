@@ -57,6 +57,7 @@ object Dimens {
     /** List item avatar (letter or type icon). */
     val avatar = dp40
     val avatarLarge = dp56
+
     /** Small app mark in sheet headers (autofill). */
     val sheetLogoContainer = dp40
     val sheetLogoIcon = dp24

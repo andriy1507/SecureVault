@@ -8,9 +8,12 @@ import dev.spaceapps.secvault.feature.vault.domain.repository.VaultItemRepositor
 import dev.spaceapps.secvault.feature.vault.domain.usecase.SaveVaultItemUseCase
 
 /** Logins linked to the target, via "Autofill for" entries or the Website field. Needs the vault unlocked. */
-class FindAutofillMatchesUseCase(private val repository: VaultItemRepository) {
+class FindAutofillMatchesUseCase(
+    private val repository: VaultItemRepository,
+) {
     suspend operator fun invoke(target: AutofillTarget): List<VaultItem> =
-        repository.getAll()
+        repository
+            .getAll()
             .filter { it.type == ItemType.Login && it.password.isNotEmpty() }
             .filter { item -> (item.uris + item.url).any { it.isNotBlank() && UriMatcher.matches(target, it) } }
             .sortedWith(compareByDescending<VaultItem> { it.favorite }.thenByDescending { it.updatedAt })
@@ -25,12 +28,22 @@ class SaveAutofillCredentialUseCase(
     private val saveItem: SaveVaultItemUseCase,
 ) {
     sealed interface Result {
-        data class Created(val title: String) : Result
-        data class Updated(val title: String) : Result
+        data class Created(
+            val title: String,
+        ) : Result
+
+        data class Updated(
+            val title: String,
+        ) : Result
+
         data object NothingToSave : Result
     }
 
-    suspend operator fun invoke(target: AutofillTarget, username: String, password: String): Result {
+    suspend operator fun invoke(
+        target: AutofillTarget,
+        username: String,
+        password: String,
+    ): Result {
         if (password.isEmpty()) return Result.NothingToSave
         val existing = findMatches(target).firstOrNull { it.username.equals(username.trim(), ignoreCase = true) }
         if (existing != null && existing.password == password) return Result.NothingToSave

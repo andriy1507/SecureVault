@@ -7,7 +7,10 @@ import dev.spaceapps.secvault.feature.vault.domain.model.VaultItem
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal class PasswordHistoryDto(val password: String, val changedAt: Long)
+internal class PasswordHistoryDto(
+    val password: String,
+    val changedAt: Long,
+)
 
 @Serializable
 internal class PasskeyDto(
@@ -56,54 +59,103 @@ internal class VaultItemPayloadDto(
     val trashedAt: Long? = null,
 )
 
-internal fun VaultItemPayloadDto.toDomain(id: String) = VaultItem(
-    id = id,
-    type = runCatching { ItemType.valueOf(type) }.getOrDefault(ItemType.Note),
-    title = title,
-    username = username,
-    password = password,
-    url = url,
-    notes = notes,
-    favorite = favorite,
-    createdAt = createdAt,
-    updatedAt = updatedAt,
-    uris = uris,
-    totpSecret = totpSecret,
-    cardholderName = cardholderName,
-    cardNumber = cardNumber,
-    cardExpiry = cardExpiry,
-    cardCvv = cardCvv,
-    passwordHistory = passwordHistory.map { PasswordHistoryEntry(it.password, it.changedAt) },
-    passkeys = passkeys.map { it.toDomain() },
-    trashedAt = trashedAt,
-)
+internal fun VaultItemPayloadDto.toDomain(id: String) =
+    VaultItem(
+        id = id,
+        type = runCatching { ItemType.valueOf(type) }.getOrDefault(ItemType.Note),
+        title = title,
+        username = username,
+        password = password,
+        url = url,
+        notes = notes,
+        favorite = favorite,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        uris = uris,
+        totpSecret = totpSecret,
+        cardholderName = cardholderName,
+        cardNumber = cardNumber,
+        cardExpiry = cardExpiry,
+        cardCvv = cardCvv,
+        passwordHistory = passwordHistory.map { PasswordHistoryEntry(it.password, it.changedAt) },
+        passkeys = passkeys.map { it.toDomain() },
+        trashedAt = trashedAt,
+    )
 
 private const val LIST_SEPARATOR = "\n"
 
 private fun fieldsOf(
-    type: String, title: String, username: String, password: String, url: String, notes: String, favorite: Boolean,
-    uris: List<String>, totpSecret: String, cardholderName: String, cardNumber: String, cardExpiry: String,
-    cardCvv: String, trashedAt: Long?, passkeyIds: List<String>,
+    type: String,
+    title: String,
+    username: String,
+    password: String,
+    url: String,
+    notes: String,
+    favorite: Boolean,
+    uris: List<String>,
+    totpSecret: String,
+    cardholderName: String,
+    cardNumber: String,
+    cardExpiry: String,
+    cardCvv: String,
+    trashedAt: Long?,
+    passkeyIds: List<String>,
 ) = mapOf(
-    "type" to type, "title" to title, "username" to username, "password" to password, "url" to url,
-    "notes" to notes, "favorite" to favorite.toString(), "uris" to uris.joinToString(LIST_SEPARATOR),
-    "totpSecret" to totpSecret, "cardholderName" to cardholderName, "cardNumber" to cardNumber,
-    "cardExpiry" to cardExpiry, "cardCvv" to cardCvv, "trashedAt" to trashedAt?.toString().orEmpty(),
+    "type" to type,
+    "title" to title,
+    "username" to username,
+    "password" to password,
+    "url" to url,
+    "notes" to notes,
+    "favorite" to favorite.toString(),
+    "uris" to uris.joinToString(LIST_SEPARATOR),
+    "totpSecret" to totpSecret,
+    "cardholderName" to cardholderName,
+    "cardNumber" to cardNumber,
+    "cardExpiry" to cardExpiry,
+    "cardCvv" to cardCvv,
+    "trashedAt" to trashedAt?.toString().orEmpty(),
     "passkeys" to passkeyIds.sorted().joinToString(LIST_SEPARATOR),
 )
 
 internal fun VaultItem.toPayload(previous: VaultItemPayloadDto?): VaultItemPayloadDto {
     val fields = fieldsOf(
-        type.name, title, username, password, url, notes, favorite, uris, totpSecret,
-        cardholderName, cardNumber, cardExpiry, cardCvv, trashedAt, passkeys.map { it.credentialId },
+        type.name,
+        title,
+        username,
+        password,
+        url,
+        notes,
+        favorite,
+        uris,
+        totpSecret,
+        cardholderName,
+        cardNumber,
+        cardExpiry,
+        cardCvv,
+        trashedAt,
+        passkeys.map { it.credentialId },
     )
     val clocks = if (previous == null) {
         fields.mapValues { updatedAt }
     } else {
         val oldFields = with(previous) {
             fieldsOf(
-                type, title, username, password, url, notes, favorite, uris, totpSecret,
-                cardholderName, cardNumber, cardExpiry, cardCvv, trashedAt, passkeys.map { it.credentialId },
+                type,
+                title,
+                username,
+                password,
+                url,
+                notes,
+                favorite,
+                uris,
+                totpSecret,
+                cardholderName,
+                cardNumber,
+                cardExpiry,
+                cardCvv,
+                trashedAt,
+                passkeys.map { it.credentialId },
             )
         }
         fields.mapValues { (name, value) ->
@@ -111,10 +163,22 @@ internal fun VaultItem.toPayload(previous: VaultItemPayloadDto?): VaultItemPaylo
         }
     }
     return VaultItemPayloadDto(
-        type = type.name, title = title, username = username, password = password, url = url,
-        notes = notes, favorite = favorite, createdAt = createdAt, updatedAt = updatedAt, fieldClocks = clocks,
-        uris = uris, totpSecret = totpSecret, cardholderName = cardholderName, cardNumber = cardNumber,
-        cardExpiry = cardExpiry, cardCvv = cardCvv,
+        type = type.name,
+        title = title,
+        username = username,
+        password = password,
+        url = url,
+        notes = notes,
+        favorite = favorite,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        fieldClocks = clocks,
+        uris = uris,
+        totpSecret = totpSecret,
+        cardholderName = cardholderName,
+        cardNumber = cardNumber,
+        cardExpiry = cardExpiry,
+        cardCvv = cardCvv,
         passwordHistory = passwordHistory.map { PasswordHistoryDto(it.password, it.changedAt) },
         passkeys = passkeys.map { it.toDto() },
         trashedAt = trashedAt,

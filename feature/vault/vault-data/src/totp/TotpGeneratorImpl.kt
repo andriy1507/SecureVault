@@ -10,14 +10,22 @@ import dev.spaceapps.secvault.feature.vault.domain.repository.TotpGenerator
  * otpauth://totp/...?secret=...&digits=...&period=...&algorithm=... URI.
  */
 internal class TotpGeneratorImpl : TotpGenerator {
+    private data class Params(
+        val key: ByteArray,
+        val digits: Int,
+        val period: Int,
+        val algorithm: HmacAlgorithm,
+    )
 
-    private data class Params(val key: ByteArray, val digits: Int, val period: Int, val algorithm: HmacAlgorithm)
-
-    override suspend fun generate(secret: String, nowEpochMillis: Long): TotpCode? {
+    override suspend fun generate(
+        secret: String,
+        nowEpochMillis: Long,
+    ): TotpCode? {
         val params = parse(secret) ?: return null
         val seconds = nowEpochMillis / MILLIS_PER_SECOND
         val counter = seconds / params.period
-        val message = ByteArray(COUNTER_BYTES) { i -> (counter ushr (BITS_PER_BYTE * (COUNTER_BYTES - 1 - i))).toByte() }
+        val message =
+            ByteArray(COUNTER_BYTES) { i -> (counter ushr (BITS_PER_BYTE * (COUNTER_BYTES - 1 - i))).toByte() }
         val mac = Hmac.compute(params.algorithm, params.key, message)
         params.key.fill(0)
         val offset = mac.last().toInt() and LOW_NIBBLE
@@ -36,9 +44,12 @@ internal class TotpGeneratorImpl : TotpGenerator {
             val key = Base32Decoder.decode(trimmed) ?: return null
             return Params(key, DEFAULT_DIGITS, DEFAULT_PERIOD, HmacAlgorithm.Sha1)
         }
-        val query = trimmed.substringAfter('?', "").split('&')
-            .mapNotNull { part -> part.split('=', limit = 2).takeIf { it.size == 2 }?.let { it[0].lowercase() to it[1] } }
-            .toMap()
+        val query = trimmed
+            .substringAfter('?', "")
+            .split('&')
+            .mapNotNull { part ->
+                part.split('=', limit = 2).takeIf { it.size == 2 }?.let { it[0].lowercase() to it[1] }
+            }.toMap()
         val key = query["secret"]?.let(Base32Decoder::decode) ?: return null
         val digits = query["digits"]?.toIntOrNull()?.takeIf { it in VALID_DIGITS } ?: DEFAULT_DIGITS
         val period = query["period"]?.toIntOrNull()?.takeIf { it > 0 } ?: DEFAULT_PERIOD

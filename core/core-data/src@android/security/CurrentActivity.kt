@@ -4,10 +4,10 @@ import android.app.Activity
 import android.app.Application
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
+import java.lang.ref.WeakReference
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.mapNotNull
-import java.lang.ref.WeakReference
 
 /**
  * BiometricPrompt needs a resumed FragmentActivity. Tracks the one in the foreground through
@@ -39,8 +39,17 @@ object CurrentActivity : Application.ActivityLifecycleCallbacks {
         if (resumed.value?.get() === activity) resumed.value = null
     }
 
-    override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) = Unit
+    override fun onActivityCreated(
+        activity: Activity,
+        savedInstanceState: Bundle?,
+    ) = Unit
+
     override fun onActivityStarted(activity: Activity) = Unit
+
     override fun onActivityStopped(activity: Activity) = Unit
-    override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) = Unit
+
+    override fun onActivitySaveInstanceState(
+        activity: Activity,
+        outState: Bundle,
+    ) = Unit
 }

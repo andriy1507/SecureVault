@@ -1,0 +1,139 @@
+build:
+  maxIssues: 0
+
+config:
+  validation: true
+  warningsAsErrors: false
+
+complexity:
+  LongMethod:
+    threshold: 60
+    ignoreAnnotated: ['Composable', 'Preview']
+  LongParameterList:
+    functionThreshold: 8
+    constructorThreshold: 10
+    ignoreDefaultParameters: true
+    ignoreAnnotated: ['Composable']
+  CyclomaticComplexMethod:
+    threshold: 15
+    ignoreSimpleWhenEntries: true
+  TooManyFunctions:
+    thresholdInFiles: 20
+    thresholdInClasses: 20
+    thresholdInInterfaces: 20
+    ignorePrivate: true
+    ignoreOverridden: true
+  LargeClass:
+    threshold: 600
+  NestedBlockDepth:
+    threshold: 4
+
+naming:
+  FunctionNaming:
+    ignoreAnnotated: ['Composable', 'Test']
+  TopLevelPropertyNaming:
+    constantPattern: '[A-Z][A-Za-z0-9_]*'
+  MatchingDeclarationName:
+    active: false
+  PackageNaming:
+    packagePattern: '[a-z]+(\.[a-z][A-Za-z0-9]*)*'
+
+style:
+  MagicNumber:
+    ignorePropertyDeclaration: true
+    ignoreCompanionObjectPropertyDeclaration: true
+    ignoreAnnotated: ['Composable', 'Preview']
+    excludes: ['**/test/**', '**/commonTest/**', '**/androidTest/**', '**/iosTest/**', '**/*Theme*.kt', '**/*Color*.kt']
+  MaxLineLength:
+    maxLineLength: 120
+    excludeCommentStatements: true
+  ReturnCount:
+    max: 3
+    excludeGuardClauses: true
+  UnusedPrivateMember:
+    ignoreAnnotated: ['Preview']
+  ForbiddenComment:
+    comments:
+      - value: 'FIXME:'
+        reason: 'Resolve FIXME before merging.'
+      - value: 'STOPSHIP:'
+        reason: 'Must not be merged.'
+  WildcardImport:
+    active: true
+  UseDataClass:
+    active: true
+  ForbiddenMethodCall:
+    active: true
+    methods:
+      - value: 'kotlin.io.println'
+        reason: 'Use a logger (e.g. Kermit/Napier).'
+      - value: 'kotlin.io.print'
+        reason: 'Use a logger.'
+
+coroutines:
+  active: true
+  GlobalCoroutineUsage:
+    active: true
+  InjectDispatcher:
+    active: true
+  RedundantSuspendModifier:
+    active: true
+  SleepInsteadOfDelay:
+    active: true
+  SuspendFunWithFlowReturnType:
+    active: true
+  SuspendFunSwallowedCancellation:
+    active: true
+
+exceptions:
+  TooGenericExceptionCaught:
+    active: true
+    exceptionNames: ['Exception', 'Throwable', 'RuntimeException']
+    allowedExceptionNameRegex: '_|(ignore|expected).*'
+  SwallowedException:
+    active: true
+  PrintStackTrace:
+    active: true
+
+potential-bugs:
+  UnsafeCallOnNullableType:
+    active: true
+  LateinitUsage:
+    active: true
+    ignoreOnClassesPattern: '.*Test'
+  ImplicitDefaultLocale:
+    active: true
+
+Compose:
+  ModifierMissing:
+    active: true
+  ModifierComposed:
+    active: true
+  ModifierNaming:
+    active: true
+  MultipleEmitters:
+    active: true
+  ModifierNotUsedAtRoot:
+    active: true
+  ModifierReused:
+    active: true
+  ModifierWithoutDefault:
+    active: true
+  ComposableParamOrder:
+    active: true
+  MutableParams:
+    active: true
+  RememberMissing:
+    active: true
+  ViewModelForwarding:
+    active: true
+  ViewModelInjection:
+    active: true
+  UnstableCollections:
+    active: true
+  CompositionLocalAllowlist:
+    active: true
+  PreviewPublic:
+    active: true
+  LambdaParameterInRestartableEffect:
+    active: true

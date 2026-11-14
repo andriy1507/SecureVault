@@ -53,7 +53,10 @@ internal object PasskeySession {
     private val handler = Handler(Looper.getMainLooper())
     private var timeout: Runnable? = null
 
-    fun verified(wasLocked: Boolean, keys: VaultKeysRepository) {
+    fun verified(
+        wasLocked: Boolean,
+        keys: VaultKeysRepository,
+    ) {
         verifiedAt = SystemClock.elapsedRealtime()
         if (wasLocked) {
             lockWhenDone = true
@@ -80,7 +83,9 @@ internal object PasskeySession {
 
 /** Base for the passkey screens: no UI of their own, only the phone's unlock prompt over the other app. */
 @RequiresApi(34)
-abstract class PasskeyActivity : FragmentActivity(), KoinComponent {
+abstract class PasskeyActivity :
+    FragmentActivity(),
+    KoinComponent {
     protected val keys: VaultKeysRepository by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -123,7 +128,9 @@ class PasskeyCreateActivity : PasskeyActivity() {
         lifecycleScope.launch {
             try {
                 val caller = PasskeyJson.caller(this@PasskeyCreateActivity, request.callingAppInfo)
-                PasskeyLog.step("create: caller=${caller.packageName} browser=${caller.isBrowser} origin=${caller.origin}")
+                PasskeyLog.step(
+                    "create: caller=${caller.packageName} browser=${caller.isBrowser} origin=${caller.origin}",
+                )
                 val options = PasskeyJson.parseCreation(calling.requestJson)
                 PasskeyLog.step("create: rpId=${options.request.rpId}")
                 PasskeyJson.checkOrigin(caller, options.request.rpId)
@@ -173,7 +180,9 @@ class PasskeySignInActivity : PasskeyActivity() {
         val option = request?.credentialOptions?.filterIsInstance<GetPublicKeyCredentialOption>()?.firstOrNull()
         val itemId = intent.getStringExtra(PasskeyIntents.EXTRA_ITEM_ID)
         val credentialId = intent.getStringExtra(PasskeyIntents.EXTRA_CREDENTIAL_ID)
-        PasskeyLog.step("sign in: request=${request != null} option=${option != null} entry=${itemId != null && credentialId != null}")
+        PasskeyLog.step(
+            "sign in: request=${request != null} option=${option != null} entry=${itemId != null && credentialId != null}",
+        )
         if (request == null || option == null || itemId == null || credentialId == null) {
             return fail(GetCredentialUnknownException())
         }
@@ -188,10 +197,19 @@ class PasskeySignInActivity : PasskeyActivity() {
                 // A browser computes clientDataJSON itself and passes only its hash.
                 val clientDataHash = option.clientDataHash ?: PasskeyJson.sha256(clientData)
                 val assertion = assertPasskey(itemId, credentialId, options.rpId, clientDataHash)
-                    ?: return@launch fail(NoCredentialException()).also { PasskeyLog.step("sign in: passkey not found") }
+                    ?: return@launch fail(
+                        NoCredentialException(),
+                    ).also { PasskeyLog.step("sign in: passkey not found") }
                 PasskeyLog.step("sign in: signed for rpId=${options.rpId}")
                 val credential = PublicKeyCredential(PasskeyJson.assertionResponse(assertion, clientData))
-                finishWith(Intent().also { PendingIntentHandler.setGetCredentialResponse(it, GetCredentialResponse(credential)) })
+                finishWith(
+                    Intent().also {
+                        PendingIntentHandler.setGetCredentialResponse(
+                            it,
+                            GetCredentialResponse(credential),
+                        )
+                    },
+                )
             } catch (e: CancellationException) {
                 throw e
             } catch (e: VaultError.AuthCancelled) {

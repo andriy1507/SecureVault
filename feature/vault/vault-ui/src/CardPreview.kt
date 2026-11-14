@@ -37,7 +37,11 @@ private const val GROUP_SEPARATOR = " "
 /** "4417123456781234" → "4417 •••• •••• 1234": first and last group visible. */
 internal fun maskCardNumber(number: String): String {
     val digits = number.filter { it.isDigit() }
-    if (digits.length <= CARD_GROUP + CARD_VISIBLE_DIGITS) return digits.chunked(CARD_GROUP).joinToString(GROUP_SEPARATOR)
+    if (digits.length <=
+        CARD_GROUP + CARD_VISIBLE_DIGITS
+    ) {
+        return digits.chunked(CARD_GROUP).joinToString(GROUP_SEPARATOR)
+    }
     val groups = digits.chunked(CARD_GROUP)
     return (listOf(groups.first()) + List(groups.size - 2) { MASK_GROUP } + digits.takeLast(CARD_VISIBLE_DIGITS))
         .joinToString(GROUP_SEPARATOR)
@@ -48,7 +52,13 @@ internal fun groupCardNumber(number: String): String =
 
 /** Gradient payment card from the "New card" design. */
 @Composable
-internal fun CardPreview(name: String, number: String, holder: String, expiry: String, modifier: Modifier = Modifier) {
+internal fun CardPreview(
+    name: String,
+    number: String,
+    holder: String,
+    expiry: String,
+    modifier: Modifier = Modifier,
+) {
     val colors = AppTheme.extendedColors
     Box(
         modifier
@@ -63,7 +73,13 @@ internal fun CardPreview(name: String, number: String, holder: String, expiry: S
                 Icon(Icons.Outlined.Contactless, contentDescription = null, tint = colors.onCard)
             }
             Text(
-                if (number.isBlank()) stringResource(Res.string.card_preview_number_placeholder) else maskCardNumber(number),
+                if (number.isBlank()) {
+                    stringResource(
+                        Res.string.card_preview_number_placeholder,
+                    )
+                } else {
+                    maskCardNumber(number)
+                },
                 style = MaterialTheme.typography.titleLarge,
                 fontFamily = FontFamily.Monospace,
                 color = colors.onCard,

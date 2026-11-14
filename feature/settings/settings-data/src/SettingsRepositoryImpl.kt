@@ -17,8 +17,9 @@ import kotlinx.coroutines.flow.map
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
-internal class SettingsRepositoryImpl(private val dataStore: DataStore<Preferences>) : SettingsRepository {
-
+internal class SettingsRepositoryImpl(
+    private val dataStore: DataStore<Preferences>,
+) : SettingsRepository {
     override val settings: Flow<AppSettings> = dataStore.data.map { it.toSettings() }
 
     override suspend fun update(transform: (AppSettings) -> AppSettings) {
@@ -47,8 +48,10 @@ internal class SettingsRepositoryImpl(private val dataStore: DataStore<Preferenc
         )
     }
 
-    private inline fun <reified E : Enum<E>> enumOr(name: String?, default: E): E =
-        name?.let { n -> enumValues<E>().firstOrNull { it.name == n } } ?: default
+    private inline fun <reified E : Enum<E>> enumOr(
+        name: String?,
+        default: E,
+    ): E = name?.let { n -> enumValues<E>().firstOrNull { it.name == n } } ?: default
 
     private companion object {
         val THEME = stringPreferencesKey("theme")

@@ -20,6 +20,7 @@ internal object CardNumberTransformation : VisualTransformation {
         val breaks = groups.runningFold(0) { acc, group -> acc + group.length }.drop(1).dropLast(1)
         val mapping = object : OffsetMapping {
             override fun originalToTransformed(offset: Int) = offset + breaks.count { it < offset }
+
             override fun transformedToOriginal(offset: Int): Int {
                 // Separator k sits at transformed position breaks[k] + k.
                 val separatorsBefore = breaks.withIndex().count { (k, b) -> b + k < offset }
@@ -42,6 +43,7 @@ internal object ExpiryTransformation : VisualTransformation {
         val formatted = PaymentCard.formatExpiry(digits)
         val mapping = object : OffsetMapping {
             override fun originalToTransformed(offset: Int) = if (offset < MONTH_DIGITS) offset else offset + 1
+
             override fun transformedToOriginal(offset: Int) =
                 (if (offset <= MONTH_DIGITS) offset else offset - 1).coerceIn(0, digits.length)
         }

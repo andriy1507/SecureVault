@@ -9,7 +9,6 @@ import dev.spaceapps.secvault.feature.vault.presentation.common.CopyField
 import dev.spaceapps.secvault.feature.vault.presentation.common.CopyRequest
 
 object ItemDetailContract {
-
     data class State(
         val isLoading: Boolean = true,
         val notFound: Boolean = false,
@@ -26,29 +25,67 @@ object ItemDetailContract {
     }
 
     sealed interface Intent : UiIntent {
-        data class Load(val id: String) : Intent
+        data class Load(
+            val id: String,
+        ) : Intent
+
         data object TogglePasswordVisible : Intent
+
         data object ToggleCvvVisible : Intent
-        data class Copy(val field: CopyField) : Intent
-        data class CopyHistory(val index: Int) : Intent
+
+        data class Copy(
+            val field: CopyField,
+        ) : Intent
+
+        data class CopyHistory(
+            val index: Int,
+        ) : Intent
+
         data object ToggleFavorite : Intent
+
         data object Edit : Intent
+
         data object OpenWebsite : Intent
-        data class ShowHistory(val show: Boolean) : Intent
+
+        data class ShowHistory(
+            val show: Boolean,
+        ) : Intent
+
         data object Trash : Intent
+
         data object ConfirmTrash : Intent
+
         data object DismissTrash : Intent
-        data class DeletePasskey(val credentialId: String) : Intent
+
+        data class DeletePasskey(
+            val credentialId: String,
+        ) : Intent
+
         data object ConfirmDeletePasskey : Intent
+
         data object DismissDeletePasskey : Intent
+
         data object Back : Intent
     }
 
     sealed interface Effect : UiEffect {
-        data class Copy(val request: CopyRequest) : Effect
-        data class Edit(val id: String) : Effect
-        data class OpenUrl(val url: String) : Effect
-        data class Trashed(val id: String, val title: String) : Effect
+        data class Copy(
+            val request: CopyRequest,
+        ) : Effect
+
+        data class Edit(
+            val id: String,
+        ) : Effect
+
+        data class OpenUrl(
+            val url: String,
+        ) : Effect
+
+        data class Trashed(
+            val id: String,
+            val title: String,
+        ) : Effect
+
         data object Close : Effect
     }
 }

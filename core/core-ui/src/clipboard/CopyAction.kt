@@ -19,7 +19,11 @@ val LocalClipboardClearSeconds = compositionLocalOf<Int?> { DEFAULT_CLIPBOARD_CL
 
 /** Copies text and shows "Password copied · clears in 30 s" on the app snackbar host. */
 fun interface CopyAction {
-    fun copy(text: String, sensitive: Boolean, label: String)
+    fun copy(
+        text: String,
+        sensitive: Boolean,
+        label: String,
+    )
 }
 
 @Composable
@@ -35,7 +39,13 @@ fun rememberCopyAction(): CopyAction {
             scope.launch {
                 snackbar.currentSnackbarData?.dismiss()
                 snackbar.showSnackbar(
-                    if (seconds != null) getString(Res.string.copied_clears_in, label, seconds) else getString(Res.string.copied, label),
+                    if (seconds !=
+                        null
+                    ) {
+                        getString(Res.string.copied_clears_in, label, seconds)
+                    } else {
+                        getString(Res.string.copied, label)
+                    },
                 )
             }
         }

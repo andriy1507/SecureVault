@@ -20,10 +20,16 @@ actual fun rememberSecureClipboard(): SecureClipboard {
     return remember(context) { AndroidSecureClipboard(context) }
 }
 
-private class AndroidSecureClipboard(context: Context) : SecureClipboard {
+private class AndroidSecureClipboard(
+    context: Context,
+) : SecureClipboard {
     private val manager = context.getSystemService(ClipboardManager::class.java)
 
-    override fun copy(text: String, sensitive: Boolean, clearAfterSeconds: Int?) {
+    override fun copy(
+        text: String,
+        sensitive: Boolean,
+        clearAfterSeconds: Int?,
+    ) {
         val clip = ClipData.newPlainText(CLIP_LABEL, text)
         if (sensitive) {
             // ClipDescription.EXTRA_IS_SENSITIVE (API 33); the plain key also works on Android 12L builds that honor it
@@ -46,14 +52,23 @@ private object ClearScheduler {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private var job: Job? = null
 
-    fun schedule(manager: ClipboardManager, copied: String, clearAfterSeconds: Int?) {
+    fun schedule(
+        manager: ClipboardManager,
+        copied: String,
+        clearAfterSeconds: Int?,
+    ) {
         job?.cancel()
         if (clearAfterSeconds == null) return
         job = scope.launch {
             delay(clearAfterSeconds * MILLIS_PER_SECOND)
             // If we can read it and the user copied something else since, leave it alone.
             // In background Android hides the clipboard from us (null): clear anyway.
-            val current = runCatching { manager.primaryClip?.getItemAt(0)?.text?.toString() }.getOrNull()
+            val current = runCatching {
+                manager.primaryClip
+                    ?.getItemAt(0)
+                    ?.text
+                    ?.toString()
+            }.getOrNull()
             if (current == null || current == copied) manager.clearPrimaryClip()
         }
     }

@@ -19,4 +19,8 @@ expect fun rememberCameraPermission(): CameraPermission
  * Decoding happens on the device; frames never leave it.
  */
 @Composable
-expect fun QrScannerView(torchOn: Boolean, onResult: (String) -> Unit, modifier: Modifier = Modifier)
+expect fun QrScannerView(
+    torchOn: Boolean,
+    onResult: (String) -> Unit,
+    modifier: Modifier = Modifier,
+)

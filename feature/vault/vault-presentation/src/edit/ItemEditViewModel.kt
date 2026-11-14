@@ -7,8 +7,8 @@ import dev.spaceapps.secvault.feature.generator.domain.usecase.EstimateStrengthU
 import dev.spaceapps.secvault.feature.generator.domain.usecase.GeneratePasswordUseCase
 import dev.spaceapps.secvault.feature.vault.domain.model.CardValidation
 import dev.spaceapps.secvault.feature.vault.domain.model.ItemDraft
-import dev.spaceapps.secvault.feature.vault.domain.model.PaymentCard
 import dev.spaceapps.secvault.feature.vault.domain.model.ItemType
+import dev.spaceapps.secvault.feature.vault.domain.model.PaymentCard
 import dev.spaceapps.secvault.feature.vault.domain.model.VaultItem
 import dev.spaceapps.secvault.feature.vault.domain.model.toDraft
 import dev.spaceapps.secvault.feature.vault.domain.usecase.GetVaultItemUseCase
@@ -19,10 +19,10 @@ import dev.spaceapps.secvault.feature.vault.presentation.edit.ItemEditContract.E
 import dev.spaceapps.secvault.feature.vault.presentation.edit.ItemEditContract.Field
 import dev.spaceapps.secvault.feature.vault.presentation.edit.ItemEditContract.Intent
 import dev.spaceapps.secvault.feature.vault.presentation.edit.ItemEditContract.State
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.launch
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.launch
 
 class ItemEditViewModel(
     private val getItem: GetVaultItemUseCase,
@@ -31,22 +31,43 @@ class ItemEditViewModel(
     private val generatePassword: GeneratePasswordUseCase,
     private val estimateStrength: EstimateStrengthUseCase,
 ) : MviViewModel<Intent, State, Effect>(State()) {
-
     private var loaded = false
     private var existing: VaultItem? = null
 
     override fun handleIntent(intent: Intent) {
         when (intent) {
             is Intent.Load -> load(intent)
+
             is Intent.TypeChanged -> if (currentState.isNew) setState { copy(draft = draft.copy(type = intent.type)) }
+
             is Intent.FieldChanged -> setState { withDraft(draft.with(intent.field, intent.value)).copy(error = null) }
+
             Intent.AddUri -> setState { copy(extraUris = extraUris + "") }
+
             is Intent.UriChanged -> setState {
-                copy(extraUris = extraUris.toMutableList().also { if (intent.index in it.indices) it[intent.index] = intent.value })
+                copy(
+                    extraUris = extraUris.toMutableList().also {
+                        if (intent.index in
+                            it.indices
+                        ) {
+                            it[intent.index] = intent.value
+                        }
+                    },
+                )
             }
+
             is Intent.RemoveUri -> setState {
-                copy(extraUris = extraUris.toMutableList().also { if (intent.index in it.indices) it.removeAt(intent.index) })
+                copy(
+                    extraUris = extraUris.toMutableList().also {
+                        if (intent.index in
+                            it.indices
+                        ) {
+                            it.removeAt(intent.index)
+                        }
+                    },
+                )
             }
+
             is Intent.TotpScanned -> setState {
                 copy(
                     draft = draft.copy(
@@ -56,16 +77,25 @@ class ItemEditViewModel(
                     ),
                 )
             }
+
             Intent.ToggleFavorite -> setState { copy(draft = draft.copy(favorite = !draft.favorite)) }
+
             Intent.TogglePasswordVisible -> setState { copy(passwordVisible = !passwordVisible) }
+
             Intent.ToggleCvvVisible -> setState { copy(cvvVisible = !cvvVisible) }
+
             Intent.GeneratePassword -> setState {
                 withDraft(draft.copy(password = generatePassword(PasswordOptions()))).copy(passwordVisible = true)
             }
+
             Intent.Save -> save()
+
             Intent.Trash -> setState { copy(confirmTrash = true) }
+
             Intent.DismissTrash -> setState { copy(confirmTrash = false) }
+
             Intent.ConfirmTrash -> trash()
+
             Intent.Close -> sendEffect(Effect.Close)
         }
     }
@@ -74,7 +104,13 @@ class ItemEditViewModel(
         if (loaded) return
         loaded = true
         if (intent.id == null) {
-            val draft = ItemDraft(type = intent.type, title = intent.title, username = intent.username, totpSecret = intent.totpSecret)
+            val draft =
+                ItemDraft(
+                    type = intent.type,
+                    title = intent.title,
+                    username = intent.username,
+                    totpSecret = intent.totpSecret,
+                )
             setState { State(isLoading = false, draft = draft) }
             return
         }
@@ -93,23 +129,28 @@ class ItemEditViewModel(
                 )
             }
             setState {
-                State(isLoading = false, itemId = item.id, draft = draft.copy(uris = emptyList()), extraUris = item.uris)
-                    .withDraft(draft.copy(uris = emptyList()))
+                State(
+                    isLoading = false,
+                    itemId = item.id,
+                    draft = draft.copy(uris = emptyList()),
+                    extraUris = item.uris,
+                ).withDraft(draft.copy(uris = emptyList()))
             }
         }
     }
 
     @OptIn(ExperimentalTime::class)
-    private fun State.withDraft(draft: ItemDraft) = copy(
-        draft = draft,
-        strength = draft.password.takeIf { it.isNotEmpty() }?.let { estimateStrength(it) },
-        cardValidation = if (draft.type == ItemType.Card) {
-            val today = PaymentCard.yearMonthOf(Clock.System.now().toEpochMilliseconds())
-            PaymentCard.validate(draft.cardNumber, draft.cardExpiry, draft.cardCvv, today)
-        } else {
-            CardValidation()
-        },
-    )
+    private fun State.withDraft(draft: ItemDraft) =
+        copy(
+            draft = draft,
+            strength = draft.password.takeIf { it.isNotEmpty() }?.let { estimateStrength(it) },
+            cardValidation = if (draft.type == ItemType.Card) {
+                val today = PaymentCard.yearMonthOf(Clock.System.now().toEpochMilliseconds())
+                PaymentCard.validate(draft.cardNumber, draft.cardExpiry, draft.cardCvv, today)
+            } else {
+                CardValidation()
+            },
+        )
 
     private fun save() {
         val state = currentState
@@ -119,10 +160,17 @@ class ItemEditViewModel(
             try {
                 val draft = state.draft.copy(uris = state.extraUris)
                 when (val result = saveItem(existing, draft)) {
-                    SaveVaultItemUseCase.Result.TitleRequired -> setState { copy(isSaving = false, error = Error.TitleRequired) }
+                    SaveVaultItemUseCase.Result.TitleRequired -> setState {
+                        copy(
+                            isSaving = false,
+                            error = Error.TitleRequired,
+                        )
+                    }
+
                     is SaveVaultItemUseCase.Result.InvalidCard -> setState {
                         copy(isSaving = false, cardValidation = result.validation, showCardErrors = true)
                     }
+
                     is SaveVaultItemUseCase.Result.Saved -> sendEffect(Effect.Saved(result.id, state.isNew))
                 }
             } catch (e: CancellationException) {
@@ -148,19 +196,30 @@ class ItemEditViewModel(
         super.onCleared()
     }
 
-    private fun ItemDraft.with(field: Field, value: String) = when (field) {
+    private fun ItemDraft.with(
+        field: Field,
+        value: String,
+    ) = when (field) {
         Field.Title -> copy(title = value)
+
         Field.Username -> copy(username = value)
+
         Field.Password -> copy(password = value)
+
         Field.Url -> copy(url = value)
+
         Field.Notes -> copy(notes = value)
+
         Field.Totp -> copy(totpSecret = value)
+
         Field.CardholderName -> copy(cardholderName = value)
+
         Field.CardNumber -> PaymentCard.sanitizeNumber(value).let { number ->
             copy(cardNumber = number, cardCvv = PaymentCard.sanitizeCvv(cardCvv, number))
         }
+
         Field.CardExpiry -> copy(cardExpiry = PaymentCard.sanitizeExpiry(value))
+
         Field.CardCvv -> copy(cardCvv = PaymentCard.sanitizeCvv(value, cardNumber))
     }
 }
-
