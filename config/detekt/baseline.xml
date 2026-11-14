@@ -1,0 +1,273 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>ComplexCondition:PasskeyActivities.kt$PasskeySignInActivity$request == null || option == null || itemId == null || credentialId == null</ID>
+    <ID>CyclomaticComplexMethod:ItemDetailScreen.kt$@OptIn(ExperimentalMaterial3Api::class) @Composable internal fun ItemDetailContent( state: State, onIntent: (Intent) -&gt; Unit, )</ID>
+    <ID>CyclomaticComplexMethod:ItemDetailViewModel.kt$ItemDetailViewModel$override fun handleIntent(intent: Intent)</ID>
+    <ID>CyclomaticComplexMethod:VaultListViewModel.kt$VaultListViewModel$override fun handleIntent(intent: Intent)</ID>
+    <ID>CyclomaticComplexMethod:VaultUseCases.kt$SaveVaultItemUseCase$@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class) suspend operator fun invoke( existing: VaultItem?, draft: ItemDraft, ): Result</ID>
+    <ID>InstanceOfCheckForException:PasskeyActivities.kt$PasskeyUnlockActivity$e !is VaultError.AuthCancelled</ID>
+    <ID>InvalidPackageDeclaration:AndroidDataModule.kt$package dev.spaceapps.secvault.core.data.di</ID>
+    <ID>InvalidPackageDeclaration:AndroidHardwareKeyGuard.kt$package dev.spaceapps.secvault.core.data.security</ID>
+    <ID>InvalidPackageDeclaration:App.kt$package dev.spaceapps.secvault</ID>
+    <ID>InvalidPackageDeclaration:AppDatabase.kt$package dev.spaceapps.secvault.core.data.database</ID>
+    <ID>InvalidPackageDeclaration:AppModule.kt$package dev.spaceapps.secvault.di</ID>
+    <ID>InvalidPackageDeclaration:AutofillAuthActivity.kt$package dev.spaceapps.secvault.autofill</ID>
+    <ID>InvalidPackageDeclaration:AutofillMatcherTest.kt$package dev.spaceapps.secvault.feature.autofill.domain</ID>
+    <ID>InvalidPackageDeclaration:AutofillSaveActivity.kt$package dev.spaceapps.secvault.autofill</ID>
+    <ID>InvalidPackageDeclaration:AutofillSettings.android.kt$package dev.spaceapps.secvault</ID>
+    <ID>InvalidPackageDeclaration:AutofillSettings.ios.kt$package dev.spaceapps.secvault</ID>
+    <ID>InvalidPackageDeclaration:AutofillSettings.kt$package dev.spaceapps.secvault</ID>
+    <ID>InvalidPackageDeclaration:AutofillSheet.kt$package dev.spaceapps.secvault.autofill</ID>
+    <ID>InvalidPackageDeclaration:AutofillTarget.kt$package dev.spaceapps.secvault.feature.autofill.domain</ID>
+    <ID>InvalidPackageDeclaration:AutofillUseCases.kt$package dev.spaceapps.secvault.feature.autofill.domain</ID>
+    <ID>InvalidPackageDeclaration:Bars.kt$package dev.spaceapps.secvault.core.ui.components</ID>
+    <ID>InvalidPackageDeclaration:Base32.kt$package dev.spaceapps.secvault.core.data.crypto</ID>
+    <ID>InvalidPackageDeclaration:Bip39.kt$package dev.spaceapps.secvault.core.data.crypto</ID>
+    <ID>InvalidPackageDeclaration:CardInputTransformations.kt$package dev.spaceapps.secvault.feature.vault.ui</ID>
+    <ID>InvalidPackageDeclaration:CardPreview.kt$package dev.spaceapps.secvault.feature.vault.ui</ID>
+    <ID>InvalidPackageDeclaration:Color.kt$package dev.spaceapps.secvault.core.ui.theme</ID>
+    <ID>InvalidPackageDeclaration:Components.kt$package dev.spaceapps.secvault.core.ui.components</ID>
+    <ID>InvalidPackageDeclaration:ComposeResourceWordlist.kt$package dev.spaceapps.secvault</ID>
+    <ID>InvalidPackageDeclaration:CopyAction.kt$package dev.spaceapps.secvault.core.ui.clipboard</ID>
+    <ID>InvalidPackageDeclaration:CopyField.kt$package dev.spaceapps.secvault.feature.vault.presentation.common</ID>
+    <ID>InvalidPackageDeclaration:CoreDataModule.kt$package dev.spaceapps.secvault.core.data.di</ID>
+    <ID>InvalidPackageDeclaration:Crypto.kt$package dev.spaceapps.secvault.core.data.crypto</ID>
+    <ID>InvalidPackageDeclaration:CryptoSecureRandom.kt$package dev.spaceapps.secvault.core.data.security</ID>
+    <ID>InvalidPackageDeclaration:CryptoTest.kt$package dev.spaceapps.secvault.core.data.crypto</ID>
+    <ID>InvalidPackageDeclaration:CurrentActivity.kt$package dev.spaceapps.secvault.core.data.security</ID>
+    <ID>InvalidPackageDeclaration:Datasets.kt$package dev.spaceapps.secvault.autofill</ID>
+    <ID>InvalidPackageDeclaration:Dialogs.kt$package dev.spaceapps.secvault.core.ui.components</ID>
+    <ID>InvalidPackageDeclaration:Dimens.kt$package dev.spaceapps.secvault.core.ui.theme</ID>
+    <ID>InvalidPackageDeclaration:DynamicColor.android.kt$package dev.spaceapps.secvault.core.ui.theme</ID>
+    <ID>InvalidPackageDeclaration:DynamicColor.ios.kt$package dev.spaceapps.secvault.core.ui.theme</ID>
+    <ID>InvalidPackageDeclaration:Fields.kt$package dev.spaceapps.secvault.core.ui.components</ID>
+    <ID>InvalidPackageDeclaration:GeneratePasswordUseCaseTest.kt$package dev.spaceapps.secvault.feature.generator.domain.usecase</ID>
+    <ID>InvalidPackageDeclaration:GeneratorContract.kt$package dev.spaceapps.secvault.feature.generator.presentation</ID>
+    <ID>InvalidPackageDeclaration:GeneratorModels.kt$package dev.spaceapps.secvault.feature.generator.domain.model</ID>
+    <ID>InvalidPackageDeclaration:GeneratorRepositories.kt$package dev.spaceapps.secvault.feature.generator.domain.repository</ID>
+    <ID>InvalidPackageDeclaration:GeneratorScreen.kt$package dev.spaceapps.secvault.feature.generator.ui</ID>
+    <ID>InvalidPackageDeclaration:GeneratorUseCases.kt$package dev.spaceapps.secvault.feature.generator.domain.usecase</ID>
+    <ID>InvalidPackageDeclaration:GeneratorViewModel.kt$package dev.spaceapps.secvault.feature.generator.presentation</ID>
+    <ID>InvalidPackageDeclaration:HardwareKeyGuard.kt$package dev.spaceapps.secvault.core.data.security</ID>
+    <ID>InvalidPackageDeclaration:InMemoryGeneratorHistory.kt$package dev.spaceapps.secvault.feature.generator.data</ID>
+    <ID>InvalidPackageDeclaration:IosDataModule.kt$package dev.spaceapps.secvault.core.data.di</ID>
+    <ID>InvalidPackageDeclaration:ItemDetailContract.kt$package dev.spaceapps.secvault.feature.vault.presentation.detail</ID>
+    <ID>InvalidPackageDeclaration:ItemDetailScreen.kt$package dev.spaceapps.secvault.feature.vault.ui</ID>
+    <ID>InvalidPackageDeclaration:ItemDetailViewModel.kt$package dev.spaceapps.secvault.feature.vault.presentation.detail</ID>
+    <ID>InvalidPackageDeclaration:ItemEditContract.kt$package dev.spaceapps.secvault.feature.vault.presentation.edit</ID>
+    <ID>InvalidPackageDeclaration:ItemEditScreen.kt$package dev.spaceapps.secvault.feature.vault.ui</ID>
+    <ID>InvalidPackageDeclaration:ItemEditViewModel.kt$package dev.spaceapps.secvault.feature.vault.presentation.edit</ID>
+    <ID>InvalidPackageDeclaration:KeyBundle.kt$package dev.spaceapps.secvault.core.data.crypto</ID>
+    <ID>InvalidPackageDeclaration:KeyHierarchy.kt$package dev.spaceapps.secvault.core.data.crypto</ID>
+    <ID>InvalidPackageDeclaration:KoinInit.kt$package dev.spaceapps.secvault</ID>
+    <ID>InvalidPackageDeclaration:LegalScreen.kt$package dev.spaceapps.secvault.feature.legal.ui</ID>
+    <ID>InvalidPackageDeclaration:Lists.kt$package dev.spaceapps.secvault.core.ui.components</ID>
+    <ID>InvalidPackageDeclaration:LockContract.kt$package dev.spaceapps.secvault.feature.lock.presentation</ID>
+    <ID>InvalidPackageDeclaration:LockScreen.kt$package dev.spaceapps.secvault.feature.lock.ui</ID>
+    <ID>InvalidPackageDeclaration:LockState.kt$package dev.spaceapps.secvault.core.domain.model</ID>
+    <ID>InvalidPackageDeclaration:LockUseCases.kt$package dev.spaceapps.secvault.feature.lock.domain.usecase</ID>
+    <ID>InvalidPackageDeclaration:LockViewModel.kt$package dev.spaceapps.secvault.feature.lock.presentation</ID>
+    <ID>InvalidPackageDeclaration:MainActivity.kt$package dev.spaceapps.secvault</ID>
+    <ID>InvalidPackageDeclaration:MviContract.kt$package dev.spaceapps.secvault.core.presentation.mvi</ID>
+    <ID>InvalidPackageDeclaration:MviViewModel.kt$package dev.spaceapps.secvault.core.presentation.mvi</ID>
+    <ID>InvalidPackageDeclaration:OnboardingContract.kt$package dev.spaceapps.secvault.feature.onboarding.presentation</ID>
+    <ID>InvalidPackageDeclaration:OnboardingScreen.kt$package dev.spaceapps.secvault.feature.onboarding.ui</ID>
+    <ID>InvalidPackageDeclaration:OnboardingUseCases.kt$package dev.spaceapps.secvault.feature.onboarding.domain.usecase</ID>
+    <ID>InvalidPackageDeclaration:OnboardingViewModel.kt$package dev.spaceapps.secvault.feature.onboarding.presentation</ID>
+    <ID>InvalidPackageDeclaration:OtpAuth.kt$package dev.spaceapps.secvault.feature.vault.domain.model</ID>
+    <ID>InvalidPackageDeclaration:OtpAuthUriTest.kt$package dev.spaceapps.secvault.feature.vault.domain.model</ID>
+    <ID>InvalidPackageDeclaration:Passkey.kt$package dev.spaceapps.secvault.feature.vault.domain.model</ID>
+    <ID>InvalidPackageDeclaration:PasskeyActivities.kt$package dev.spaceapps.secvault.passkey</ID>
+    <ID>InvalidPackageDeclaration:PasskeyCrypto.kt$package dev.spaceapps.secvault.feature.vault.domain.repository</ID>
+    <ID>InvalidPackageDeclaration:PasskeyCryptoImpl.kt$package dev.spaceapps.secvault.feature.vault.data.passkey</ID>
+    <ID>InvalidPackageDeclaration:PasskeyFlowTest.kt$package dev.spaceapps.secvault.feature.vault.data.passkey</ID>
+    <ID>InvalidPackageDeclaration:PasskeyJson.kt$package dev.spaceapps.secvault.passkey</ID>
+    <ID>InvalidPackageDeclaration:PasskeyLog.kt$package dev.spaceapps.secvault.passkey</ID>
+    <ID>InvalidPackageDeclaration:PasskeyUseCases.kt$package dev.spaceapps.secvault.feature.vault.domain.passkey</ID>
+    <ID>InvalidPackageDeclaration:PaymentCard.kt$package dev.spaceapps.secvault.feature.vault.domain.model</ID>
+    <ID>InvalidPackageDeclaration:PaymentCardTest.kt$package dev.spaceapps.secvault.feature.vault.domain.model</ID>
+    <ID>InvalidPackageDeclaration:Platform.android.kt$package dev.spaceapps.secvault</ID>
+    <ID>InvalidPackageDeclaration:Platform.ios.kt$package dev.spaceapps.secvault</ID>
+    <ID>InvalidPackageDeclaration:Platform.kt$package dev.spaceapps.secvault</ID>
+    <ID>InvalidPackageDeclaration:PlatformBackHandler.android.kt$package dev.spaceapps.secvault.core.ui.navigation</ID>
+    <ID>InvalidPackageDeclaration:PlatformBackHandler.ios.kt$package dev.spaceapps.secvault.core.ui.navigation</ID>
+    <ID>InvalidPackageDeclaration:PlatformBackHandler.kt$package dev.spaceapps.secvault.core.ui.navigation</ID>
+    <ID>InvalidPackageDeclaration:QrScanner.android.kt$package dev.spaceapps.secvault.core.ui.scanner</ID>
+    <ID>InvalidPackageDeclaration:QrScanner.ios.kt$package dev.spaceapps.secvault.core.ui.scanner</ID>
+    <ID>InvalidPackageDeclaration:QrScanner.kt$package dev.spaceapps.secvault.core.ui.scanner</ID>
+    <ID>InvalidPackageDeclaration:ScanCodeContract.kt$package dev.spaceapps.secvault.feature.vault.presentation.scan</ID>
+    <ID>InvalidPackageDeclaration:ScanCodeScreen.kt$package dev.spaceapps.secvault.feature.vault.ui</ID>
+    <ID>InvalidPackageDeclaration:ScanCodeViewModel.kt$package dev.spaceapps.secvault.feature.vault.presentation.scan</ID>
+    <ID>InvalidPackageDeclaration:SecureClipboard.android.kt$package dev.spaceapps.secvault.core.ui.clipboard</ID>
+    <ID>InvalidPackageDeclaration:SecureClipboard.ios.kt$package dev.spaceapps.secvault.core.ui.clipboard</ID>
+    <ID>InvalidPackageDeclaration:SecureClipboard.kt$package dev.spaceapps.secvault.core.ui.clipboard</ID>
+    <ID>InvalidPackageDeclaration:SecureRandomSource.kt$package dev.spaceapps.secvault.core.domain.security</ID>
+    <ID>InvalidPackageDeclaration:SecureVaultApplication.kt$package dev.spaceapps.secvault</ID>
+    <ID>InvalidPackageDeclaration:SecureVaultAutofillService.kt$package dev.spaceapps.secvault.autofill</ID>
+    <ID>InvalidPackageDeclaration:SecureVaultTheme.kt$package dev.spaceapps.secvault.core.ui.theme</ID>
+    <ID>InvalidPackageDeclaration:SecuritySettings.android.kt$package dev.spaceapps.secvault</ID>
+    <ID>InvalidPackageDeclaration:SecuritySettings.ios.kt$package dev.spaceapps.secvault</ID>
+    <ID>InvalidPackageDeclaration:SecuritySettings.kt$package dev.spaceapps.secvault</ID>
+    <ID>InvalidPackageDeclaration:Settings.kt$package dev.spaceapps.secvault.feature.settings.domain</ID>
+    <ID>InvalidPackageDeclaration:SettingsContract.kt$package dev.spaceapps.secvault.feature.settings.presentation</ID>
+    <ID>InvalidPackageDeclaration:SettingsRepositoryImpl.kt$package dev.spaceapps.secvault.feature.settings.data</ID>
+    <ID>InvalidPackageDeclaration:SettingsScreen.kt$package dev.spaceapps.secvault.feature.settings.ui</ID>
+    <ID>InvalidPackageDeclaration:SettingsViewModel.kt$package dev.spaceapps.secvault.feature.settings.presentation</ID>
+    <ID>InvalidPackageDeclaration:StructureParser.kt$package dev.spaceapps.secvault.autofill</ID>
+    <ID>InvalidPackageDeclaration:TextFiles.android.kt$package dev.spaceapps.secvault.core.ui.files</ID>
+    <ID>InvalidPackageDeclaration:TextFiles.ios.kt$package dev.spaceapps.secvault.core.ui.files</ID>
+    <ID>InvalidPackageDeclaration:TextFiles.kt$package dev.spaceapps.secvault.core.ui.files</ID>
+    <ID>InvalidPackageDeclaration:TotpGenerator.kt$package dev.spaceapps.secvault.feature.vault.domain.repository</ID>
+    <ID>InvalidPackageDeclaration:TotpGeneratorImpl.kt$package dev.spaceapps.secvault.feature.vault.data.totp</ID>
+    <ID>InvalidPackageDeclaration:TotpGeneratorTest.kt$package dev.spaceapps.secvault.feature.vault.data.totp</ID>
+    <ID>InvalidPackageDeclaration:TrashContract.kt$package dev.spaceapps.secvault.feature.vault.presentation.trash</ID>
+    <ID>InvalidPackageDeclaration:TrashScreen.kt$package dev.spaceapps.secvault.feature.vault.ui</ID>
+    <ID>InvalidPackageDeclaration:TrashViewModel.kt$package dev.spaceapps.secvault.feature.vault.presentation.trash</ID>
+    <ID>InvalidPackageDeclaration:VaultCipher.kt$package dev.spaceapps.secvault.core.data.cipher</ID>
+    <ID>InvalidPackageDeclaration:VaultCipherTest.kt$package dev.spaceapps.secvault.core.data.cipher</ID>
+    <ID>InvalidPackageDeclaration:VaultCreation.kt$package dev.spaceapps.secvault.core.domain.model</ID>
+    <ID>InvalidPackageDeclaration:VaultCredentialProviderService.kt$package dev.spaceapps.secvault.passkey</ID>
+    <ID>InvalidPackageDeclaration:VaultDataModule.kt$package dev.spaceapps.secvault.feature.vault.data.di</ID>
+    <ID>InvalidPackageDeclaration:VaultError.kt$package dev.spaceapps.secvault.core.domain.error</ID>
+    <ID>InvalidPackageDeclaration:VaultItem.kt$package dev.spaceapps.secvault.feature.vault.domain.model</ID>
+    <ID>InvalidPackageDeclaration:VaultItemPayloadDto.kt$package dev.spaceapps.secvault.feature.vault.data.dto</ID>
+    <ID>InvalidPackageDeclaration:VaultItemRepository.kt$package dev.spaceapps.secvault.feature.vault.domain.repository</ID>
+    <ID>InvalidPackageDeclaration:VaultItemRepositoryImpl.kt$package dev.spaceapps.secvault.feature.vault.data.repository</ID>
+    <ID>InvalidPackageDeclaration:VaultItemRepositoryTest.kt$package dev.spaceapps.secvault.feature.vault.data.repository</ID>
+    <ID>InvalidPackageDeclaration:VaultKeyStorage.kt$package dev.spaceapps.secvault.core.data.storage</ID>
+    <ID>InvalidPackageDeclaration:VaultKeysRepository.kt$package dev.spaceapps.secvault.core.domain.repository</ID>
+    <ID>InvalidPackageDeclaration:VaultKeysRepositoryImpl.kt$package dev.spaceapps.secvault.core.data.repository</ID>
+    <ID>InvalidPackageDeclaration:VaultListContract.kt$package dev.spaceapps.secvault.feature.vault.presentation.list</ID>
+    <ID>InvalidPackageDeclaration:VaultListScreen.kt$package dev.spaceapps.secvault.feature.vault.ui</ID>
+    <ID>InvalidPackageDeclaration:VaultListViewModel.kt$package dev.spaceapps.secvault.feature.vault.presentation.list</ID>
+    <ID>InvalidPackageDeclaration:VaultNavHost.kt$package dev.spaceapps.secvault.navigation</ID>
+    <ID>InvalidPackageDeclaration:VaultSession.kt$package dev.spaceapps.secvault.core.data.session</ID>
+    <ID>InvalidPackageDeclaration:VaultUiCommon.kt$package dev.spaceapps.secvault.feature.vault.ui</ID>
+    <ID>InvalidPackageDeclaration:VaultUseCases.kt$package dev.spaceapps.secvault.feature.vault.domain.usecase</ID>
+    <ID>InvalidPackageDeclaration:WebAuthn.kt$package dev.spaceapps.secvault.feature.vault.domain.passkey</ID>
+    <ID>InvalidPackageDeclaration:WebAuthnTest.kt$package dev.spaceapps.secvault.feature.vault.domain.passkey</ID>
+    <ID>LongMethod:ItemDetailViewModel.kt$ItemDetailViewModel$override fun handleIntent(intent: Intent)</ID>
+    <ID>LongMethod:PasskeyUseCases.kt$CreatePasskeyUseCase$@OptIn(ExperimentalTime::class, ExperimentalUuidApi::class) suspend operator fun invoke(request: PasskeyCreationRequest): CreatedPasskey</ID>
+    <ID>LongMethod:VaultItemPayloadDto.kt$internal fun VaultItem.toPayload(previous: VaultItemPayloadDto?): VaultItemPayloadDto</ID>
+    <ID>LongMethod:VaultListViewModel.kt$VaultListViewModel$override fun handleIntent(intent: Intent)</ID>
+    <ID>LongParameterList:VaultItemPayloadDto.kt$( type: String, title: String, username: String, password: String, url: String, notes: String, favorite: Boolean, uris: List&lt;String&gt;, totpSecret: String, cardholderName: String, cardNumber: String, cardExpiry: String, cardCvv: String, trashedAt: Long?, passkeyIds: List&lt;String&gt;, )</ID>
+    <ID>MagicNumber:AndroidHardwareKeyGuard.kt$AndroidHardwareKeyGuard$256</ID>
+    <ID>MagicNumber:Bars.kt$StrengthLevel.Strong$3</ID>
+    <ID>MagicNumber:Bars.kt$StrengthLevel.VeryStrong$4</ID>
+    <ID>MagicNumber:Base32.kt$Base32$0xFF</ID>
+    <ID>MagicNumber:Base32.kt$Base32$31</ID>
+    <ID>MagicNumber:Base32.kt$Base32$5</ID>
+    <ID>MagicNumber:Base32.kt$Base32$8</ID>
+    <ID>MagicNumber:Bip39.kt$Bip39$0xFF</ID>
+    <ID>MagicNumber:Bip39.kt$Bip39$10</ID>
+    <ID>MagicNumber:Bip39.kt$Bip39$11</ID>
+    <ID>MagicNumber:Bip39.kt$Bip39$2048</ID>
+    <ID>MagicNumber:Bip39.kt$Bip39$24</ID>
+    <ID>MagicNumber:Bip39.kt$Bip39$32</ID>
+    <ID>MagicNumber:Bip39.kt$Bip39$7</ID>
+    <ID>MagicNumber:Bip39.kt$Bip39$8</ID>
+    <ID>MagicNumber:Crypto.kt$Crypto$12</ID>
+    <ID>MagicNumber:Crypto.kt$Crypto$16</ID>
+    <ID>MagicNumber:Crypto.kt$Crypto$32</ID>
+    <ID>MagicNumber:Crypto.kt$Crypto$8</ID>
+    <ID>MagicNumber:CryptoTest.kt$CryptoTest$16</ID>
+    <ID>MagicNumber:CryptoTest.kt$CryptoTest$23</ID>
+    <ID>MagicNumber:CryptoTest.kt$CryptoTest$24</ID>
+    <ID>MagicNumber:CryptoTest.kt$CryptoTest$32</ID>
+    <ID>MagicNumber:KeyBundle.kt$Fields$0xFF</ID>
+    <ID>MagicNumber:KeyBundle.kt$Fields$0xFFFF</ID>
+    <ID>MagicNumber:KeyBundle.kt$Fields$8</ID>
+    <ID>MagicNumber:KeyBundle.kt$KeyBundle.Companion$4</ID>
+    <ID>MagicNumber:KeyBundle.kt$KeyBundle.Companion$8</ID>
+    <ID>MagicNumber:KeyBundle.kt$KeyBundle.Companion$9</ID>
+    <ID>MagicNumber:KeyBundle.kt$KeyPairSet.Companion$3</ID>
+    <ID>MagicNumber:KeyHierarchy.kt$KeyHierarchy$32</ID>
+    <ID>MagicNumber:KeyHierarchy.kt$KeyHierarchy$4</ID>
+    <ID>MagicNumber:KeyHierarchy.kt$KeyHierarchy$5</ID>
+    <ID>MagicNumber:LockScreen.kt$3</ID>
+    <ID>MagicNumber:OtpAuth.kt$OtpAuthUri$3</ID>
+    <ID>MagicNumber:PasskeyActivities.kt$PasskeyActivity$34</ID>
+    <ID>MagicNumber:PasskeyActivities.kt$PasskeyCreateActivity$34</ID>
+    <ID>MagicNumber:PasskeyActivities.kt$PasskeySignInActivity$34</ID>
+    <ID>MagicNumber:PasskeyActivities.kt$PasskeyUnlockActivity$34</ID>
+    <ID>MagicNumber:PasskeyJson.kt$PasskeyJson$34</ID>
+    <ID>MagicNumber:PaymentCard.kt$CardBrand.Amex$4</ID>
+    <ID>MagicNumber:PaymentCard.kt$CardBrand.Amex$5</ID>
+    <ID>MagicNumber:PaymentCard.kt$CardBrand.Amex$6</ID>
+    <ID>MagicNumber:PaymentCard.kt$CardBrand.Other$3</ID>
+    <ID>MagicNumber:PaymentCard.kt$CardBrand.Other$4</ID>
+    <ID>MagicNumber:PaymentCard.kt$PaymentCard$10</ID>
+    <ID>MagicNumber:PaymentCard.kt$PaymentCard$100</ID>
+    <ID>MagicNumber:PaymentCard.kt$PaymentCard$1460</ID>
+    <ID>MagicNumber:PaymentCard.kt$PaymentCard$146096</ID>
+    <ID>MagicNumber:PaymentCard.kt$PaymentCard$153</ID>
+    <ID>MagicNumber:PaymentCard.kt$PaymentCard$3</ID>
+    <ID>MagicNumber:PaymentCard.kt$PaymentCard$365</ID>
+    <ID>MagicNumber:PaymentCard.kt$PaymentCard$36524</ID>
+    <ID>MagicNumber:PaymentCard.kt$PaymentCard$4</ID>
+    <ID>MagicNumber:PaymentCard.kt$PaymentCard$400</ID>
+    <ID>MagicNumber:PaymentCard.kt$PaymentCard$5</ID>
+    <ID>MagicNumber:PaymentCard.kt$PaymentCard$9</ID>
+    <ID>MagicNumber:Settings.kt$AutoLock.FifteenMinutes$15</ID>
+    <ID>MagicNumber:Settings.kt$AutoLock.FifteenMinutes$60</ID>
+    <ID>MagicNumber:Settings.kt$AutoLock.FiveMinutes$5</ID>
+    <ID>MagicNumber:Settings.kt$AutoLock.FiveMinutes$60</ID>
+    <ID>MagicNumber:Settings.kt$AutoLock.OneMinute$60</ID>
+    <ID>MagicNumber:Settings.kt$ClipboardClear.OneMinute$60</ID>
+    <ID>MagicNumber:Settings.kt$ClipboardClear.TenSeconds$10</ID>
+    <ID>MagicNumber:Settings.kt$ClipboardClear.ThirtySeconds$30</ID>
+    <ID>MagicNumber:TotpGeneratorImpl.kt$TotpGeneratorImpl$16</ID>
+    <ID>MagicNumber:TotpGeneratorImpl.kt$TotpGeneratorImpl$24</ID>
+    <ID>MagicNumber:TotpGeneratorImpl.kt$TotpGeneratorImpl$3</ID>
+    <ID>MagicNumber:TotpGeneratorImpl.kt$TotpGeneratorImpl$8</ID>
+    <ID>MagicNumber:VaultCredentialProviderService.kt$PasskeyEntries$34</ID>
+    <ID>MagicNumber:VaultCredentialProviderService.kt$VaultCredentialProviderService$34</ID>
+    <ID>MagicNumber:WebAuthn.kt$CborWriter$4</ID>
+    <ID>MagicNumber:WebAuthn.kt$CborWriter$8</ID>
+    <ID>MaxLineLength:PasskeyActivities.kt$PasskeySignInActivity$"sign in: request=${request != null} option=${option != null} entry=${itemId != null &amp;&amp; credentialId != null}"</ID>
+    <ID>MaxLineLength:VaultCredentialProviderService.kt$VaultCredentialProviderService$"entries=${response.credentialEntries.size} unlockAction=${response.authenticationActions.isNotEmpty()}"</ID>
+    <ID>ReturnCount:OtpAuth.kt$OtpAuthUri$fun parse(text: String): OtpAuthInfo?</ID>
+    <ID>ReturnCount:TotpGeneratorImpl.kt$TotpGeneratorImpl$private fun parse(input: String): Params?</ID>
+    <ID>SwallowedException:AndroidHardwareKeyGuard.kt$AndroidHardwareKeyGuard$e: KeyPermanentlyInvalidatedException</ID>
+    <ID>SwallowedException:AndroidHardwareKeyGuard.kt$AndroidHardwareKeyGuard$e: StrongBoxUnavailableException</ID>
+    <ID>SwallowedException:AutofillAuthActivity.kt$AutofillAuthActivity$e: VaultError.AuthCancelled</ID>
+    <ID>SwallowedException:AutofillSaveActivity.kt$AutofillSaveActivity$e: VaultError.AuthCancelled</ID>
+    <ID>SwallowedException:AutofillSaveActivity.kt$AutofillSaveActivity$e: VaultError.NoVault</ID>
+    <ID>SwallowedException:LockViewModel.kt$LockViewModel$e: VaultError.AuthCancelled</ID>
+    <ID>SwallowedException:LockViewModel.kt$LockViewModel$e: VaultError.KeyInvalidated</ID>
+    <ID>SwallowedException:OnboardingViewModel.kt$OnboardingViewModel$e: VaultError.AuthCancelled</ID>
+    <ID>SwallowedException:OnboardingViewModel.kt$OnboardingViewModel$e: VaultError.DeviceNotSecure</ID>
+    <ID>SwallowedException:QrScanner.android.kt$QrDecoder$e: NotFoundException</ID>
+    <ID>SwallowedException:VaultItemRepositoryImpl.kt$VaultItemRepositoryImpl$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:AutofillAuthActivity.kt$AutofillAuthActivity$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:AutofillSaveActivity.kt$AutofillSaveActivity$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:ItemEditViewModel.kt$ItemEditViewModel$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:LockViewModel.kt$LockViewModel$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:OnboardingViewModel.kt$OnboardingViewModel$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:PasskeyActivities.kt$PasskeyCreateActivity$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:PasskeyActivities.kt$PasskeySignInActivity$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:PasskeyActivities.kt$PasskeyUnlockActivity$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:VaultCredentialProviderService.kt$VaultCredentialProviderService$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:VaultItemRepositoryImpl.kt$VaultItemRepositoryImpl$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:VaultKeysRepositoryImpl.kt$VaultKeysRepositoryImpl$e: Throwable</ID>
+    <ID>UseDataClass:AppDatabase.kt$VaultItemEntity</ID>
+    <ID>UseDataClass:KeyHierarchy.kt$NewAccount</ID>
+    <ID>UseDataClass:PasskeyCrypto.kt$PasskeyKeyPair</ID>
+    <ID>UseDataClass:PasskeyJson.kt$Caller</ID>
+    <ID>UseDataClass:PasskeyJson.kt$CreationOptions</ID>
+    <ID>UseDataClass:PasskeyJson.kt$SignInOptions</ID>
+    <ID>UseDataClass:PasskeyUseCases.kt$CreatedPasskey</ID>
+    <ID>UseDataClass:PasskeyUseCases.kt$PasskeyAssertion</ID>
+    <ID>UseDataClass:StructureParser.kt$ParsedForm</ID>
+    <ID>UseDataClass:StructureParser.kt$StructureParser$Field</ID>
+    <ID>UseDataClass:VaultCipher.kt$EncryptedRecord</ID>
+    <ID>UseDataClass:VaultCreation.kt$VaultCreation</ID>
+    <ID>UseDataClass:VaultItemPayloadDto.kt$PasskeyDto</ID>
+    <ID>UseDataClass:VaultItemPayloadDto.kt$PasswordHistoryDto</ID>
+    <ID>UseDataClass:VaultItemPayloadDto.kt$VaultItemPayloadDto</ID>
+    <ID>UseDataClass:VaultKeyStorage.kt$VaultKeyStorage$Stored</ID>
+    <ID>UseDataClass:VaultNavHost.kt$Entry</ID>
+  </CurrentIssues>
+</SmellBaseline>
