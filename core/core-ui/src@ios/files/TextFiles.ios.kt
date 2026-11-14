@@ -61,8 +61,14 @@ actual fun rememberTextFileOpener(onResult: (String?) -> Unit): TextFileOpener {
     }
 }
 
-private class PickerDelegate(private val onResult: (String?) -> Unit) : NSObject(), UIDocumentPickerDelegateProtocol {
-    override fun documentPicker(controller: UIDocumentPickerViewController, didPickDocumentsAtURLs: List<*>) {
+private class PickerDelegate(
+    private val onResult: (String?) -> Unit,
+) : NSObject(),
+    UIDocumentPickerDelegateProtocol {
+    override fun documentPicker(
+        controller: UIDocumentPickerViewController,
+        didPickDocumentsAtURLs: List<*>,
+    ) {
         val url = didPickDocumentsAtURLs.firstOrNull() as? NSURL
         onResult(url?.let(::readText))
     }
@@ -78,8 +84,12 @@ private fun readText(url: NSURL): String? {
     return NSString.create(data = data, encoding = NSUTF8StringEncoding)?.toString()
 }
 
-private fun writeTemp(name: String, content: String): NSURL? {
+private fun writeTemp(
+    name: String,
+    content: String,
+): NSURL? {
     val url = NSURL.fileURLWithPath(NSTemporaryDirectory() + name)
+
     @Suppress("CAST_NEVER_SUCCEEDS")
     val data = (content as NSString).dataUsingEncoding(NSUTF8StringEncoding) ?: return null
     return if (data.writeToURL(url, atomically = true)) url else null

@@ -6,10 +6,12 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class AutofillMatcherTest {
-
     @Test
     fun webDomainOnlyTrustedFromBrowsers() {
-        assertEquals(AutofillTarget.Website("example.com"), AutofillTarget.from("com.android.chrome", "www.example.com"))
+        assertEquals(
+            AutofillTarget.Website("example.com"),
+            AutofillTarget.from("com.android.chrome", "www.example.com"),
+        )
         // A random app claiming a bank's domain is matched by its own package instead
         assertEquals(AutofillTarget.App("com.evil.app"), AutofillTarget.from("com.evil.app", "bank.com"))
     }

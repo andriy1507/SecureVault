@@ -1,12 +1,5 @@
 package dev.spaceapps.secvault.feature.vault.ui
 
-import dev.spaceapps.secvault.feature.vault.resources.passkey_delete_text
-import dev.spaceapps.secvault.feature.vault.resources.passkey_delete_title
-import dev.spaceapps.secvault.feature.vault.resources.cd_delete_passkey
-import dev.spaceapps.secvault.feature.vault.resources.passkey_subtitle
-import dev.spaceapps.secvault.feature.vault.resources.passkeys_title
-import dev.spaceapps.secvault.core.ui.components.SectionHeader
-import androidx.compose.material.icons.outlined.Key
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,6 +16,7 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.Key
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material3.CircularProgressIndicator
@@ -59,7 +53,11 @@ import dev.spaceapps.secvault.core.ui.components.ListDivider
 import dev.spaceapps.secvault.core.ui.components.ListGroup
 import dev.spaceapps.secvault.core.ui.components.ListRow
 import dev.spaceapps.secvault.core.ui.components.NavIcon
+import dev.spaceapps.secvault.core.ui.components.SectionHeader
 import dev.spaceapps.secvault.core.ui.components.VisibilityToggle
+import dev.spaceapps.secvault.core.ui.resources.Res as CoreRes
+import dev.spaceapps.secvault.core.ui.resources.action_delete as coreDelete
+import dev.spaceapps.secvault.core.ui.resources.cd_more
 import dev.spaceapps.secvault.core.ui.theme.Dimens
 import dev.spaceapps.secvault.feature.vault.domain.model.ItemType
 import dev.spaceapps.secvault.feature.vault.domain.model.TotpCode
@@ -73,6 +71,7 @@ import dev.spaceapps.secvault.feature.vault.presentation.detail.ItemDetailViewMo
 import dev.spaceapps.secvault.feature.vault.resources.Res
 import dev.spaceapps.secvault.feature.vault.resources.action_delete
 import dev.spaceapps.secvault.feature.vault.resources.cd_copy
+import dev.spaceapps.secvault.feature.vault.resources.cd_delete_passkey
 import dev.spaceapps.secvault.feature.vault.resources.cd_edit
 import dev.spaceapps.secvault.feature.vault.resources.cd_favorite
 import dev.spaceapps.secvault.feature.vault.resources.cd_open
@@ -90,15 +89,16 @@ import dev.spaceapps.secvault.feature.vault.resources.history_changed
 import dev.spaceapps.secvault.feature.vault.resources.history_count
 import dev.spaceapps.secvault.feature.vault.resources.history_title
 import dev.spaceapps.secvault.feature.vault.resources.not_found
+import dev.spaceapps.secvault.feature.vault.resources.passkey_delete_text
+import dev.spaceapps.secvault.feature.vault.resources.passkey_delete_title
+import dev.spaceapps.secvault.feature.vault.resources.passkey_subtitle
+import dev.spaceapps.secvault.feature.vault.resources.passkeys_title
 import dev.spaceapps.secvault.feature.vault.resources.trash_dialog_text
 import dev.spaceapps.secvault.feature.vault.resources.trash_dialog_title
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import dev.spaceapps.secvault.core.ui.resources.Res as CoreRes
-import dev.spaceapps.secvault.core.ui.resources.action_delete as coreDelete
-import dev.spaceapps.secvault.core.ui.resources.cd_more
 
 private const val MASK_CHAR = '•'
 private const val MASK_MAX = 16
@@ -131,9 +131,13 @@ fun ItemDetailScreen(
             is Effect.Copy -> scope.launch {
                 copy.copy(effect.request.text, effect.request.field.sensitive, getString(effect.request.field.label))
             }
+
             is Effect.Edit -> onEdit(effect.id)
+
             is Effect.OpenUrl -> uriHandler.openWebsite(effect.url)
+
             is Effect.Trashed -> onTrashed(effect.id, effect.title)
+
             Effect.Close -> onBack()
         }
     }
@@ -142,7 +146,10 @@ fun ItemDetailScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun ItemDetailContent(state: State, onIntent: (Intent) -> Unit) {
+internal fun ItemDetailContent(
+    state: State,
+    onIntent: (Intent) -> Unit,
+) {
     val item = state.item
     Scaffold(
         topBar = {
@@ -152,10 +159,17 @@ internal fun ItemDetailContent(state: State, onIntent: (Intent) -> Unit) {
                         Icon(
                             if (item.favorite) Icons.Outlined.Star else Icons.Outlined.StarOutline,
                             stringResource(Res.string.cd_favorite),
-                            tint = if (item.favorite) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                            tint =
+                                if (item.favorite) {
+                                    MaterialTheme.colorScheme.primary
+                                } else {
+                                    MaterialTheme.colorScheme.onSurfaceVariant
+                                },
                         )
                     }
-                    IconButton(onClick = { onIntent(Intent.Edit) }) { Icon(Icons.Outlined.Edit, stringResource(Res.string.cd_edit)) }
+                    IconButton(
+                        onClick = { onIntent(Intent.Edit) },
+                    ) { Icon(Icons.Outlined.Edit, stringResource(Res.string.cd_edit)) }
                     DetailMenu(onIntent)
                 }
             }
@@ -163,11 +177,16 @@ internal fun ItemDetailContent(state: State, onIntent: (Intent) -> Unit) {
     ) { padding ->
         when {
             state.isLoading -> FullScreenProgress(Modifier.padding(padding))
+
             state.notFound || item == null -> CenteredContent(Modifier.padding(padding)) {
                 Text(stringResource(Res.string.not_found), color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
+
             else -> Column(
-                Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState())
+                Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .verticalScroll(rememberScrollState())
                     .padding(start = Dimens.screenPadding, end = Dimens.screenPadding, bottom = Dimens.dp24),
                 verticalArrangement = Arrangement.spacedBy(Dimens.dp16),
             ) {
@@ -226,7 +245,10 @@ internal fun ItemDetailContent(state: State, onIntent: (Intent) -> Unit) {
 
 /** Passkeys saved through the system passkey prompt; they can be removed here, not edited. */
 @Composable
-private fun PasskeyList(item: VaultItem, onIntent: (Intent) -> Unit) {
+private fun PasskeyList(
+    item: VaultItem,
+    onIntent: (Intent) -> Unit,
+) {
     SectionHeader(stringResource(Res.string.passkeys_title))
     ListGroup {
         item.passkeys.forEachIndexed { index, passkey ->
@@ -252,8 +274,17 @@ private fun DetailMenu(onIntent: (Intent) -> Unit) {
     DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
         DropdownMenuItem(
             text = { Text(stringResource(Res.string.action_delete), color = MaterialTheme.colorScheme.error) },
-            leadingIcon = { Icon(Icons.Outlined.Delete, contentDescription = null, tint = MaterialTheme.colorScheme.error) },
-            onClick = { open = false; onIntent(Intent.Trash) },
+            leadingIcon = {
+                Icon(
+                    Icons.Outlined.Delete,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.error,
+                )
+            },
+            onClick = {
+                open = false
+                onIntent(Intent.Trash)
+            },
         )
     }
 }
@@ -269,7 +300,11 @@ private fun Header(item: VaultItem) {
         Column {
             Text(item.title, style = MaterialTheme.typography.headlineSmall)
             Text(
-                stringResource(Res.string.detail_subtitle, stringResource(item.type.label), relativeDays(item.updatedAt)),
+                stringResource(
+                    Res.string.detail_subtitle,
+                    stringResource(item.type.label),
+                    relativeDays(item.updatedAt),
+                ),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -283,7 +318,11 @@ private fun CopyButton(onClick: () -> Unit) {
 }
 
 @Composable
-private fun LoginFields(item: VaultItem, state: State, onIntent: (Intent) -> Unit) {
+private fun LoginFields(
+    item: VaultItem,
+    state: State,
+    onIntent: (Intent) -> Unit,
+) {
     val hasCredentials = item.username.isNotEmpty() || item.password.isNotEmpty() || state.totp != null
     if (hasCredentials) {
         ListGroup {
@@ -342,7 +381,11 @@ internal fun TotpRing(totp: TotpCode) {
 }
 
 @Composable
-private fun CardFields(item: VaultItem, state: State, onIntent: (Intent) -> Unit) {
+private fun CardFields(
+    item: VaultItem,
+    state: State,
+    onIntent: (Intent) -> Unit,
+) {
     CardPreview(item.title, item.cardNumber, item.cardholderName, item.cardExpiry)
     ListGroup {
         if (item.cardholderName.isNotBlank()) {
@@ -369,7 +412,11 @@ private fun CardFields(item: VaultItem, state: State, onIntent: (Intent) -> Unit
             ListDivider()
         }
         if (item.cardCvv.isNotBlank()) {
-            FieldRow(stringResource(Res.string.field_cvv), if (state.cvvVisible) item.cardCvv else mask(item.cardCvv), monospace = true) {
+            FieldRow(
+                stringResource(Res.string.field_cvv),
+                if (state.cvvVisible) item.cardCvv else mask(item.cardCvv),
+                monospace = true,
+            ) {
                 VisibilityToggle(state.cvvVisible) { onIntent(Intent.ToggleCvvVisible) }
                 CopyButton { onIntent(Intent.Copy(CopyField.CardCvv)) }
             }
@@ -379,7 +426,10 @@ private fun CardFields(item: VaultItem, state: State, onIntent: (Intent) -> Unit
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun HistorySheet(item: VaultItem, onIntent: (Intent) -> Unit) {
+private fun HistorySheet(
+    item: VaultItem,
+    onIntent: (Intent) -> Unit,
+) {
     ModalBottomSheet(onDismissRequest = { onIntent(Intent.ShowHistory(false)) }) {
         SheetTitle(stringResource(Res.string.history_title))
         item.passwordHistory.forEachIndexed { index, entry ->

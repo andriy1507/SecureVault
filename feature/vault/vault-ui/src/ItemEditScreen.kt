@@ -59,6 +59,9 @@ import dev.spaceapps.secvault.core.ui.components.TonalButton
 import dev.spaceapps.secvault.core.ui.components.TopBarButton
 import dev.spaceapps.secvault.core.ui.components.VisibilityToggle
 import dev.spaceapps.secvault.core.ui.components.secretTransformation
+import dev.spaceapps.secvault.core.ui.resources.Res as CoreRes
+import dev.spaceapps.secvault.core.ui.resources.action_delete as coreDelete
+import dev.spaceapps.secvault.core.ui.resources.action_save
 import dev.spaceapps.secvault.core.ui.theme.Dimens
 import dev.spaceapps.secvault.core.ui.theme.Lines
 import dev.spaceapps.secvault.feature.generator.domain.model.PasswordStrength
@@ -72,6 +75,10 @@ import dev.spaceapps.secvault.feature.vault.presentation.edit.ItemEditContract.I
 import dev.spaceapps.secvault.feature.vault.presentation.edit.ItemEditContract.State
 import dev.spaceapps.secvault.feature.vault.presentation.edit.ItemEditViewModel
 import dev.spaceapps.secvault.feature.vault.resources.Res
+import dev.spaceapps.secvault.feature.vault.resources.card_error_cvv
+import dev.spaceapps.secvault.feature.vault.resources.card_error_expiry
+import dev.spaceapps.secvault.feature.vault.resources.card_error_number
+import dev.spaceapps.secvault.feature.vault.resources.card_expired
 import dev.spaceapps.secvault.feature.vault.resources.cd_remove
 import dev.spaceapps.secvault.feature.vault.resources.cd_scan
 import dev.spaceapps.secvault.feature.vault.resources.edit_card
@@ -86,10 +93,6 @@ import dev.spaceapps.secvault.feature.vault.resources.edit_new_note
 import dev.spaceapps.secvault.feature.vault.resources.edit_note
 import dev.spaceapps.secvault.feature.vault.resources.error_save_failed
 import dev.spaceapps.secvault.feature.vault.resources.error_title_required
-import dev.spaceapps.secvault.feature.vault.resources.card_error_cvv
-import dev.spaceapps.secvault.feature.vault.resources.card_error_expiry
-import dev.spaceapps.secvault.feature.vault.resources.card_error_number
-import dev.spaceapps.secvault.feature.vault.resources.card_expired
 import dev.spaceapps.secvault.feature.vault.resources.field_card_name
 import dev.spaceapps.secvault.feature.vault.resources.field_card_number
 import dev.spaceapps.secvault.feature.vault.resources.field_cardholder
@@ -110,17 +113,14 @@ import dev.spaceapps.secvault.feature.vault.resources.trash_dialog_title
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import dev.spaceapps.secvault.core.ui.resources.Res as CoreRes
-import dev.spaceapps.secvault.core.ui.resources.action_delete as coreDelete
-import dev.spaceapps.secvault.core.ui.resources.action_save
 
-
-internal fun PasswordStrength.toLevel(): StrengthLevel = when (this) {
-    PasswordStrength.Weak -> StrengthLevel.Weak
-    PasswordStrength.Fair -> StrengthLevel.Fair
-    PasswordStrength.Strong -> StrengthLevel.Strong
-    PasswordStrength.VeryStrong -> StrengthLevel.VeryStrong
-}
+internal fun PasswordStrength.toLevel(): StrengthLevel =
+    when (this) {
+        PasswordStrength.Weak -> StrengthLevel.Weak
+        PasswordStrength.Fair -> StrengthLevel.Fair
+        PasswordStrength.Strong -> StrengthLevel.Strong
+        PasswordStrength.VeryStrong -> StrengthLevel.VeryStrong
+    }
 
 /** 06 / 21 / 22 · New login, card, note and 32 · Edit item. [itemId] == null: new item. */
 @Composable
@@ -160,15 +160,23 @@ fun ItemEditScreen(
     }
 }
 
-private fun titleOf(type: ItemType, isNew: Boolean): StringResource = when (type) {
-    ItemType.Login -> if (isNew) Res.string.edit_new_login else Res.string.edit_login
-    ItemType.Card -> if (isNew) Res.string.edit_new_card else Res.string.edit_card
-    ItemType.Note -> if (isNew) Res.string.edit_new_note else Res.string.edit_note
-}
+private fun titleOf(
+    type: ItemType,
+    isNew: Boolean,
+): StringResource =
+    when (type) {
+        ItemType.Login -> if (isNew) Res.string.edit_new_login else Res.string.edit_login
+        ItemType.Card -> if (isNew) Res.string.edit_new_card else Res.string.edit_card
+        ItemType.Note -> if (isNew) Res.string.edit_new_note else Res.string.edit_note
+    }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun ItemEditContent(state: State, onIntent: (Intent) -> Unit, onScanTotp: () -> Unit = {}) {
+internal fun ItemEditContent(
+    state: State,
+    onIntent: (Intent) -> Unit,
+    onScanTotp: () -> Unit = {},
+) {
     val d = state.draft
     Scaffold(
         topBar = {
@@ -177,7 +185,11 @@ internal fun ItemEditContent(state: State, onIntent: (Intent) -> Unit, onScanTot
                 navIcon = NavIcon.Close,
                 onNavigate = { onIntent(Intent.Close) },
             ) {
-                TopBarButton(stringResource(CoreRes.string.action_save), { onIntent(Intent.Save) }, enabled = !state.isSaving)
+                TopBarButton(
+                    stringResource(CoreRes.string.action_save),
+                    { onIntent(Intent.Save) },
+                    enabled = !state.isSaving,
+                )
             }
         },
     ) { padding ->
@@ -186,8 +198,17 @@ internal fun ItemEditContent(state: State, onIntent: (Intent) -> Unit, onScanTot
             return@Scaffold
         }
         Column(
-            Modifier.fillMaxSize().padding(padding).imePadding().verticalScroll(rememberScrollState())
-                .padding(start = Dimens.screenPadding, end = Dimens.screenPadding, top = Dimens.dp12, bottom = Dimens.dp24),
+            Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .imePadding()
+                .verticalScroll(rememberScrollState())
+                .padding(
+                    start = Dimens.screenPadding,
+                    end = Dimens.screenPadding,
+                    top = Dimens.dp12,
+                    bottom = Dimens.dp24,
+                ),
             verticalArrangement = Arrangement.spacedBy(Dimens.dp16),
         ) {
             if (state.isNew) TypeSelector(d.type, onIntent)
@@ -234,7 +255,10 @@ internal fun ItemEditContent(state: State, onIntent: (Intent) -> Unit, onScanTot
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun TypeSelector(selected: ItemType, onIntent: (Intent) -> Unit) {
+private fun TypeSelector(
+    selected: ItemType,
+    onIntent: (Intent) -> Unit,
+) {
     val types = ItemType.entries
     SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
         types.forEachIndexed { index, type ->
@@ -248,19 +272,31 @@ private fun TypeSelector(selected: ItemType, onIntent: (Intent) -> Unit) {
 }
 
 @Composable
-private fun field(field: Field, onIntent: (Intent) -> Unit): (String) -> Unit = { onIntent(Intent.FieldChanged(field, it)) }
+private fun field(
+    field: Field,
+    onIntent: (Intent) -> Unit,
+): (String) -> Unit = { onIntent(Intent.FieldChanged(field, it)) }
 
 @Composable
-private fun LoginEditor(state: State, onIntent: (Intent) -> Unit, onScanTotp: () -> Unit) {
+private fun LoginEditor(
+    state: State,
+    onIntent: (Intent) -> Unit,
+    onScanTotp: () -> Unit,
+) {
     val d = state.draft
     AppTextField(d.title, field(Field.Title, onIntent), stringResource(Res.string.field_name))
     AppTextField(
-        d.username, field(Field.Username, onIntent), stringResource(Res.string.field_username),
-        leadingIcon = Icons.Outlined.Person, keyboardType = KeyboardType.Email,
+        d.username,
+        field(Field.Username, onIntent),
+        stringResource(Res.string.field_username),
+        leadingIcon = Icons.Outlined.Person,
+        keyboardType = KeyboardType.Email,
     )
     Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp8)) {
         AppTextField(
-            d.password, field(Field.Password, onIntent), stringResource(Res.string.field_password),
+            d.password,
+            field(Field.Password, onIntent),
+            stringResource(Res.string.field_password),
             leadingIcon = Icons.Outlined.Key,
             monospace = true,
             keyboardType = KeyboardType.Password,
@@ -268,21 +304,29 @@ private fun LoginEditor(state: State, onIntent: (Intent) -> Unit, onScanTotp: ()
             trailing = { VisibilityToggle(state.passwordVisible) { onIntent(Intent.TogglePasswordVisible) } },
         )
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Dimens.dp8)) {
-            TonalButton(stringResource(Res.string.edit_generate), { onIntent(Intent.GeneratePassword) }, icon = Icons.Filled.Password)
+            TonalButton(stringResource(Res.string.edit_generate), {
+                onIntent(Intent.GeneratePassword)
+            }, icon = Icons.Filled.Password)
             state.strength?.let { StrengthLabel(it.toLevel()) }
         }
     }
     AppTextField(
-        d.url, field(Field.Url, onIntent), stringResource(Res.string.field_website),
+        d.url,
+        field(Field.Url, onIntent),
+        stringResource(Res.string.field_website),
         leadingIcon = Icons.Outlined.Language,
         keyboardType = KeyboardType.Uri,
         trailing = {
-            IconButton(onClick = { onIntent(Intent.AddUri) }) { Icon(Icons.Filled.Add, stringResource(Res.string.field_website_extra)) }
+            IconButton(onClick = {
+                onIntent(Intent.AddUri)
+            }) { Icon(Icons.Filled.Add, stringResource(Res.string.field_website_extra)) }
         },
     )
     state.extraUris.forEachIndexed { index, uri ->
         AppTextField(
-            uri, { onIntent(Intent.UriChanged(index, it)) }, stringResource(Res.string.field_website_extra),
+            uri,
+            { onIntent(Intent.UriChanged(index, it)) },
+            stringResource(Res.string.field_website_extra),
             leadingIcon = Icons.Outlined.Language,
             keyboardType = KeyboardType.Uri,
             trailing = {
@@ -293,18 +337,29 @@ private fun LoginEditor(state: State, onIntent: (Intent) -> Unit, onScanTotp: ()
         )
     }
     AppTextField(
-        d.totpSecret, field(Field.Totp, onIntent), stringResource(Res.string.field_totp_secret),
+        d.totpSecret,
+        field(Field.Totp, onIntent),
+        stringResource(Res.string.field_totp_secret),
         leadingIcon = Icons.Outlined.Schedule,
         monospace = true,
         trailing = {
             IconButton(onClick = onScanTotp) { Icon(Icons.Filled.QrCodeScanner, stringResource(Res.string.cd_scan)) }
         },
     )
-    AppTextField(d.notes, field(Field.Notes, onIntent), stringResource(Res.string.field_notes), singleLine = false, minLines = Lines.NOTES)
+    AppTextField(
+        d.notes,
+        field(Field.Notes, onIntent),
+        stringResource(Res.string.field_notes),
+        singleLine = false,
+        minLines = Lines.NOTES,
+    )
 }
 
 @Composable
-private fun CardEditor(state: State, onIntent: (Intent) -> Unit) {
+private fun CardEditor(
+    state: State,
+    onIntent: (Intent) -> Unit,
+) {
     val d = state.draft
     val check = state.cardValidation
     val brand = PaymentCard.brandOf(d.cardNumber)
@@ -316,7 +371,9 @@ private fun CardEditor(state: State, onIntent: (Intent) -> Unit) {
     CardPreview(d.title, d.cardNumber, d.cardholderName, PaymentCard.formatExpiry(d.cardExpiry))
     AppTextField(d.title, field(Field.Title, onIntent), stringResource(Res.string.field_card_name))
     AppTextField(
-        d.cardholderName, field(Field.CardholderName, onIntent), stringResource(Res.string.field_cardholder),
+        d.cardholderName,
+        field(Field.CardholderName, onIntent),
+        stringResource(Res.string.field_cardholder),
         leadingIcon = Icons.Outlined.Person,
     )
     FormattedDigitsField(
@@ -360,7 +417,13 @@ private fun CardEditor(state: State, onIntent: (Intent) -> Unit) {
             modifier = Modifier.weight(1f),
         )
     }
-    AppTextField(d.notes, field(Field.Notes, onIntent), stringResource(Res.string.field_notes), singleLine = false, minLines = Lines.NOTES)
+    AppTextField(
+        d.notes,
+        field(Field.Notes, onIntent),
+        stringResource(Res.string.field_notes),
+        singleLine = false,
+        minLines = Lines.NOTES,
+    )
 }
 
 /**
@@ -408,11 +471,17 @@ private fun FormattedDigitsField(
 }
 
 @Composable
-private fun NoteEditor(state: State, onIntent: (Intent) -> Unit) {
+private fun NoteEditor(
+    state: State,
+    onIntent: (Intent) -> Unit,
+) {
     val d = state.draft
     AppTextField(d.title, field(Field.Title, onIntent), stringResource(Res.string.field_title))
     AppTextField(
-        d.notes, field(Field.Notes, onIntent), stringResource(Res.string.field_note),
-        singleLine = false, minLines = Lines.NOTE_BODY,
+        d.notes,
+        field(Field.Notes, onIntent),
+        stringResource(Res.string.field_note),
+        singleLine = false,
+        minLines = Lines.NOTE_BODY,
     )
 }

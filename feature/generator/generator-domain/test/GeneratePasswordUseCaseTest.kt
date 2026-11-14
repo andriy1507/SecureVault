@@ -4,16 +4,16 @@ import dev.spaceapps.secvault.core.domain.security.SecureRandomSource
 import dev.spaceapps.secvault.feature.generator.domain.model.PassphraseOptions
 import dev.spaceapps.secvault.feature.generator.domain.model.PasswordOptions
 import dev.spaceapps.secvault.feature.generator.domain.model.PasswordStrength
-import kotlinx.coroutines.test.runTest
 import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.coroutines.test.runTest
 
 class GeneratePasswordUseCaseTest {
-
     private val generator = GeneratePasswordUseCase(object : SecureRandomSource {
         private val r = Random(42)
+
         override fun nextInt(until: Int) = r.nextInt(until)
     })
 
@@ -22,8 +22,11 @@ class GeneratePasswordUseCaseTest {
         repeat(200) {
             val p = generator(PasswordOptions(length = 12))
             assertEquals(12, p.length)
-            assertTrue(p.any { it.isUpperCase() } && p.any { it.isLowerCase() } && p.any { it.isDigit() } &&
-                p.any { !it.isLetterOrDigit() }, p)
+            assertTrue(
+                p.any { it.isUpperCase() } && p.any { it.isLowerCase() } && p.any { it.isDigit() } &&
+                    p.any { !it.isLetterOrDigit() },
+                p,
+            )
         }
     }
 
@@ -44,19 +47,21 @@ class GeneratePasswordUseCaseTest {
     }
 
     @Test
-    fun passphraseHasRequestedWordsAndSeparator() = runTest {
-        val random = object : SecureRandomSource {
-            private val r = Random(7)
-            override fun nextInt(until: Int) = r.nextInt(until)
+    fun passphraseHasRequestedWordsAndSeparator() =
+        runTest {
+            val random = object : SecureRandomSource {
+                private val r = Random(7)
+
+                override fun nextInt(until: Int) = r.nextInt(until)
+            }
+            val phrase = GeneratePassphraseUseCase(random) { listOf("maple", "orbit", "velvet", "harbor") }(
+                PassphraseOptions(words = 5, includeNumber = true),
+            )
+            val parts = phrase.split("-")
+            assertEquals(6, parts.size)
+            assertTrue(parts.last().all { it.isDigit() })
+            assertTrue(parts.any { it.first().isUpperCase() })
         }
-        val phrase = GeneratePassphraseUseCase(random) { listOf("maple", "orbit", "velvet", "harbor") }(
-            PassphraseOptions(words = 5, includeNumber = true),
-        )
-        val parts = phrase.split("-")
-        assertEquals(6, parts.size)
-        assertTrue(parts.last().all { it.isDigit() })
-        assertTrue(parts.any { it.first().isUpperCase() })
-    }
 
     @Test
     fun strengthGrowsWithLengthAndVariety() {

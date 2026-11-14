@@ -14,7 +14,6 @@ internal class NewAccount(
  * vault key -> item keys -> item data (all AES-256-GCM)
  */
 internal object KeyHierarchy {
-
     private const val RECOVERY_INFO = "secvault-recovery-wrap-v1"
     private const val RECOVERY_FORMAT: Byte = 1
     private const val ACCOUNT_ID_BYTES = 8
@@ -38,7 +37,12 @@ internal object KeyHierarchy {
     }
 
     /** Restore on a new phone. Device keys are always fresh. */
-    suspend fun restoreFromRecovery(words: List<String>, recoveryBlob: ByteArray, accountId: String, bip39: Bip39): KeyBundle {
+    suspend fun restoreFromRecovery(
+        words: List<String>,
+        recoveryBlob: ByteArray,
+        accountId: String,
+        bip39: Bip39,
+    ): KeyBundle {
         val entropy = bip39.wordsToEntropy(words)
         val wrapKey = Crypto.hkdf(entropy, RECOVERY_INFO)
         entropy.fill(0)
@@ -54,13 +58,19 @@ internal object KeyHierarchy {
     // --- per-item keys -------------------------------------------------------
 
     /** New random key for one item and its wrapped form (stored next to the item). */
-    suspend fun newItemKey(vaultKey: ByteArray, itemId: String): Pair<ByteArray, ByteArray> {
+    suspend fun newItemKey(
+        vaultKey: ByteArray,
+        itemId: String,
+    ): Pair<ByteArray, ByteArray> {
         val itemKey = Crypto.newSymmetricKey()
         return itemKey to Crypto.encrypt(vaultKey, itemKey, ad = "itemkey:$itemId")
     }
 
-    suspend fun unwrapItemKey(vaultKey: ByteArray, wrapped: ByteArray, itemId: String): ByteArray =
-        Crypto.decrypt(vaultKey, wrapped, ad = "itemkey:$itemId")
+    suspend fun unwrapItemKey(
+        vaultKey: ByteArray,
+        wrapped: ByteArray,
+        itemId: String,
+    ): ByteArray = Crypto.decrypt(vaultKey, wrapped, ad = "itemkey:$itemId")
 
     // --- internals ------------------------------------------------------------
 
@@ -69,13 +79,20 @@ internal object KeyHierarchy {
      * in groups of 4: "7F3A-91C2-E04B-D58E".
      */
     private suspend fun deriveAccountId(identitySignPublic: ByteArray): String =
-        Crypto.sha256(identitySignPublic).copyOfRange(0, ACCOUNT_ID_BYTES)
+        Crypto
+            .sha256(identitySignPublic)
+            .copyOfRange(0, ACCOUNT_ID_BYTES)
             .joinToString("") { (it.toInt() and BYTE_MASK).toString(HEX_RADIX).padStart(2, '0') }
             .uppercase()
             .chunked(ACCOUNT_ID_GROUP)
             .joinToString(ACCOUNT_ID_SEPARATOR)
 
-    private suspend fun sealForRecovery(entropy: ByteArray, identity: KeyPairSet, vaultKey: ByteArray, accountId: String): ByteArray {
+    private suspend fun sealForRecovery(
+        entropy: ByteArray,
+        identity: KeyPairSet,
+        vaultKey: ByteArray,
+        accountId: String,
+    ): ByteArray {
         val wrapKey = Crypto.hkdf(entropy, RECOVERY_INFO)
         val plain = Fields.write(RECOVERY_FORMAT, identity.fields() + listOf(vaultKey))
         val blob = Crypto.encrypt(wrapKey, plain, ad = accountId)

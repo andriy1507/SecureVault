@@ -43,7 +43,9 @@ import org.koin.core.component.inject
  * which sites have passkeys until the user unlocks.
  */
 @RequiresApi(34)
-class VaultCredentialProviderService : CredentialProviderService(), KoinComponent {
+class VaultCredentialProviderService :
+    CredentialProviderService(),
+    KoinComponent {
     private val keys: VaultKeysRepository by inject()
     private val findPasskeys: FindPasskeysUseCase by inject()
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
@@ -70,8 +72,11 @@ class VaultCredentialProviderService : CredentialProviderService(), KoinComponen
                 callback.onError(CreateCredentialNoCreateOptionException())
                 return@launch
             }
-            val entry = CreateEntry.Builder(getString(R.string.passkey_account_name), PasskeyIntents.create(this@VaultCredentialProviderService))
-                .setDescription(getString(R.string.passkey_create_description))
+            val entry = CreateEntry
+                .Builder(
+                    getString(R.string.passkey_account_name),
+                    PasskeyIntents.create(this@VaultCredentialProviderService),
+                ).setDescription(getString(R.string.passkey_create_description))
                 .build()
             callback.onResult(BeginCreateCredentialResponse(createEntries = listOf(entry)))
         }
@@ -87,18 +92,28 @@ class VaultCredentialProviderService : CredentialProviderService(), KoinComponen
                 keys.refresh()
                 val wantsPasskey = request.beginGetCredentialOptions.any { it is BeginGetPublicKeyCredentialOption }
                 val response = when {
-                    !wantsPasskey -> BeginGetCredentialResponse()
-                    keys.lockState.value == LockState.Unlocked ->
+                    !wantsPasskey -> {
+                        BeginGetCredentialResponse()
+                    }
+
+                    keys.lockState.value == LockState.Unlocked -> {
                         PasskeyEntries.build(this@VaultCredentialProviderService, request, findPasskeys)
-                    keys.lockState.value == LockState.Locked -> BeginGetCredentialResponse(
-                        authenticationActions = listOf(
-                            AuthenticationAction(
-                                getString(R.string.passkey_unlock_action),
-                                PasskeyIntents.unlock(this@VaultCredentialProviderService),
+                    }
+
+                    keys.lockState.value == LockState.Locked -> {
+                        BeginGetCredentialResponse(
+                            authenticationActions = listOf(
+                                AuthenticationAction(
+                                    getString(R.string.passkey_unlock_action),
+                                    PasskeyIntents.unlock(this@VaultCredentialProviderService),
+                                ),
                             ),
-                        ),
-                    )
-                    else -> BeginGetCredentialResponse()
+                        )
+                    }
+
+                    else -> {
+                        BeginGetCredentialResponse()
+                    }
                 }
                 PasskeyLog.step(
                     "begin get: passkey=$wantsPasskey vault=${keys.lockState.value} " +
@@ -128,22 +143,31 @@ class VaultCredentialProviderService : CredentialProviderService(), KoinComponen
 /** Passkey entries for a sign-in request; needs an unlocked vault. Used by the service and after unlock. */
 @RequiresApi(34)
 internal object PasskeyEntries {
-    suspend fun build(context: Context, request: BeginGetCredentialRequest, find: FindPasskeysUseCase): BeginGetCredentialResponse {
-        val entries = request.beginGetCredentialOptions.filterIsInstance<BeginGetPublicKeyCredentialOption>().flatMap { option ->
-            val options = runCatching { PasskeyJson.parseSignIn(option.requestJson) }
-                .onFailure { PasskeyLog.failed("parse sign-in request", it) }
-                .getOrNull() ?: return@flatMap emptyList()
-            PasskeyLog.step("sign-in request for rpId=${options.rpId}")
-            find(options.rpId, options.allowCredentialIds).map { match ->
-                val passkey = match.passkey
-                PublicKeyCredentialEntry.Builder(
-                    context,
-                    passkey.userName.ifBlank { match.item.username.ifBlank { match.item.title } },
-                    PasskeyIntents.signIn(context, match.item.id, passkey.credentialId),
-                    option,
-                ).setDisplayName(passkey.userDisplayName.ifBlank { match.item.title }).build()
-            }
-        }
+    suspend fun build(
+        context: Context,
+        request: BeginGetCredentialRequest,
+        find: FindPasskeysUseCase,
+    ): BeginGetCredentialResponse {
+        val entries =
+            request.beginGetCredentialOptions
+                .filterIsInstance<BeginGetPublicKeyCredentialOption>()
+                .flatMap { option ->
+                    val options = runCatching { PasskeyJson.parseSignIn(option.requestJson) }
+                        .onFailure { PasskeyLog.failed("parse sign-in request", it) }
+                        .getOrNull() ?: return@flatMap emptyList()
+                    PasskeyLog.step("sign-in request for rpId=${options.rpId}")
+                    find(options.rpId, options.allowCredentialIds).map { match ->
+                        val passkey = match.passkey
+                        PublicKeyCredentialEntry
+                            .Builder(
+                                context,
+                                passkey.userName.ifBlank { match.item.username.ifBlank { match.item.title } },
+                                PasskeyIntents.signIn(context, match.item.id, passkey.credentialId),
+                                option,
+                            ).setDisplayName(passkey.userDisplayName.ifBlank { match.item.title })
+                            .build()
+                    }
+                }
         return BeginGetCredentialResponse(credentialEntries = entries)
     }
 }
@@ -158,14 +182,21 @@ internal object PasskeyIntents {
 
     fun unlock(context: Context) = pending(context, Intent(context, PasskeyUnlockActivity::class.java))
 
-    fun signIn(context: Context, itemId: String, credentialId: String) = pending(
+    fun signIn(
+        context: Context,
+        itemId: String,
+        credentialId: String,
+    ) = pending(
         context,
         Intent(context, PasskeySignInActivity::class.java)
             .putExtra(EXTRA_ITEM_ID, itemId)
             .putExtra(EXTRA_CREDENTIAL_ID, credentialId),
     )
 
-    private fun pending(context: Context, intent: Intent): PendingIntent =
+    private fun pending(
+        context: Context,
+        intent: Intent,
+    ): PendingIntent =
         PendingIntent.getActivity(
             context,
             requestCode++,

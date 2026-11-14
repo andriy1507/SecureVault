@@ -90,12 +90,20 @@ fun ScanCodeScreen(
 }
 
 @Composable
-internal fun ScanCodeContent(state: State, scanSession: Int, onIntent: (Intent) -> Unit) {
+internal fun ScanCodeContent(
+    state: State,
+    scanSession: Int,
+    onIntent: (Intent) -> Unit,
+) {
     val permission = rememberCameraPermission()
     val colors = AppTheme.extendedColors
     if (!permission.granted) {
         Column(Modifier.fillMaxSize().safeDrawingPadding()) {
-            AppTopBar(stringResource(Res.string.scan_title), navIcon = NavIcon.Close, onNavigate = { onIntent(Intent.Close) })
+            AppTopBar(
+                stringResource(Res.string.scan_title),
+                navIcon = NavIcon.Close,
+                onNavigate = { onIntent(Intent.Close) },
+            )
             CenteredContent(Modifier.weight(1f)) {
                 HeroMessage(
                     icon = Icons.Filled.QrCodeScanner,
@@ -104,7 +112,9 @@ internal fun ScanCodeContent(state: State, scanSession: Int, onIntent: (Intent) 
                 )
             }
             BottomActions {
-                SecondaryButton(stringResource(Res.string.scan_manual), { onIntent(Intent.EnterManually) }, icon = Icons.Outlined.Keyboard)
+                SecondaryButton(stringResource(Res.string.scan_manual), {
+                    onIntent(Intent.EnterManually)
+                }, icon = Icons.Outlined.Keyboard)
                 PrimaryButton(stringResource(Res.string.scan_permission_allow), permission::request)
             }
         }
@@ -113,7 +123,11 @@ internal fun ScanCodeContent(state: State, scanSession: Int, onIntent: (Intent) 
 
     Box(Modifier.fillMaxSize().background(colors.scannerBackground)) {
         key(scanSession) {
-            QrScannerView(torchOn = state.torchOn, onResult = { onIntent(Intent.Scanned(it)) }, modifier = Modifier.fillMaxSize())
+            QrScannerView(
+                torchOn = state.torchOn,
+                onResult = { onIntent(Intent.Scanned(it)) },
+                modifier = Modifier.fillMaxSize(),
+            )
         }
         Column(Modifier.fillMaxSize().safeDrawingPadding()) {
             AppTopBar(
@@ -137,8 +151,13 @@ internal fun ScanCodeContent(state: State, scanSession: Int, onIntent: (Intent) 
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Box(
-                    Modifier.size(Dimens.scannerFrame)
-                        .border(Dimens.scannerFrameBorder, colors.onCard, RoundedCornerShape(Dimens.radiusScannerFrame)),
+                    Modifier
+                        .size(Dimens.scannerFrame)
+                        .border(
+                            Dimens.scannerFrameBorder,
+                            colors.onCard,
+                            RoundedCornerShape(Dimens.radiusScannerFrame),
+                        ),
                 )
                 Text(
                     stringResource(if (state.notAnOtpCode) Res.string.scan_not_otp else Res.string.scan_hint),

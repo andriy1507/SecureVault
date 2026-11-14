@@ -1,7 +1,5 @@
 package dev.spaceapps.secvault.autofill
 
-import dev.spaceapps.secvault.R
-
 import android.os.CancellationSignal
 import android.service.autofill.AutofillService
 import android.service.autofill.FillCallback
@@ -11,8 +9,9 @@ import android.service.autofill.SaveCallback
 import android.service.autofill.SaveInfo
 import android.service.autofill.SaveRequest
 import android.view.autofill.AutofillValue
-import dev.spaceapps.secvault.feature.generator.domain.usecase.GeneratePasswordUseCase
+import dev.spaceapps.secvault.R
 import dev.spaceapps.secvault.feature.generator.domain.model.PasswordOptions
+import dev.spaceapps.secvault.feature.generator.domain.usecase.GeneratePasswordUseCase
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -21,11 +20,16 @@ import org.koin.core.component.inject
  * so suggestions never carry secrets: "Unlock SecureVault" opens [AutofillAuthActivity], which unlocks
  * with the device lock and returns the chosen login. Generated passwords need no unlock.
  */
-class SecureVaultAutofillService : AutofillService(), KoinComponent {
-
+class SecureVaultAutofillService :
+    AutofillService(),
+    KoinComponent {
     private val generatePassword: GeneratePasswordUseCase by inject()
 
-    override fun onFillRequest(request: FillRequest, cancellationSignal: CancellationSignal, callback: FillCallback) {
+    override fun onFillRequest(
+        request: FillRequest,
+        cancellationSignal: CancellationSignal,
+        callback: FillCallback,
+    ) {
         val structure = request.fillContexts.lastOrNull()?.structure ?: return callback.onSuccess(null)
         val form = StructureParser.parse(structure)
         if (form.isEmpty || form.packageName == packageName) return callback.onSuccess(null)
@@ -60,10 +64,15 @@ class SecureVaultAutofillService : AutofillService(), KoinComponent {
 
         // 3. After submit, Android offers "Save to SecureVault?"
         if (form.passwordIds.isNotEmpty()) {
-            val type = if (form.usernameIds.isNotEmpty()) SaveInfo.SAVE_DATA_TYPE_PASSWORD or SaveInfo.SAVE_DATA_TYPE_USERNAME
-            else SaveInfo.SAVE_DATA_TYPE_PASSWORD
+            val type = if (form.usernameIds.isNotEmpty()) {
+                SaveInfo.SAVE_DATA_TYPE_PASSWORD or
+                    SaveInfo.SAVE_DATA_TYPE_USERNAME
+            } else {
+                SaveInfo.SAVE_DATA_TYPE_PASSWORD
+            }
             response.setSaveInfo(
-                SaveInfo.Builder(type, form.passwordIds.toTypedArray())
+                SaveInfo
+                    .Builder(type, form.passwordIds.toTypedArray())
                     .apply { if (form.usernameIds.isNotEmpty()) setOptionalIds(form.usernameIds.toTypedArray()) }
                     .setFlags(SaveInfo.FLAG_SAVE_ON_ALL_VIEWS_INVISIBLE)
                     .build(),
@@ -72,7 +81,10 @@ class SecureVaultAutofillService : AutofillService(), KoinComponent {
         callback.onSuccess(response.build())
     }
 
-    override fun onSaveRequest(request: SaveRequest, callback: SaveCallback) {
+    override fun onSaveRequest(
+        request: SaveRequest,
+        callback: SaveCallback,
+    ) {
         val structure = request.fillContexts.lastOrNull()?.structure ?: return callback.onSuccess()
         val form = StructureParser.parse(structure)
         val password = form.passwordValue

@@ -14,15 +14,18 @@ import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
-fun androidDataModule(context: Context): Module = module {
-    val appContext = context.applicationContext
-    single<HardwareKeyGuard> { AndroidHardwareKeyGuard(appContext) }
-    single { createVaultDataStore(appContext.filesDir.resolve(VAULT_DATASTORE_FILE).absolutePath) }
-    single(named(SETTINGS_DATASTORE)) { createVaultDataStore(appContext.filesDir.resolve(SETTINGS_DATASTORE_FILE).absolutePath) }
-    single {
-        Room.databaseBuilder<AppDatabase>(
-            context = appContext,
-            name = appContext.getDatabasePath(VAULT_DB_FILE).absolutePath,
-        )
+fun androidDataModule(context: Context): Module =
+    module {
+        val appContext = context.applicationContext
+        single<HardwareKeyGuard> { AndroidHardwareKeyGuard(appContext) }
+        single { createVaultDataStore(appContext.filesDir.resolve(VAULT_DATASTORE_FILE).absolutePath) }
+        single(named(SETTINGS_DATASTORE)) {
+            createVaultDataStore(appContext.filesDir.resolve(SETTINGS_DATASTORE_FILE).absolutePath)
+        }
+        single {
+            Room.databaseBuilder<AppDatabase>(
+                context = appContext,
+                name = appContext.getDatabasePath(VAULT_DB_FILE).absolutePath,
+            )
+        }
     }
-}

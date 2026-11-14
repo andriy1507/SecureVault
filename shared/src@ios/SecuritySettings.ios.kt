@@ -8,11 +8,12 @@ import platform.UIKit.UIApplicationOpenSettingsURLString
 
 /** iOS can't deep-link to Face ID & Passcode; opens the app's Settings page instead. */
 @Composable
-internal actual fun rememberOpenSecuritySettings(): () -> Unit = remember {
-    {
-        NSURL.URLWithString(UIApplicationOpenSettingsURLString)?.let { url ->
-            UIApplication.sharedApplication.openURL(url, options = emptyMap<Any?, Any>(), completionHandler = null)
+internal actual fun rememberOpenSecuritySettings(): () -> Unit =
+    remember {
+        {
+            NSURL.URLWithString(UIApplicationOpenSettingsURLString)?.let { url ->
+                UIApplication.sharedApplication.openURL(url, options = emptyMap<Any?, Any>(), completionHandler = null)
+            }
+            Unit
         }
-        Unit
     }
-}

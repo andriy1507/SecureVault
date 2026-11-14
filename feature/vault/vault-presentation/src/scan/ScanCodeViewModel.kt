@@ -12,7 +12,6 @@ import kotlinx.coroutines.launch
 class ScanCodeViewModel(
     private val parseScannedCode: ParseScannedCodeUseCase,
 ) : MviViewModel<Intent, State, Effect>(State()) {
-
     override fun handleIntent(intent: Intent) {
         when (intent) {
             is Intent.Scanned -> check(intent.text)
@@ -27,8 +26,14 @@ class ScanCodeViewModel(
         setState { copy(isChecking = true) }
         viewModelScope.launch {
             when (val result = parseScannedCode(text)) {
-                is ScannedCode.Otp -> sendEffect(Effect.Found(CodePrefill(result.info.issuer, result.info.account, result.info.secret)))
-                is ScannedCode.BareSecret -> sendEffect(Effect.Found(CodePrefill("", "", result.secret)))
+                is ScannedCode.Otp -> {
+                    sendEffect(Effect.Found(CodePrefill(result.info.issuer, result.info.account, result.info.secret)))
+                }
+
+                is ScannedCode.BareSecret -> {
+                    sendEffect(Effect.Found(CodePrefill("", "", result.secret)))
+                }
+
                 ScannedCode.NotAnOtpCode -> {
                     setState { copy(notAnOtpCode = true) }
                     sendEffect(Effect.ScanAgain)

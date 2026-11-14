@@ -20,7 +20,10 @@ enum class CardBrand(
 }
 
 /** Month and year of a card's expiry (year as 4 digits). */
-data class YearMonth(val year: Int, val month: Int) : Comparable<YearMonth> {
+data class YearMonth(
+    val year: Int,
+    val month: Int,
+) : Comparable<YearMonth> {
     override fun compareTo(other: YearMonth) = compareValuesBy(this, other, { it.year }, { it.month })
 }
 
@@ -82,13 +85,19 @@ object PaymentCard {
         for (c in input) {
             if (!c.isDigit() || out.length >= EXPIRY_DIGITS) continue
             when (out.length) {
-                0 -> if (c > '1') out.append('0').append(c) else out.append(c)
+                0 -> {
+                    if (c > '1') out.append('0').append(c) else out.append(c)
+                }
+
                 1 -> {
                     val first = out[0]
                     val impossible = (first == '0' && c == '0') || (first == '1' && c > '2')
                     if (!impossible) out.append(c)
                 }
-                else -> out.append(c)
+
+                else -> {
+                    out.append(c)
+                }
             }
         }
         return out.toString()
@@ -96,11 +105,16 @@ object PaymentCard {
 
     /** "0528" → "05/28"; partial input keeps the slash once the month is complete ("05" → "05/"). */
     fun formatExpiry(digits: String): String =
-        if (digits.length < MONTH_DIGITS) digits
-        else digits.take(MONTH_DIGITS) + EXPIRY_SEPARATOR + digits.drop(MONTH_DIGITS)
+        if (digits.length < MONTH_DIGITS) {
+            digits
+        } else {
+            digits.take(MONTH_DIGITS) + EXPIRY_SEPARATOR + digits.drop(MONTH_DIGITS)
+        }
 
-    fun sanitizeCvv(input: String, cardDigits: String): String =
-        input.filter { it.isDigit() }.take(brandOf(cardDigits).cvvLength)
+    fun sanitizeCvv(
+        input: String,
+        cardDigits: String,
+    ): String = input.filter { it.isDigit() }.take(brandOf(cardDigits).cvvLength)
 
     /** Luhn checksum, used by every major card network to catch typos. */
     fun isLuhnValid(digits: String): Boolean {
@@ -126,7 +140,12 @@ object PaymentCard {
     }
 
     /** Empty fields are allowed (a card can be saved with only a name); filled ones must be complete and valid. */
-    fun validate(number: String, expiry: String, cvv: String, today: YearMonth): CardValidation {
+    fun validate(
+        number: String,
+        expiry: String,
+        cvv: String,
+        today: YearMonth,
+    ): CardValidation {
         val brand = brandOf(number)
         val numberError = when {
             number.isEmpty() -> null

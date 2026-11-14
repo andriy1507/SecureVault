@@ -16,7 +16,6 @@ class LockViewModel(
     private val unlockVault: UnlockVaultUseCase,
     private val getAccountId: GetAccountIdUseCase,
 ) : MviViewModel<Intent, State, Effect>(State()) {
-
     init {
         viewModelScope.launch {
             val id = runCatching { getAccountId() }.getOrNull()

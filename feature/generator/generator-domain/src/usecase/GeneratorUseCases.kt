@@ -10,10 +10,10 @@ import dev.spaceapps.secvault.feature.generator.domain.model.UsernameOptions
 import dev.spaceapps.secvault.feature.generator.domain.model.UsernameType
 import dev.spaceapps.secvault.feature.generator.domain.repository.GeneratorHistoryRepository
 import dev.spaceapps.secvault.feature.generator.domain.repository.GeneratorWordsSource
-import kotlinx.coroutines.flow.StateFlow
 import kotlin.math.ln
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
+import kotlinx.coroutines.flow.StateFlow
 
 private object Charsets {
     const val UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -28,8 +28,9 @@ private object Charsets {
  * Uniform picks from a CSPRNG, at least one character from every chosen set,
  * then a Fisher-Yates shuffle so those guaranteed characters aren't always first.
  */
-class GeneratePasswordUseCase(private val random: SecureRandomSource) {
-
+class GeneratePasswordUseCase(
+    private val random: SecureRandomSource,
+) {
     operator fun invoke(options: PasswordOptions): String {
         fun String.clean() = if (options.avoidAmbiguous) filterNot { it in Charsets.AMBIGUOUS } else this
         val sets = buildList {
@@ -54,12 +55,17 @@ class GeneratePasswordUseCase(private val random: SecureRandomSource) {
 private fun SecureRandomSource.shuffle(chars: CharArray) {
     for (i in chars.size - 1 downTo 1) {
         val j = nextInt(i + 1)
-        val tmp = chars[i]; chars[i] = chars[j]; chars[j] = tmp
+        val tmp = chars[i]
+        chars[i] = chars[j]
+        chars[j] = tmp
     }
 }
 
 /** "maple-Orbit-velvet-harbor-7": random words from the word list, optionally a digit. */
-class GeneratePassphraseUseCase(private val random: SecureRandomSource, private val words: GeneratorWordsSource) {
+class GeneratePassphraseUseCase(
+    private val random: SecureRandomSource,
+    private val words: GeneratorWordsSource,
+) {
     suspend operator fun invoke(options: PassphraseOptions): String {
         val list = words.words()
         val count = options.words.coerceIn(PassphraseOptions.MIN_WORDS, PassphraseOptions.MAX_WORDS)
@@ -74,18 +80,27 @@ class GeneratePassphraseUseCase(private val random: SecureRandomSource, private 
 }
 
 /** "quiet.otter.42" or "x7kq2mzp". */
-class GenerateUsernameUseCase(private val random: SecureRandomSource, private val words: GeneratorWordsSource) {
-    suspend operator fun invoke(options: UsernameOptions): String = when (options.type) {
-        UsernameType.RandomWords -> {
-            val list = words.words()
-            val parts = List(UsernameOptions.WORDS) { list[random.nextInt(list.size)] } +
-                random.nextInt(UsernameOptions.NUMBER_BOUND).toString()
-            parts.joinToString(UsernameOptions.SEPARATOR)
+class GenerateUsernameUseCase(
+    private val random: SecureRandomSource,
+    private val words: GeneratorWordsSource,
+) {
+    suspend operator fun invoke(options: UsernameOptions): String =
+        when (options.type) {
+            UsernameType.RandomWords -> {
+                val list = words.words()
+                val parts = List(UsernameOptions.WORDS) { list[random.nextInt(list.size)] } +
+                    random.nextInt(UsernameOptions.NUMBER_BOUND).toString()
+                parts.joinToString(UsernameOptions.SEPARATOR)
+            }
+
+            UsernameType.RandomCharacters -> {
+                buildString {
+                    repeat(
+                        UsernameOptions.RANDOM_CHARACTERS_LENGTH,
+                    ) { append(Charsets.USERNAME[random.nextInt(Charsets.USERNAME.length)]) }
+                }
+            }
         }
-        UsernameType.RandomCharacters -> buildString {
-            repeat(UsernameOptions.RANDOM_CHARACTERS_LENGTH) { append(Charsets.USERNAME[random.nextInt(Charsets.USERNAME.length)]) }
-        }
-    }
 }
 
 /**
@@ -117,25 +132,34 @@ class EstimateStrengthUseCase {
 }
 
 /** Words make passphrases strong even when the character pool is small, so they are rated by word count. */
-fun passphraseStrength(options: PassphraseOptions): PasswordStrength = when {
-    options.words <= PASSPHRASE_FAIR_WORDS -> PasswordStrength.Fair
-    options.words <= PASSPHRASE_STRONG_WORDS -> PasswordStrength.Strong
-    else -> PasswordStrength.VeryStrong
-}
+fun passphraseStrength(options: PassphraseOptions): PasswordStrength =
+    when {
+        options.words <= PASSPHRASE_FAIR_WORDS -> PasswordStrength.Fair
+        options.words <= PASSPHRASE_STRONG_WORDS -> PasswordStrength.Strong
+        else -> PasswordStrength.VeryStrong
+    }
 
 private const val PASSPHRASE_FAIR_WORDS = 3
 private const val PASSPHRASE_STRONG_WORDS = 4
 
-class ObserveGeneratorHistoryUseCase(private val repository: GeneratorHistoryRepository) {
+class ObserveGeneratorHistoryUseCase(
+    private val repository: GeneratorHistoryRepository,
+) {
     operator fun invoke(): StateFlow<List<GeneratedValue>> = repository.history
 }
 
-class AddToGeneratorHistoryUseCase(private val repository: GeneratorHistoryRepository) {
+class AddToGeneratorHistoryUseCase(
+    private val repository: GeneratorHistoryRepository,
+) {
     @OptIn(ExperimentalTime::class)
-    operator fun invoke(value: String, mode: GeneratorMode) =
-        repository.add(GeneratedValue(value, mode, Clock.System.now().toEpochMilliseconds()))
+    operator fun invoke(
+        value: String,
+        mode: GeneratorMode,
+    ) = repository.add(GeneratedValue(value, mode, Clock.System.now().toEpochMilliseconds()))
 }
 
-class ClearGeneratorHistoryUseCase(private val repository: GeneratorHistoryRepository) {
+class ClearGeneratorHistoryUseCase(
+    private val repository: GeneratorHistoryRepository,
+) {
     operator fun invoke() = repository.clear()
 }

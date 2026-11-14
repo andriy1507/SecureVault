@@ -9,7 +9,14 @@ import kotlin.test.assertTrue
 class WebAuthnTest {
     @Test
     fun base64UrlMatchesRfc4648WithoutPadding() {
-        val vectors = mapOf("" to "", "f" to "Zg", "fo" to "Zm8", "foo" to "Zm9v", "foob" to "Zm9vYg", "fooba" to "Zm9vYmE")
+        val vectors = mapOf(
+            "" to "",
+            "f" to "Zg",
+            "fo" to "Zm8",
+            "foo" to "Zm9v",
+            "foob" to "Zm9vYg",
+            "fooba" to "Zm9vYmE",
+        )
         for ((plain, encoded) in vectors) {
             assertEquals(encoded, Base64Url.encode(plain.encodeToByteArray()))
             assertEquals(plain, Base64Url.decode(encoded).decodeToString())
@@ -45,7 +52,12 @@ class WebAuthnTest {
         assertEquals(0x1D, signIn[32].toInt()) // UP | UV | BE | BS
 
         val credentialId = ByteArray(16) { 9 }
-        val register = WebAuthn.authenticatorData(rpHash, WebAuthn.STANDARD_FLAGS or WebAuthn.FLAG_AT, credentialId, cose)
+        val register = WebAuthn.authenticatorData(
+            rpHash,
+            WebAuthn.STANDARD_FLAGS or WebAuthn.FLAG_AT,
+            credentialId,
+            cose,
+        )
         assertEquals(37 + 16 + 2 + 16 + cose.size, register.size)
         assertEquals(16, register[37 + 16 + 1].toInt()) // credential id length, low byte
     }

@@ -32,10 +32,10 @@ class PaymentCardTest {
 
     @Test
     fun expiryTypesLikeBankingApps() {
-        assertEquals("05", PaymentCard.sanitizeExpiry("5"))      // 5 → 05
-        assertEquals("1", PaymentCard.sanitizeExpiry("1"))       // could be 10–12
-        assertEquals("1", PaymentCard.sanitizeExpiry("13"))      // month 13 can't be typed
-        assertEquals("0", PaymentCard.sanitizeExpiry("00"))      // month 00 can't be typed
+        assertEquals("05", PaymentCard.sanitizeExpiry("5")) // 5 → 05
+        assertEquals("1", PaymentCard.sanitizeExpiry("1")) // could be 10–12
+        assertEquals("1", PaymentCard.sanitizeExpiry("13")) // month 13 can't be typed
+        assertEquals("0", PaymentCard.sanitizeExpiry("00")) // month 00 can't be typed
         assertEquals("0528", PaymentCard.sanitizeExpiry("05/28"))
         assertEquals("1228", PaymentCard.sanitizeExpiry("122899"))
         assertEquals("05/", PaymentCard.formatExpiry("05"))

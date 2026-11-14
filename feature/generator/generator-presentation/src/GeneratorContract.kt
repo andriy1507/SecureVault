@@ -12,7 +12,6 @@ import dev.spaceapps.secvault.feature.generator.domain.model.PasswordStrength
 import dev.spaceapps.secvault.feature.generator.domain.model.UsernameType
 
 object GeneratorContract {
-
     data class State(
         val mode: GeneratorMode = GeneratorMode.Password,
         val password: PasswordOptions = PasswordOptions(),
@@ -29,21 +28,50 @@ object GeneratorContract {
     }
 
     sealed interface Intent : UiIntent {
-        data class ModeChanged(val mode: GeneratorMode) : Intent
-        data class PasswordOptionsChanged(val options: PasswordOptions) : Intent
-        data class PassphraseOptionsChanged(val options: PassphraseOptions) : Intent
-        data class SeparatorChosen(val separator: PassphraseSeparator) : Intent
-        data class UsernameTypeChanged(val type: UsernameType) : Intent
+        data class ModeChanged(
+            val mode: GeneratorMode,
+        ) : Intent
+
+        data class PasswordOptionsChanged(
+            val options: PasswordOptions,
+        ) : Intent
+
+        data class PassphraseOptionsChanged(
+            val options: PassphraseOptions,
+        ) : Intent
+
+        data class SeparatorChosen(
+            val separator: PassphraseSeparator,
+        ) : Intent
+
+        data class UsernameTypeChanged(
+            val type: UsernameType,
+        ) : Intent
+
         data object Regenerate : Intent
+
         data object Copy : Intent
-        data class CopyHistory(val index: Int) : Intent
-        data class ShowHistory(val show: Boolean) : Intent
+
+        data class CopyHistory(
+            val index: Int,
+        ) : Intent
+
+        data class ShowHistory(
+            val show: Boolean,
+        ) : Intent
+
         data object ClearHistory : Intent
-        data class ShowSeparatorDialog(val show: Boolean) : Intent
+
+        data class ShowSeparatorDialog(
+            val show: Boolean,
+        ) : Intent
     }
 
     sealed interface Effect : UiEffect {
-        data class Copy(val text: String, val mode: GeneratorMode) : Effect {
+        data class Copy(
+            val text: String,
+            val mode: GeneratorMode,
+        ) : Effect {
             override fun toString() = "Copy($mode)"
         }
     }

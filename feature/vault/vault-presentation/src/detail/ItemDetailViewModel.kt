@@ -25,33 +25,68 @@ class ItemDetailViewModel(
     private val generateTotp: GenerateTotpUseCase,
     private val deletePasskey: DeletePasskeyUseCase,
 ) : MviViewModel<Intent, State, Effect>(State()) {
-
     private var loadedId: String? = null
     private var totpJob: Job? = null
 
     override fun handleIntent(intent: Intent) {
         when (intent) {
-            is Intent.Load -> if (intent.id != loadedId) {
-                loadedId = intent.id
-                reload()
-            }
-            Intent.TogglePasswordVisible -> setState { copy(passwordVisible = !passwordVisible) }
-            Intent.ToggleCvvVisible -> setState { copy(cvvVisible = !cvvVisible) }
-            is Intent.Copy -> copy(intent.field)
-            is Intent.CopyHistory -> currentState.item?.passwordHistory?.getOrNull(intent.index)?.let {
-                sendEffect(Effect.Copy(CopyRequest(it.password, CopyField.History)))
-            }
-            Intent.ToggleFavorite -> loadedId?.let { id ->
-                viewModelScope.launch {
-                    toggleFavorite(id)
+            is Intent.Load -> {
+                if (intent.id != loadedId) {
+                    loadedId = intent.id
                     reload()
                 }
             }
-            Intent.Edit -> loadedId?.let { sendEffect(Effect.Edit(it)) }
-            Intent.OpenWebsite -> currentState.item?.url?.takeIf { it.isNotBlank() }?.let { sendEffect(Effect.OpenUrl(it)) }
-            is Intent.ShowHistory -> setState { copy(showHistory = intent.show) }
-            Intent.Trash -> setState { copy(confirmTrash = true) }
-            Intent.DismissTrash -> setState { copy(confirmTrash = false) }
+
+            Intent.TogglePasswordVisible -> {
+                setState { copy(passwordVisible = !passwordVisible) }
+            }
+
+            Intent.ToggleCvvVisible -> {
+                setState { copy(cvvVisible = !cvvVisible) }
+            }
+
+            is Intent.Copy -> {
+                copy(intent.field)
+            }
+
+            is Intent.CopyHistory -> {
+                currentState.item?.passwordHistory?.getOrNull(intent.index)?.let {
+                    sendEffect(Effect.Copy(CopyRequest(it.password, CopyField.History)))
+                }
+            }
+
+            Intent.ToggleFavorite -> {
+                loadedId?.let { id ->
+                    viewModelScope.launch {
+                        toggleFavorite(id)
+                        reload()
+                    }
+                }
+            }
+
+            Intent.Edit -> {
+                loadedId?.let { sendEffect(Effect.Edit(it)) }
+            }
+
+            Intent.OpenWebsite -> {
+                currentState.item
+                    ?.url
+                    ?.takeIf { it.isNotBlank() }
+                    ?.let { sendEffect(Effect.OpenUrl(it)) }
+            }
+
+            is Intent.ShowHistory -> {
+                setState { copy(showHistory = intent.show) }
+            }
+
+            Intent.Trash -> {
+                setState { copy(confirmTrash = true) }
+            }
+
+            Intent.DismissTrash -> {
+                setState { copy(confirmTrash = false) }
+            }
+
             Intent.ConfirmTrash -> {
                 val item = currentState.item ?: return
                 setState { copy(confirmTrash = false) }
@@ -60,8 +95,15 @@ class ItemDetailViewModel(
                     sendEffect(Effect.Trashed(item.id, item.title))
                 }
             }
-            is Intent.DeletePasskey -> setState { copy(confirmDeletePasskey = intent.credentialId) }
-            Intent.DismissDeletePasskey -> setState { copy(confirmDeletePasskey = null) }
+
+            is Intent.DeletePasskey -> {
+                setState { copy(confirmDeletePasskey = intent.credentialId) }
+            }
+
+            Intent.DismissDeletePasskey -> {
+                setState { copy(confirmDeletePasskey = null) }
+            }
+
             Intent.ConfirmDeletePasskey -> {
                 val id = loadedId ?: return
                 val credentialId = currentState.confirmDeletePasskey ?: return
@@ -71,7 +113,10 @@ class ItemDetailViewModel(
                     reload()
                 }
             }
-            Intent.Back -> sendEffect(Effect.Close)
+
+            Intent.Back -> {
+                sendEffect(Effect.Close)
+            }
         }
     }
 
@@ -81,8 +126,11 @@ class ItemDetailViewModel(
         viewModelScope.launch {
             val item = runCatching { getItem(id) }.getOrNull()
             setState {
-                if (item == null) State(isLoading = false, notFound = true)
-                else copy(isLoading = false, notFound = false, item = item)
+                if (item == null) {
+                    State(isLoading = false, notFound = true)
+                } else {
+                    copy(isLoading = false, notFound = false, item = item)
+                }
             }
             startTotp(item?.totpSecret.orEmpty())
         }

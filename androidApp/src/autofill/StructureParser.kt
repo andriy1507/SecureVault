@@ -26,7 +26,6 @@ class ParsedForm(
  * right before it is taken as the username.
  */
 object StructureParser {
-
     fun parse(structure: AssistStructure): ParsedForm {
         val state = State()
         for (i in 0 until structure.windowNodeCount) visit(structure.getWindowNodeAt(i).rootViewNode, state)
@@ -34,7 +33,9 @@ object StructureParser {
         if (state.usernames.isEmpty() && state.passwords.isNotEmpty()) {
             val firstPassword = state.passwords.first().id
             val index = state.textFields.indexOfFirst { it.id == firstPassword }
-            state.textFields.getOrNull(index - 1)?.takeIf { it.id !in state.passwords.map(Field::id) }
+            state.textFields
+                .getOrNull(index - 1)
+                ?.takeIf { it.id !in state.passwords.map(Field::id) }
                 ?.let { state.usernames += it }
         }
         return ParsedForm(
@@ -48,7 +49,10 @@ object StructureParser {
         )
     }
 
-    private class Field(val id: AutofillId, val value: String?)
+    private class Field(
+        val id: AutofillId,
+        val value: String?,
+    )
 
     private class State {
         var webDomain: String? = null
@@ -58,14 +62,26 @@ object StructureParser {
         val textFields = mutableListOf<Field>()
     }
 
-    private fun visit(node: AssistStructure.ViewNode, state: State) {
+    private fun visit(
+        node: AssistStructure.ViewNode,
+        state: State,
+    ) {
         if (state.webDomain == null) node.webDomain?.takeIf { it.isNotBlank() }?.let { state.webDomain = it }
 
         val id = node.autofillId
         if (id != null && node.autofillType == View.AUTOFILL_TYPE_TEXT && node.visibility == View.VISIBLE) {
-            val field = Field(id, node.autofillValue?.takeIf { it.isText }?.textValue?.toString())
+            val field = Field(
+                id,
+                node.autofillValue
+                    ?.takeIf { it.isText }
+                    ?.textValue
+                    ?.toString(),
+            )
             val hints = node.autofillHints?.map { it.lowercase() }.orEmpty()
-            val html = node.htmlInfo?.attributes?.associate { it.first.lowercase() to it.second.lowercase() }.orEmpty()
+            val html = node.htmlInfo
+                ?.attributes
+                ?.associate { it.first.lowercase() to it.second.lowercase() }
+                .orEmpty()
             val autocomplete = html["autocomplete"].orEmpty()
             val text = listOfNotNull(node.idEntry, node.hint, html["name"], html["id"]).joinToString(" ").lowercase()
 
@@ -81,7 +97,11 @@ object StructureParser {
         for (i in 0 until node.childCount) visit(node.getChildAt(i), state)
     }
 
-    private fun isPassword(node: AssistStructure.ViewNode, hints: List<String>, html: Map<String, String>): Boolean {
+    private fun isPassword(
+        node: AssistStructure.ViewNode,
+        hints: List<String>,
+        html: Map<String, String>,
+    ): Boolean {
         if (hints.any { it.contains("password") }) return true
         if (html["type"] == "password") return true
         val cls = node.inputType and InputType.TYPE_MASK_CLASS
@@ -90,13 +110,23 @@ object StructureParser {
             (cls == InputType.TYPE_CLASS_NUMBER && variation == InputType.TYPE_NUMBER_VARIATION_PASSWORD)
     }
 
-    private fun isUsername(node: AssistStructure.ViewNode, hints: List<String>, autocomplete: String, text: String): Boolean {
+    private fun isUsername(
+        node: AssistStructure.ViewNode,
+        hints: List<String>,
+        autocomplete: String,
+        text: String,
+    ): Boolean {
         if (hints.any { it in USERNAME_HINTS }) return true
         if (autocomplete.contains("username") || autocomplete.contains("email")) return true
         val variation = node.inputType and InputType.TYPE_MASK_VARIATION
         if ((node.inputType and InputType.TYPE_MASK_CLASS) == InputType.TYPE_CLASS_TEXT &&
-            (variation == InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS || variation == InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS)
-        ) return true
+            (
+                variation == InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS ||
+                    variation == InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS
+            )
+        ) {
+            return true
+        }
         return USERNAME_WORDS.any { text.contains(it) }
     }
 

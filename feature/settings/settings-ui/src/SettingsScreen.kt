@@ -1,9 +1,5 @@
 package dev.spaceapps.secvault.feature.settings.ui
 
-import dev.spaceapps.secvault.feature.settings.resources.passkeys_subtitle
-import dev.spaceapps.secvault.feature.settings.resources.passkeys
-import dev.spaceapps.secvault.core.ui.components.ListDivider
-import androidx.compose.material.icons.outlined.Key
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,6 +18,7 @@ import androidx.compose.material.icons.outlined.ContentPasteOff
 import androidx.compose.material.icons.outlined.DeleteForever
 import androidx.compose.material.icons.outlined.Gavel
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Key
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Policy
@@ -46,11 +43,14 @@ import dev.spaceapps.secvault.core.ui.components.ChevronTrailing
 import dev.spaceapps.secvault.core.ui.components.CollectEffects
 import dev.spaceapps.secvault.core.ui.components.ConfirmDialog
 import dev.spaceapps.secvault.core.ui.components.FilledIconTextButton
+import dev.spaceapps.secvault.core.ui.components.ListDivider
 import dev.spaceapps.secvault.core.ui.components.ListGroup
 import dev.spaceapps.secvault.core.ui.components.ListRow
 import dev.spaceapps.secvault.core.ui.components.RadioOptionDialog
 import dev.spaceapps.secvault.core.ui.components.SectionHeader
 import dev.spaceapps.secvault.core.ui.components.SwitchRow
+import dev.spaceapps.secvault.core.ui.resources.Res as CoreRes
+import dev.spaceapps.secvault.core.ui.resources.action_delete
 import dev.spaceapps.secvault.core.ui.theme.Dimens
 import dev.spaceapps.secvault.feature.settings.domain.AppTheme
 import dev.spaceapps.secvault.feature.settings.domain.AutoLock
@@ -87,6 +87,8 @@ import dev.spaceapps.secvault.feature.settings.resources.delete_account_title
 import dev.spaceapps.secvault.feature.settings.resources.dynamic_color
 import dev.spaceapps.secvault.feature.settings.resources.dynamic_color_subtitle
 import dev.spaceapps.secvault.feature.settings.resources.lock_now
+import dev.spaceapps.secvault.feature.settings.resources.passkeys
+import dev.spaceapps.secvault.feature.settings.resources.passkeys_subtitle
 import dev.spaceapps.secvault.feature.settings.resources.privacy
 import dev.spaceapps.secvault.feature.settings.resources.section_about
 import dev.spaceapps.secvault.feature.settings.resources.section_appearance
@@ -105,8 +107,6 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import dev.spaceapps.secvault.core.ui.resources.Res as CoreRes
-import dev.spaceapps.secvault.core.ui.resources.action_delete
 
 private val THEMES: List<Pair<AppTheme, StringResource>> = listOf(
     AppTheme.Light to Res.string.theme_light,
@@ -155,7 +155,9 @@ fun SettingsScreen(
     val scope = rememberCoroutineScope()
     CollectEffects(viewModel.effects) { effect ->
         when (effect) {
-            is Effect.CopyId -> scope.launch { copy.copy(effect.id, sensitive = false, label = getString(Res.string.account_id_label)) }
+            is Effect.CopyId -> scope.launch {
+                copy.copy(effect.id, sensitive = false, label = getString(Res.string.account_id_label))
+            }
         }
     }
     SettingsContent(state, platform, viewModel::onIntent, onOpenTerms, onOpenPrivacy)
@@ -172,7 +174,10 @@ internal fun SettingsContent(
     val s = state.settings
     Scaffold(topBar = { AppTopBar(stringResource(Res.string.settings_title)) }) { padding ->
         Column(
-            Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState())
+            Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .verticalScroll(rememberScrollState())
                 .padding(start = Dimens.screenPadding, end = Dimens.screenPadding, bottom = Dimens.dp24),
             verticalArrangement = Arrangement.spacedBy(Dimens.dp12),
         ) {
@@ -258,7 +263,11 @@ internal fun SettingsContent(
 
             SectionHeader(stringResource(Res.string.section_about))
             ListGroup {
-                ListRow(title = stringResource(Res.string.version), subtitle = platform.appVersion, leadingIcon = Icons.Outlined.Info)
+                ListRow(
+                    title = stringResource(Res.string.version),
+                    subtitle = platform.appVersion,
+                    leadingIcon = Icons.Outlined.Info,
+                )
                 ListRow(
                     title = stringResource(Res.string.terms),
                     leadingIcon = Icons.Outlined.Gavel,
@@ -290,14 +299,20 @@ internal fun SettingsContent(
 }
 
 @Composable
-private fun IdCard(accountId: String, onCopy: () -> Unit) {
+private fun IdCard(
+    accountId: String,
+    onCopy: () -> Unit,
+) {
     Surface(
         shape = RoundedCornerShape(Dimens.radiusExtraLarge),
         color = MaterialTheme.colorScheme.primaryContainer,
         contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
     ) {
         Column(Modifier.fillMaxWidth().padding(Dimens.dp20), verticalArrangement = Arrangement.spacedBy(Dimens.dp12)) {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Dimens.dp12)) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(Dimens.dp12),
+            ) {
                 Icon(Icons.Filled.Fingerprint, contentDescription = null)
                 Text(stringResource(Res.string.account_id_title), style = MaterialTheme.typography.titleSmall)
             }
@@ -308,10 +323,14 @@ private fun IdCard(accountId: String, onCopy: () -> Unit) {
 }
 
 @Composable
-private fun Dialogs(state: State, onIntent: (Intent) -> Unit) {
+private fun Dialogs(
+    state: State,
+    onIntent: (Intent) -> Unit,
+) {
     val dismiss = { onIntent(Intent.ShowDialog(Dialog.None)) }
     when (state.dialog) {
         Dialog.None -> Unit
+
         Dialog.Theme -> RadioOptionDialog(
             title = stringResource(Res.string.theme),
             options = THEMES.map { stringResource(it.second) },
@@ -319,6 +338,7 @@ private fun Dialogs(state: State, onIntent: (Intent) -> Unit) {
             onConfirm = { onIntent(Intent.ThemeChosen(THEMES[it].first)) },
             onDismiss = dismiss,
         )
+
         Dialog.AutoLock -> RadioOptionDialog(
             title = stringResource(Res.string.auto_lock),
             options = AUTO_LOCKS.map { stringResource(it.second) },
@@ -326,6 +346,7 @@ private fun Dialogs(state: State, onIntent: (Intent) -> Unit) {
             onConfirm = { onIntent(Intent.AutoLockChosen(AUTO_LOCKS[it].first)) },
             onDismiss = dismiss,
         )
+
         Dialog.ClipboardClear -> RadioOptionDialog(
             title = stringResource(Res.string.clear_clipboard),
             options = CLIPBOARD.map { stringResource(it.second) },
@@ -333,6 +354,7 @@ private fun Dialogs(state: State, onIntent: (Intent) -> Unit) {
             onConfirm = { onIntent(Intent.ClipboardClearChosen(CLIPBOARD[it].first)) },
             onDismiss = dismiss,
         )
+
         Dialog.DeleteAccount -> ConfirmDialog(
             icon = Icons.Outlined.DeleteForever,
             title = stringResource(Res.string.delete_account_title),

@@ -50,7 +50,11 @@ fun RadioOptionDialog(
                         Modifier
                             .fillMaxWidth()
                             .heightIn(min = Dimens.dp48)
-                            .selectable(selected = index == selected, onClick = { selected = index }, role = Role.RadioButton),
+                            .selectable(
+                                selected = index == selected,
+                                onClick = { selected = index },
+                                role = Role.RadioButton,
+                            ),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(Dimens.dp12),
                     ) {
@@ -60,7 +64,11 @@ fun RadioOptionDialog(
                 }
             }
         },
-        confirmButton = { TextButton(onClick = { onConfirm(selected) }) { Text(stringResource(Res.string.action_ok)) } },
+        confirmButton = {
+            TextButton(
+                onClick = { onConfirm(selected) },
+            ) { Text(stringResource(Res.string.action_ok)) }
+        },
         dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(Res.string.action_cancel)) } },
     )
 }
@@ -84,12 +92,18 @@ fun ConfirmDialog(
         title = { Text(title, textAlign = TextAlign.Center) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp16)) {
-                Text(text, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(
+                    text,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
                 content()
             }
         },
         confirmButton = {
-            TextButton(onClick = onConfirm, enabled = confirmEnabled) { Text(confirmText, color = if (confirmEnabled) confirmColor else Color.Unspecified) }
+            TextButton(onClick = onConfirm, enabled = confirmEnabled) {
+                Text(confirmText, color = if (confirmEnabled) confirmColor else Color.Unspecified)
+            }
         },
         dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(Res.string.action_cancel)) } },
     )

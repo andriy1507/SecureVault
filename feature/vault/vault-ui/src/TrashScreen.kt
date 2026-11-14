@@ -39,11 +39,11 @@ import dev.spaceapps.secvault.feature.vault.resources.Res
 import dev.spaceapps.secvault.feature.vault.resources.cd_empty_trash
 import dev.spaceapps.secvault.feature.vault.resources.cd_restore
 import dev.spaceapps.secvault.feature.vault.resources.restored_snackbar
-import dev.spaceapps.secvault.feature.vault.resources.trash_deleted_days_ago
-import dev.spaceapps.secvault.feature.vault.resources.trash_deleted_today
 import dev.spaceapps.secvault.feature.vault.resources.trash_delete_dialog_text
 import dev.spaceapps.secvault.feature.vault.resources.trash_delete_dialog_title
 import dev.spaceapps.secvault.feature.vault.resources.trash_delete_forever
+import dev.spaceapps.secvault.feature.vault.resources.trash_deleted_days_ago
+import dev.spaceapps.secvault.feature.vault.resources.trash_deleted_today
 import dev.spaceapps.secvault.feature.vault.resources.trash_empty_action
 import dev.spaceapps.secvault.feature.vault.resources.trash_empty_body
 import dev.spaceapps.secvault.feature.vault.resources.trash_empty_dialog_text
@@ -58,13 +58,21 @@ import org.koin.compose.viewmodel.koinViewModel
 
 /** 38 · Trash. Tap restores; long press deletes forever. */
 @Composable
-fun TrashScreen(onBack: () -> Unit, viewModel: TrashViewModel = koinViewModel()) {
+fun TrashScreen(
+    onBack: () -> Unit,
+    viewModel: TrashViewModel = koinViewModel(),
+) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbar = LocalSnackbarHostState.current
     val scope = rememberCoroutineScope()
     CollectEffects(viewModel.effects) { effect ->
         when (effect) {
-            is Effect.Restored -> scope.launch { snackbar.showSnackbar(getString(Res.string.restored_snackbar, effect.title)) }
+            is Effect.Restored -> scope.launch {
+                snackbar.showSnackbar(
+                    getString(Res.string.restored_snackbar, effect.title),
+                )
+            }
+
             Effect.Close -> onBack()
         }
     }
@@ -72,10 +80,17 @@ fun TrashScreen(onBack: () -> Unit, viewModel: TrashViewModel = koinViewModel())
 }
 
 @Composable
-internal fun TrashContent(state: State, onIntent: (Intent) -> Unit) {
+internal fun TrashContent(
+    state: State,
+    onIntent: (Intent) -> Unit,
+) {
     Scaffold(
         topBar = {
-            AppTopBar(stringResource(Res.string.trash_title), navIcon = NavIcon.Back, onNavigate = { onIntent(Intent.Back) }) {
+            AppTopBar(
+                stringResource(Res.string.trash_title),
+                navIcon = NavIcon.Back,
+                onNavigate = { onIntent(Intent.Back) },
+            ) {
                 if (state.items.isNotEmpty()) {
                     IconButton(onClick = { onIntent(Intent.EmptyTrash) }) {
                         Icon(Icons.Outlined.DeleteSweep, stringResource(Res.string.cd_empty_trash))
@@ -86,6 +101,7 @@ internal fun TrashContent(state: State, onIntent: (Intent) -> Unit) {
     ) { padding ->
         when {
             state.isLoading -> FullScreenProgress(Modifier.padding(padding))
+
             state.items.isEmpty() -> CenteredContent(Modifier.padding(padding)) {
                 HeroMessage(
                     icon = Icons.Outlined.Delete,
@@ -95,9 +111,14 @@ internal fun TrashContent(state: State, onIntent: (Intent) -> Unit) {
                     iconContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
+
             else -> LazyColumn(
                 Modifier.fillMaxSize().padding(padding),
-                contentPadding = PaddingValues(start = Dimens.screenPadding, end = Dimens.screenPadding, bottom = Dimens.dp24),
+                contentPadding = PaddingValues(
+                    start = Dimens.screenPadding,
+                    end = Dimens.screenPadding,
+                    bottom = Dimens.dp24,
+                ),
                 verticalArrangement = Arrangement.spacedBy(Dimens.dp12),
             ) {
                 item {

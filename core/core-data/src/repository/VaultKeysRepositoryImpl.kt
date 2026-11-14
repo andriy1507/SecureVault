@@ -25,7 +25,6 @@ internal class VaultKeysRepositoryImpl(
     private val session: VaultSession,
     private val itemDao: VaultItemDao,
 ) : VaultKeysRepository {
-
     private val _lockState = MutableStateFlow(LockState.Unknown)
     override val lockState: StateFlow<LockState> = _lockState.asStateFlow()
 
@@ -36,67 +35,85 @@ internal class VaultKeysRepositoryImpl(
 
     override fun isDeviceSecure(): Boolean = guard.isDeviceSecure()
 
-    override suspend fun refresh() = mutex.withLock {
-        val stored = storage.read()
-        _lockState.value = when {
-            pending != null -> LockState.NoVault // onboarding in progress
-            stored.sealedBundle == null -> LockState.NoVault
-            !stored.recoveryConfirmed -> {
-                // Onboarding was interrupted: the phrase was never confirmed, so it may be lost.
-                wipeVault()
-                LockState.NoVault
+    override suspend fun refresh() =
+        mutex.withLock {
+            val stored = storage.read()
+            _lockState.value = when {
+                pending != null -> {
+                    LockState.NoVault
+                }
+
+                // onboarding in progress
+                stored.sealedBundle == null -> {
+                    LockState.NoVault
+                }
+
+                !stored.recoveryConfirmed -> {
+                    // Onboarding was interrupted: the phrase was never confirmed, so it may be lost.
+                    wipeVault()
+                    LockState.NoVault
+                }
+
+                session.isOpen -> {
+                    LockState.Unlocked
+                }
+
+                else -> {
+                    LockState.Locked
+                }
             }
-            session.isOpen -> LockState.Unlocked
-            else -> LockState.Locked
         }
-    }
 
-    override suspend fun createVault(): VaultCreation = mutex.withLock {
-        if (!guard.isDeviceSecure()) throw VaultError.DeviceNotSecure()
+    override suspend fun createVault(): VaultCreation =
+        mutex.withLock {
+            if (!guard.isDeviceSecure()) throw VaultError.DeviceNotSecure()
 
-        pending?.wipe()
-        pending = null
+            pending?.wipe()
+            pending = null
 
-        val account = KeyHierarchy.createAccount(Bip39(wordlist.load()))
-        wipeVault() // fresh hardware key and empty item table for a fresh vault
-        val sealed = try {
-            guard.seal(account.bundle.serialize())
-        } catch (e: Throwable) {
-            account.bundle.wipe()
-            throw e
+            val account = KeyHierarchy.createAccount(Bip39(wordlist.load()))
+            wipeVault() // fresh hardware key and empty item table for a fresh vault
+            val sealed = try {
+                guard.seal(account.bundle.serialize())
+            } catch (e: Throwable) {
+                account.bundle.wipe()
+                throw e
+            }
+            storage.saveNewVault(account.accountId, sealed, account.recoveryBlob)
+            pending = account.bundle
+            VaultCreation(account.accountId, account.recoveryWords)
         }
-        storage.saveNewVault(account.accountId, sealed, account.recoveryBlob)
-        pending = account.bundle
-        VaultCreation(account.accountId, account.recoveryWords)
-    }
 
-    override suspend fun completeOnboarding() = mutex.withLock {
-        val bundle = pending ?: throw VaultError.NoVault()
-        storage.setRecoveryConfirmed()
-        pending = null
-        session.open(bundle)
-        _lockState.value = LockState.Unlocked
-    }
-
-    override suspend fun unlock() = mutex.withLock {
-        val sealed = storage.read().sealedBundle ?: throw VaultError.NoVault()
-        val plain = guard.unseal(sealed)
-        try {
-            session.open(KeyBundle.deserialize(plain))
-        } finally {
-            plain.fill(0)
+    override suspend fun completeOnboarding() =
+        mutex.withLock {
+            val bundle = pending ?: throw VaultError.NoVault()
+            storage.setRecoveryConfirmed()
+            pending = null
+            session.open(bundle)
+            _lockState.value = LockState.Unlocked
         }
-        _lockState.value = LockState.Unlocked
-    }
+
+    override suspend fun unlock() =
+        mutex.withLock {
+            val sealed = storage.read().sealedBundle ?: throw VaultError.NoVault()
+            val plain = guard.unseal(sealed)
+            try {
+                session.open(KeyBundle.deserialize(plain))
+            } finally {
+                plain.fill(0)
+            }
+            _lockState.value = LockState.Unlocked
+        }
 
     override suspend fun accountId(): String? = storage.read().accountId
 
-    override suspend fun deleteVault() = mutex.withLock {
-        pending?.wipe()
-        pending = null
-        wipeVault()
-        _lockState.value = LockState.NoVault
-    }
+    override suspend fun deleteVault() =
+        mutex.withLock {
+            pending?.wipe()
+            pending = null
+            wipeVault()
+            _lockState.value = LockState.NoVault
+        }
 
     override fun lock() {
         if (_lockState.value != LockState.Unlocked) return

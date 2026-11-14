@@ -37,19 +37,26 @@ import java.util.concurrent.Executors
 actual fun rememberCameraPermission(): CameraPermission {
     val context = LocalContext.current
     var granted by remember {
-        mutableStateOf(ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
+        mutableStateOf(
+            ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED,
+        )
     }
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted = it }
     return remember(granted, launcher) {
         object : CameraPermission {
             override val granted: Boolean = granted
+
             override fun request() = launcher.launch(Manifest.permission.CAMERA)
         }
     }
 }
 
 @Composable
-actual fun QrScannerView(torchOn: Boolean, onResult: (String) -> Unit, modifier: Modifier) {
+actual fun QrScannerView(
+    torchOn: Boolean,
+    onResult: (String) -> Unit,
+    modifier: Modifier,
+) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val callback = rememberUpdatedState(onResult)
@@ -63,7 +70,8 @@ actual fun QrScannerView(torchOn: Boolean, onResult: (String) -> Unit, modifier:
         providerFuture.addListener({
             val cameraProvider = providerFuture.get().also { provider = it }
             val preview = Preview.Builder().build().also { it.surfaceProvider = previewView.surfaceProvider }
-            val analysis = ImageAnalysis.Builder()
+            val analysis = ImageAnalysis
+                .Builder()
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .build()
             val decoder = QrDecoder()
@@ -77,7 +85,8 @@ actual fun QrScannerView(torchOn: Boolean, onResult: (String) -> Unit, modifier:
                 }
             }
             cameraProvider.unbindAll()
-            camera = cameraProvider.bindToLifecycle(lifecycleOwner, CameraSelector.DEFAULT_BACK_CAMERA, preview, analysis)
+            camera =
+                cameraProvider.bindToLifecycle(lifecycleOwner, CameraSelector.DEFAULT_BACK_CAMERA, preview, analysis)
         }, ContextCompat.getMainExecutor(context))
         onDispose {
             provider?.unbindAll()
@@ -94,7 +103,12 @@ actual fun QrScannerView(torchOn: Boolean, onResult: (String) -> Unit, modifier:
 /** ZXing QR decoding on the luminance (Y) plane of a camera frame. */
 private class QrDecoder {
     private val reader = MultiFormatReader().apply {
-        setHints(mapOf(DecodeHintType.POSSIBLE_FORMATS to listOf(BarcodeFormat.QR_CODE), DecodeHintType.TRY_HARDER to true))
+        setHints(
+            mapOf(
+                DecodeHintType.POSSIBLE_FORMATS to listOf(BarcodeFormat.QR_CODE),
+                DecodeHintType.TRY_HARDER to true,
+            ),
+        )
     }
 
     fun decode(image: ImageProxy): String? {
@@ -102,7 +116,14 @@ private class QrDecoder {
         val buffer = plane.buffer
         val data = ByteArray(buffer.remaining()).also { buffer.get(it) }
         val source = PlanarYUVLuminanceSource(
-            data, plane.rowStride, image.height, 0, 0, image.width, image.height, false,
+            data,
+            plane.rowStride,
+            image.height,
+            0,
+            0,
+            image.width,
+            image.height,
+            false,
         )
         return try {
             reader.decodeWithState(BinaryBitmap(HybridBinarizer(source))).text

@@ -9,7 +9,11 @@ import androidx.compose.runtime.Composable
  */
 interface SecureClipboard {
     /** [clearAfterSeconds] == null: leave it on the clipboard. */
-    fun copy(text: String, sensitive: Boolean, clearAfterSeconds: Int?)
+    fun copy(
+        text: String,
+        sensitive: Boolean,
+        clearAfterSeconds: Int?,
+    )
 }
 
 @Composable

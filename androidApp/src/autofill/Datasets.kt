@@ -1,21 +1,20 @@
 package dev.spaceapps.secvault.autofill
 
 import android.content.Context
-import android.view.View
-import androidx.annotation.DrawableRes
-import dev.spaceapps.secvault.R
 import android.content.IntentSender
 import android.os.Build
 import android.service.autofill.Dataset
 import android.service.autofill.Field
 import android.service.autofill.Presentations
+import android.view.View
 import android.view.autofill.AutofillId
 import android.view.autofill.AutofillValue
 import android.widget.RemoteViews
+import androidx.annotation.DrawableRes
+import dev.spaceapps.secvault.R
 
 /** Builds a suggestion with the Android 13+ API, falling back to the older one on 11-12. */
 internal object Datasets {
-
     /**
      * A value of null means "filled after [authentication]".
      * The suggestion row uses the app's look (R.layout.autofill_dataset) so it reads as Vault, not the system.

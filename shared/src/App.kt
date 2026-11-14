@@ -19,6 +19,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.spaceapps.secvault.core.domain.model.LockState
 import dev.spaceapps.secvault.core.ui.clipboard.LocalClipboardClearSeconds
 import dev.spaceapps.secvault.core.ui.components.SplashScreen
+import dev.spaceapps.secvault.core.ui.navigation.PlatformBackHandler
 import dev.spaceapps.secvault.core.ui.theme.SecureVaultTheme
 import dev.spaceapps.secvault.core.ui.theme.ThemeMode
 import dev.spaceapps.secvault.core.ui.theme.isDynamicColorSupported
@@ -35,23 +36,23 @@ import dev.spaceapps.secvault.feature.settings.domain.AppTheme
 import dev.spaceapps.secvault.feature.settings.domain.AutoLock
 import dev.spaceapps.secvault.feature.settings.domain.ObserveSettingsUseCase
 import dev.spaceapps.secvault.feature.settings.ui.SettingsPlatform
-import dev.spaceapps.secvault.core.ui.navigation.PlatformBackHandler
 import dev.spaceapps.secvault.navigation.ScopedViewModels
 import dev.spaceapps.secvault.navigation.VaultNavHost
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.reload.DevelopmentEntryPoint
 import org.koin.compose.koinInject
-import kotlin.time.Clock
-import kotlin.time.Duration.Companion.seconds
-import kotlin.time.ExperimentalTime
 
-private fun AppTheme.toThemeMode() = when (this) {
-    AppTheme.System -> ThemeMode.System
-    AppTheme.Light -> ThemeMode.Light
-    AppTheme.Dark -> ThemeMode.Dark
-}
+private fun AppTheme.toThemeMode() =
+    when (this) {
+        AppTheme.System -> ThemeMode.System
+        AppTheme.Light -> ThemeMode.Light
+        AppTheme.Dark -> ThemeMode.Dark
+    }
 
 /** Root: the lock state decides which screen is shown; settings drive theme, auto-lock and the clipboard. */
 @Composable
@@ -132,8 +133,11 @@ private fun AppRoot(settings: AppSettings) {
 
     when (lockState) {
         LockState.Unknown -> SplashScreen()
+
         LockState.NoVault -> ScopedViewModels { OnboardingFlow(openSecuritySettings) }
+
         LockState.Locked -> ScopedViewModels { LockScreen() }
+
         LockState.Unlocked -> ScopedViewModels {
             VaultNavHost(
                 onLock = lockVault::invoke,

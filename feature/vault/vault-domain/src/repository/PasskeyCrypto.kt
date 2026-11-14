@@ -15,7 +15,10 @@ interface PasskeyCrypto {
     suspend fun generateKeyPair(): PasskeyKeyPair
 
     /** ECDSA P-256 with SHA-256, DER-encoded signature as WebAuthn expects. */
-    suspend fun sign(privateKey: ByteArray, data: ByteArray): ByteArray
+    suspend fun sign(
+        privateKey: ByteArray,
+        data: ByteArray,
+    ): ByteArray
 
     suspend fun sha256(data: ByteArray): ByteArray
 

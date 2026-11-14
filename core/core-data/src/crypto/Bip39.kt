@@ -6,8 +6,9 @@ fun interface WordlistSource {
 }
 
 /** BIP39 encoding: 256-bit entropy <-> 24 words (8-bit SHA-256 checksum). */
-internal class Bip39(private val wordlist: List<String>) {
-
+internal class Bip39(
+    private val wordlist: List<String>,
+) {
     init {
         require(wordlist.size == 2048) { "BIP39 wordlist must have 2048 words, got ${wordlist.size}" }
         require(wordlist.first() == "abandon" && wordlist.last() == "zoo") { "Unexpected BIP39 wordlist" }

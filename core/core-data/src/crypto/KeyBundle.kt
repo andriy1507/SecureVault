@@ -24,8 +24,14 @@ internal class KeyPairSet(
 
     companion object {
         suspend fun generate(): KeyPairSet {
-            val sign = Crypto.provider.get(ECDSA).keyPairGenerator(EC.Curve.P256).generateKey()
-            val agree = Crypto.provider.get(ECDH).keyPairGenerator(EC.Curve.P256).generateKey()
+            val sign = Crypto.provider
+                .get(ECDSA)
+                .keyPairGenerator(EC.Curve.P256)
+                .generateKey()
+            val agree = Crypto.provider
+                .get(ECDH)
+                .keyPairGenerator(EC.Curve.P256)
+                .generateKey()
             return KeyPairSet(
                 signPrivate = sign.privateKey.encodeToByteArray(EC.PrivateKey.Format.DER),
                 signPublic = sign.publicKey.encodeToByteArray(EC.PublicKey.Format.RAW),
@@ -34,16 +40,18 @@ internal class KeyPairSet(
             )
         }
 
-        fun fromFields(f: List<ByteArray>, offset: Int) =
-            KeyPairSet(f[offset], f[offset + 1], f[offset + 2], f[offset + 3])
+        fun fromFields(
+            f: List<ByteArray>,
+            offset: Int,
+        ) = KeyPairSet(f[offset], f[offset + 1], f[offset + 2], f[offset + 3])
     }
 }
 
 /** Everything sealed by the hardware key on this device. */
 internal class KeyBundle(
     val identity: KeyPairSet, // account-level, same on all devices
-    val device: KeyPairSet,   // unique per device, never restored
-    val vaultKey: ByteArray,  // AES-256, wraps item keys
+    val device: KeyPairSet, // unique per device, never restored
+    val vaultKey: ByteArray, // AES-256, wraps item keys
 ) {
     fun serialize(): ByteArray = Fields.write(FORMAT_VERSION, identity.fields() + device.fields() + listOf(vaultKey))
 
@@ -66,7 +74,10 @@ internal class KeyBundle(
 
 /** Simple binary layout: [version | (u16 length | bytes)*]. */
 internal object Fields {
-    fun write(version: Byte, fields: List<ByteArray>): ByteArray {
+    fun write(
+        version: Byte,
+        fields: List<ByteArray>,
+    ): ByteArray {
         var out = byteArrayOf(version)
         for (f in fields) {
             require(f.size <= 0xFFFF)
@@ -75,7 +86,10 @@ internal object Fields {
         return out
     }
 
-    fun read(version: Byte, bytes: ByteArray): List<ByteArray> {
+    fun read(
+        version: Byte,
+        bytes: ByteArray,
+    ): List<ByteArray> {
         require(bytes.isNotEmpty() && bytes[0] == version) { "Unsupported format" }
         val fields = mutableListOf<ByteArray>()
         var i = 1

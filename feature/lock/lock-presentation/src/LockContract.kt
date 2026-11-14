@@ -5,11 +5,13 @@ import dev.spaceapps.secvault.core.presentation.mvi.UiIntent
 import dev.spaceapps.secvault.core.presentation.mvi.UiState
 
 object LockContract {
-
     sealed interface Error {
         /** Screen lock or biometrics changed, the device key is gone. */
         data object KeyInvalidated : Error
-        data class Failed(val reason: String?) : Error
+
+        data class Failed(
+            val reason: String?,
+        ) : Error
     }
 
     data class State(

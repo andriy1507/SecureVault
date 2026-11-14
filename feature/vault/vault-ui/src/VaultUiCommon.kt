@@ -52,11 +52,11 @@ import dev.spaceapps.secvault.feature.vault.resources.subtitle_note
 import dev.spaceapps.secvault.feature.vault.resources.type_card
 import dev.spaceapps.secvault.feature.vault.resources.type_login
 import dev.spaceapps.secvault.feature.vault.resources.type_note_short
-import org.jetbrains.compose.resources.StringResource
-import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.days
 import kotlin.time.ExperimentalTime
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
 
 internal val ItemType.icon: ImageVector
     get() = when (this) {
@@ -88,7 +88,10 @@ internal val CopyField.label: StringResource
 
 /** Logins get a letter avatar; cards and notes get their type icon, as in the design. */
 @Composable
-internal fun avatarColors(title: String, type: ItemType): ColorPair {
+internal fun avatarColors(
+    title: String,
+    type: ItemType,
+): ColorPair {
     val palette = AppTheme.extendedColors.avatars
     return when (type) {
         ItemType.Login -> avatarColorFor(title, palette)
@@ -101,7 +104,11 @@ private const val CARD_AVATAR_INDEX = 3
 private const val NOTE_AVATAR_INDEX = 4
 
 @Composable
-internal fun TypeAvatar(title: String, type: ItemType, large: Boolean = false) {
+internal fun TypeAvatar(
+    title: String,
+    type: ItemType,
+    large: Boolean = false,
+) {
     val size = if (large) Dimens.avatarLarge else Dimens.avatar
     val letter = avatarLetter(title)
     if (type == ItemType.Login && letter != null) {
@@ -112,15 +119,18 @@ internal fun TypeAvatar(title: String, type: ItemType, large: Boolean = false) {
 }
 
 @Composable
-internal fun summarySubtitle(item: VaultItemSummary): String = when (item.type) {
-    ItemType.Login -> item.subtitle
-    ItemType.Card -> if (item.subtitle.isNotBlank()) {
-        stringResource(Res.string.subtitle_card, item.subtitle)
-    } else {
-        stringResource(Res.string.subtitle_card_no_expiry)
+internal fun summarySubtitle(item: VaultItemSummary): String =
+    when (item.type) {
+        ItemType.Login -> item.subtitle
+
+        ItemType.Card -> if (item.subtitle.isNotBlank()) {
+            stringResource(Res.string.subtitle_card, item.subtitle)
+        } else {
+            stringResource(Res.string.subtitle_card_no_expiry)
+        }
+
+        ItemType.Note -> stringResource(Res.string.subtitle_note)
     }
-    ItemType.Note -> stringResource(Res.string.subtitle_note)
-}
 
 /** Filled card row of the vault list. */
 @OptIn(ExperimentalFoundationApi::class)
@@ -135,18 +145,26 @@ internal fun VaultCard(
     Surface(
         shape = RoundedCornerShape(Dimens.radiusMedium),
         color = MaterialTheme.colorScheme.surfaceContainerLow,
-        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(Dimens.radiusMedium))
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(Dimens.radiusMedium))
             .combinedClickable(onClick = onClick, onLongClick = onLongClick),
     ) {
         Row(
-            Modifier.heightIn(min = Dimens.vaultCardMinHeight)
+            Modifier
+                .heightIn(min = Dimens.vaultCardMinHeight)
                 .padding(start = Dimens.dp16, end = Dimens.dp8, top = Dimens.dp12, bottom = Dimens.dp12),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(Dimens.dp16),
         ) {
             TypeAvatar(item.title, item.type)
             Column(Modifier.weight(1f)) {
-                Text(item.title, style = MaterialTheme.typography.bodyLarge, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(
+                    item.title,
+                    style = MaterialTheme.typography.bodyLarge,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
                 if (subtitle.isNotBlank()) {
                     Text(
                         subtitle,

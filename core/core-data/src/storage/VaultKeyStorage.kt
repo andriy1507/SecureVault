@@ -6,10 +6,10 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import kotlinx.coroutines.flow.first
-import okio.Path.Companion.toPath
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
+import kotlinx.coroutines.flow.first
+import okio.Path.Companion.toPath
 
 const val VAULT_DATASTORE_FILE = "vault_keys.preferences_pb"
 const val SETTINGS_DATASTORE_FILE = "settings.preferences_pb"
@@ -22,8 +22,9 @@ fun createVaultDataStore(absolutePath: String): DataStore<Preferences> =
 
 /** Persists only ciphertext and public data. */
 @OptIn(ExperimentalEncodingApi::class)
-class VaultKeyStorage(private val dataStore: DataStore<Preferences>) {
-
+class VaultKeyStorage(
+    private val dataStore: DataStore<Preferences>,
+) {
     class Stored(
         val accountId: String?,
         val sealedBundle: ByteArray?,
@@ -41,7 +42,11 @@ class VaultKeyStorage(private val dataStore: DataStore<Preferences>) {
         )
     }
 
-    suspend fun saveNewVault(accountId: String, sealedBundle: ByteArray, recoveryBlob: ByteArray) {
+    suspend fun saveNewVault(
+        accountId: String,
+        sealedBundle: ByteArray,
+        recoveryBlob: ByteArray,
+    ) {
         dataStore.edit {
             it.clear()
             it[ACCOUNT_ID] = accountId

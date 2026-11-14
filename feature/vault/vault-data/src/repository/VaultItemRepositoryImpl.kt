@@ -13,30 +13,35 @@ import dev.spaceapps.secvault.feature.vault.domain.model.VaultItem
 import dev.spaceapps.secvault.feature.vault.domain.model.VaultItemSummary
 import dev.spaceapps.secvault.feature.vault.domain.model.toSummary
 import dev.spaceapps.secvault.feature.vault.domain.repository.VaultItemRepository
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
-import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
 
 internal class VaultItemRepositoryImpl(
     private val dao: VaultItemDao,
     private val cipher: VaultCipher,
     private val keys: VaultKeysRepository,
 ) : VaultItemRepository {
-
-    private val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
+    private val json = Json {
+        ignoreUnknownKeys = true
+        encodeDefaults = true
+    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun observeSummaries(): Flow<List<VaultItemSummary>> =
         keys.lockState.flatMapLatest { state ->
-            if (state != LockState.Unlocked) flowOf(emptyList())
-            else dao.observeActive().map { rows -> rows.mapNotNull { decryptOrNull(it)?.toDomain(it.id)?.toSummary() } }
+            if (state != LockState.Unlocked) {
+                flowOf(emptyList())
+            } else {
+                dao.observeActive().map { rows -> rows.mapNotNull { decryptOrNull(it)?.toDomain(it.id)?.toSummary() } }
+            }
         }
 
     override suspend fun get(id: String): VaultItem? {
@@ -45,7 +50,11 @@ internal class VaultItemRepositoryImpl(
     }
 
     override suspend fun getAll(): List<VaultItem> =
-        dao.observeActive().first().map { decrypt(it).toDomain(it.id) }.filter { !it.isTrashed }
+        dao
+            .observeActive()
+            .first()
+            .map { decrypt(it).toDomain(it.id) }
+            .filter { !it.isTrashed }
 
     override suspend fun save(item: VaultItem) {
         val existing = dao.get(item.id)

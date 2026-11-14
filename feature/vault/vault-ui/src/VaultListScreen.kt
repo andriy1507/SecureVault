@@ -1,5 +1,6 @@
 package dev.spaceapps.secvault.feature.vault.ui
 
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,7 +13,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Inventory2
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.SearchOff
 import androidx.compose.material.icons.outlined.ContentCopy
@@ -32,17 +33,9 @@ import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material.icons.outlined.StarOutline
-import androidx.compose.material.icons.filled.QrCodeScanner
-import androidx.compose.material.icons.outlined.Schedule
-import androidx.compose.ui.text.font.FontFamily
-import dev.spaceapps.secvault.feature.vault.resources.codes_empty_body
-import dev.spaceapps.secvault.feature.vault.resources.codes_empty_title
-import dev.spaceapps.secvault.feature.vault.resources.codes_scan
-import dev.spaceapps.secvault.feature.vault.resources.filter_codes
-import dev.spaceapps.secvault.feature.vault.resources.type_code
-import dev.spaceapps.secvault.feature.vault.resources.type_code_desc
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -67,14 +60,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.font.FontFamily
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.spaceapps.secvault.core.ui.clipboard.rememberCopyAction
-import dev.spaceapps.secvault.core.ui.navigation.PlatformBackHandler
 import dev.spaceapps.secvault.core.ui.components.AppTopBar
 import dev.spaceapps.secvault.core.ui.components.CenteredContent
 import dev.spaceapps.secvault.core.ui.components.CollectEffects
@@ -85,6 +78,11 @@ import dev.spaceapps.secvault.core.ui.components.ListDivider
 import dev.spaceapps.secvault.core.ui.components.ListRow
 import dev.spaceapps.secvault.core.ui.components.SectionHeader
 import dev.spaceapps.secvault.core.ui.components.TonalButton
+import dev.spaceapps.secvault.core.ui.navigation.PlatformBackHandler
+import dev.spaceapps.secvault.core.ui.resources.Res as CoreRes
+import dev.spaceapps.secvault.core.ui.resources.action_back
+import dev.spaceapps.secvault.core.ui.resources.action_delete as coreDelete
+import dev.spaceapps.secvault.core.ui.resources.cd_more
 import dev.spaceapps.secvault.core.ui.theme.Dimens
 import dev.spaceapps.secvault.feature.vault.domain.model.ItemFilter
 import dev.spaceapps.secvault.feature.vault.domain.model.ItemSort
@@ -113,15 +111,14 @@ import dev.spaceapps.secvault.feature.vault.resources.cd_copy
 import dev.spaceapps.secvault.feature.vault.resources.cd_open
 import dev.spaceapps.secvault.feature.vault.resources.cd_search
 import dev.spaceapps.secvault.feature.vault.resources.cd_sort
+import dev.spaceapps.secvault.feature.vault.resources.codes_empty_body
+import dev.spaceapps.secvault.feature.vault.resources.codes_empty_title
+import dev.spaceapps.secvault.feature.vault.resources.codes_scan
 import dev.spaceapps.secvault.feature.vault.resources.empty_body
 import dev.spaceapps.secvault.feature.vault.resources.empty_title
 import dev.spaceapps.secvault.feature.vault.resources.filter_all
 import dev.spaceapps.secvault.feature.vault.resources.filter_cards
-import dev.spaceapps.secvault.feature.vault.resources.filter_logins
-import dev.spaceapps.secvault.feature.vault.resources.filter_notes
-import dev.spaceapps.secvault.feature.vault.resources.menu_lock
-import dev.spaceapps.secvault.feature.vault.resources.menu_trash
-import dev.spaceapps.secvault.feature.vault.resources.new_item
+import dev.spaceapps.secvault.feature.vault.resources.filter_codes
 import dev.spaceapps.secvault.feature.vault.resources.filter_empty_cards_add
 import dev.spaceapps.secvault.feature.vault.resources.filter_empty_cards_body
 import dev.spaceapps.secvault.feature.vault.resources.filter_empty_cards_title
@@ -131,6 +128,11 @@ import dev.spaceapps.secvault.feature.vault.resources.filter_empty_logins_title
 import dev.spaceapps.secvault.feature.vault.resources.filter_empty_notes_add
 import dev.spaceapps.secvault.feature.vault.resources.filter_empty_notes_body
 import dev.spaceapps.secvault.feature.vault.resources.filter_empty_notes_title
+import dev.spaceapps.secvault.feature.vault.resources.filter_logins
+import dev.spaceapps.secvault.feature.vault.resources.filter_notes
+import dev.spaceapps.secvault.feature.vault.resources.menu_lock
+import dev.spaceapps.secvault.feature.vault.resources.menu_trash
+import dev.spaceapps.secvault.feature.vault.resources.new_item
 import dev.spaceapps.secvault.feature.vault.resources.no_results_add
 import dev.spaceapps.secvault.feature.vault.resources.no_results_body
 import dev.spaceapps.secvault.feature.vault.resources.no_results_title
@@ -147,6 +149,8 @@ import dev.spaceapps.secvault.feature.vault.resources.trash_dialog_text
 import dev.spaceapps.secvault.feature.vault.resources.trash_dialog_title
 import dev.spaceapps.secvault.feature.vault.resources.type_card
 import dev.spaceapps.secvault.feature.vault.resources.type_card_desc
+import dev.spaceapps.secvault.feature.vault.resources.type_code
+import dev.spaceapps.secvault.feature.vault.resources.type_code_desc
 import dev.spaceapps.secvault.feature.vault.resources.type_login
 import dev.spaceapps.secvault.feature.vault.resources.type_login_desc
 import dev.spaceapps.secvault.feature.vault.resources.type_note
@@ -157,10 +161,6 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import dev.spaceapps.secvault.core.ui.resources.Res as CoreRes
-import dev.spaceapps.secvault.core.ui.resources.action_delete as coreDelete
-import dev.spaceapps.secvault.core.ui.resources.action_back
-import dev.spaceapps.secvault.core.ui.resources.cd_more
 
 /** 01 · Vault, with 19 (empty), 20 (no results), 07/35/36/37 sheets and dialogs. */
 @Composable
@@ -181,15 +181,23 @@ fun VaultListScreen(
     CollectEffects(viewModel.effects) { effect ->
         when (effect) {
             is Effect.OpenItem -> onOpenItem(effect.id)
+
             is Effect.EditItem -> onEditItem(effect.id)
+
             is Effect.NewItem -> onNewItem(effect.type, effect.title)
+
             is Effect.Copy -> scope.launch {
                 copy.copy(effect.request.text, effect.request.field.sensitive, getString(effect.request.field.label))
             }
+
             is Effect.OpenUrl -> uriHandler.openWebsite(effect.url)
+
             is Effect.Trashed -> onItemTrashed(effect.id, effect.title)
+
             Effect.OpenTrash -> onOpenTrash()
+
             Effect.ScanCode -> onScanCode()
+
             Effect.Lock -> onLock()
         }
     }
@@ -198,7 +206,10 @@ fun VaultListScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun VaultListContent(state: State, onIntent: (Intent) -> Unit) {
+internal fun VaultListContent(
+    state: State,
+    onIntent: (Intent) -> Unit,
+) {
     Scaffold(
         topBar = {
             if (!state.searchActive) {
@@ -224,16 +235,28 @@ internal fun VaultListContent(state: State, onIntent: (Intent) -> Unit) {
     ) { padding ->
         Column(Modifier.fillMaxSize().padding(padding)) {
             when {
-                state.isLoading -> FullScreenProgress()
-                state.isEmptyVault -> EmptyVault()
+                state.isLoading -> {
+                    FullScreenProgress()
+                }
+
+                state.isEmptyVault -> {
+                    EmptyVault()
+                }
+
                 else -> {
                     SearchBar(state, onIntent)
                     if (!state.searchActive) FilterChips(state.filter, onIntent)
                     when {
-                        state.filter == ItemFilter.Codes && state.noResults && state.query.isBlank() -> CodesEmpty(onIntent)
+                        state.filter == ItemFilter.Codes && state.noResults && state.query.isBlank() -> CodesEmpty(
+                            onIntent,
+                        )
+
                         state.noResults && state.query.isBlank() -> FilterEmpty(state.filter, onIntent)
+
                         state.noResults -> NoResults(state.query, onIntent)
+
                         state.filter == ItemFilter.Codes -> CodeList(state, onIntent)
+
                         else -> ItemList(state, onIntent)
                     }
                 }
@@ -269,18 +292,27 @@ private fun OverflowMenu(onIntent: (Intent) -> Unit) {
         DropdownMenuItem(
             text = { Text(stringResource(Res.string.menu_trash)) },
             leadingIcon = { Icon(Icons.Outlined.Delete, contentDescription = null) },
-            onClick = { open = false; onIntent(Intent.TrashClicked) },
+            onClick = {
+                open = false
+                onIntent(Intent.TrashClicked)
+            },
         )
         DropdownMenuItem(
             text = { Text(stringResource(Res.string.menu_lock)) },
             leadingIcon = { Icon(Icons.Outlined.Lock, contentDescription = null) },
-            onClick = { open = false; onIntent(Intent.LockClicked) },
+            onClick = {
+                open = false
+                onIntent(Intent.LockClicked)
+            },
         )
     }
 }
 
 @Composable
-private fun SearchBar(state: State, onIntent: (Intent) -> Unit) {
+private fun SearchBar(
+    state: State,
+    onIntent: (Intent) -> Unit,
+) {
     val focusManager = LocalFocusManager.current
     // Back closes the search (and its keyboard) before it can leave the app.
     PlatformBackHandler(enabled = state.searchActive || state.query.isNotEmpty()) {
@@ -297,7 +329,10 @@ private fun SearchBar(state: State, onIntent: (Intent) -> Unit) {
         singleLine = true,
         leadingIcon = {
             if (state.searchActive) {
-                IconButton(onClick = { focusManager.clearFocus(); onIntent(Intent.SearchActiveChanged(false)) }) {
+                IconButton(onClick = {
+                    focusManager.clearFocus()
+                    onIntent(Intent.SearchActiveChanged(false))
+                }) {
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(CoreRes.string.action_back))
                 }
             } else {
@@ -318,7 +353,9 @@ private fun SearchBar(state: State, onIntent: (Intent) -> Unit) {
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
         ),
-        modifier = Modifier.fillMaxWidth().padding(horizontal = Dimens.screenPadding, vertical = Dimens.dp4)
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Dimens.screenPadding, vertical = Dimens.dp4)
             .heightIn(min = Dimens.searchBarHeight),
     )
 }
@@ -332,7 +369,10 @@ private val FILTERS = listOf(
 )
 
 @Composable
-private fun FilterChips(selected: ItemFilter, onIntent: (Intent) -> Unit) {
+private fun FilterChips(
+    selected: ItemFilter,
+    onIntent: (Intent) -> Unit,
+) {
     Row(
         Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal = Dimens.screenPadding),
         horizontalArrangement = Arrangement.spacedBy(Dimens.dp8),
@@ -345,7 +385,11 @@ private fun FilterChips(selected: ItemFilter, onIntent: (Intent) -> Unit) {
                 label = { Text(stringResource(label)) },
                 leadingIcon = {
                     val icon = if (isSelected) Icons.Filled.Check else filter.icon
-                    if (icon != null) Icon(icon, contentDescription = null, modifier = Modifier.size(FilterChipDefaults.IconSize))
+                    if (icon !=
+                        null
+                    ) {
+                        Icon(icon, contentDescription = null, modifier = Modifier.size(FilterChipDefaults.IconSize))
+                    }
                 },
             )
         }
@@ -362,9 +406,17 @@ private val ItemFilter.icon: ImageVector?
     }
 
 @Composable
-private fun ItemList(state: State, onIntent: (Intent) -> Unit) {
+private fun ItemList(
+    state: State,
+    onIntent: (Intent) -> Unit,
+) {
     LazyColumn(
-        contentPadding = PaddingValues(start = Dimens.screenPadding, end = Dimens.screenPadding, top = Dimens.dp4, bottom = Dimens.fabListPadding),
+        contentPadding = PaddingValues(
+            start = Dimens.screenPadding,
+            end = Dimens.screenPadding,
+            top = Dimens.dp4,
+            bottom = Dimens.fabListPadding,
+        ),
         verticalArrangement = Arrangement.spacedBy(Dimens.dp12),
     ) {
         if (state.favorites.isNotEmpty()) {
@@ -373,7 +425,11 @@ private fun ItemList(state: State, onIntent: (Intent) -> Unit) {
         }
         if (state.others.isNotEmpty()) {
             item(key = "h_all") {
-                SectionHeader(stringResource(if (state.query.isNotBlank()) Res.string.section_results else Res.string.section_all_items))
+                SectionHeader(
+                    stringResource(
+                        if (state.query.isNotBlank()) Res.string.section_results else Res.string.section_all_items,
+                    ),
+                )
             }
             items(state.others, key = { "a_" + it.id }) { item -> Card(item, onIntent) }
         }
@@ -381,7 +437,10 @@ private fun ItemList(state: State, onIntent: (Intent) -> Unit) {
 }
 
 @Composable
-private fun Card(item: dev.spaceapps.secvault.feature.vault.domain.model.VaultItemSummary, onIntent: (Intent) -> Unit) {
+private fun Card(
+    item: dev.spaceapps.secvault.feature.vault.domain.model.VaultItemSummary,
+    onIntent: (Intent) -> Unit,
+) {
     VaultCard(
         item = item,
         onClick = { onIntent(Intent.ItemClicked(item.id)) },
@@ -397,7 +456,11 @@ private fun Card(item: dev.spaceapps.secvault.feature.vault.domain.model.VaultIt
                 }
             } else {
                 IconButton(onClick = { onIntent(Intent.QuickCopy(item.id)) }) {
-                    Icon(Icons.Outlined.ContentCopy, stringResource(Res.string.cd_copy), tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Icon(
+                        Icons.Outlined.ContentCopy,
+                        stringResource(Res.string.cd_copy),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
                 }
             }
         },
@@ -406,9 +469,17 @@ private fun Card(item: dev.spaceapps.secvault.feature.vault.domain.model.VaultIt
 
 /** 2FA codes, Google Authenticator style: tap a row to copy its current code. */
 @Composable
-private fun CodeList(state: State, onIntent: (Intent) -> Unit) {
+private fun CodeList(
+    state: State,
+    onIntent: (Intent) -> Unit,
+) {
     LazyColumn(
-        contentPadding = PaddingValues(start = Dimens.screenPadding, end = Dimens.screenPadding, top = Dimens.dp4, bottom = Dimens.fabListPadding),
+        contentPadding = PaddingValues(
+            start = Dimens.screenPadding,
+            end = Dimens.screenPadding,
+            top = Dimens.dp4,
+            bottom = Dimens.fabListPadding,
+        ),
         verticalArrangement = Arrangement.spacedBy(Dimens.dp12),
     ) {
         items(state.favorites + state.others, key = { "c_" + it.id }) { item ->
@@ -420,7 +491,10 @@ private fun CodeList(state: State, onIntent: (Intent) -> Unit) {
                 onLongClick = { onIntent(Intent.ItemLongPressed(item)) },
                 trailing = {
                     if (code != null) {
-                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Dimens.dp12)) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(Dimens.dp12),
+                        ) {
                             Text(
                                 formatTotp(code.code),
                                 style = MaterialTheme.typography.headlineSmall,
@@ -446,7 +520,9 @@ private fun CodesEmpty(onIntent: (Intent) -> Unit) {
             iconContainerColor = MaterialTheme.colorScheme.secondaryContainer,
             iconContentColor = MaterialTheme.colorScheme.onSecondaryContainer,
         ) {
-            TonalButton(stringResource(Res.string.codes_scan), { onIntent(Intent.ScanCodeClicked) }, icon = Icons.Filled.QrCodeScanner)
+            TonalButton(stringResource(Res.string.codes_scan), {
+                onIntent(Intent.ScanCodeClicked)
+            }, icon = Icons.Filled.QrCodeScanner)
         }
     }
 }
@@ -466,12 +542,29 @@ private fun EmptyVault() {
 
 /** A type filter with nothing in it yet (no search text): offer to add that type. */
 @Composable
-private fun FilterEmpty(filter: ItemFilter, onIntent: (Intent) -> Unit) {
+private fun FilterEmpty(
+    filter: ItemFilter,
+    onIntent: (Intent) -> Unit,
+) {
     val type = filter.itemType ?: return
     val (title, body, action) = when (type) {
-        ItemType.Login -> Triple(Res.string.filter_empty_logins_title, Res.string.filter_empty_logins_body, Res.string.filter_empty_logins_add)
-        ItemType.Card -> Triple(Res.string.filter_empty_cards_title, Res.string.filter_empty_cards_body, Res.string.filter_empty_cards_add)
-        ItemType.Note -> Triple(Res.string.filter_empty_notes_title, Res.string.filter_empty_notes_body, Res.string.filter_empty_notes_add)
+        ItemType.Login -> Triple(
+            Res.string.filter_empty_logins_title,
+            Res.string.filter_empty_logins_body,
+            Res.string.filter_empty_logins_add,
+        )
+
+        ItemType.Card -> Triple(
+            Res.string.filter_empty_cards_title,
+            Res.string.filter_empty_cards_body,
+            Res.string.filter_empty_cards_add,
+        )
+
+        ItemType.Note -> Triple(
+            Res.string.filter_empty_notes_title,
+            Res.string.filter_empty_notes_body,
+            Res.string.filter_empty_notes_add,
+        )
     }
     CenteredContent {
         HeroMessage(
@@ -495,7 +588,10 @@ private val ItemFilter.itemType: ItemType?
     }
 
 @Composable
-private fun NoResults(query: String, onIntent: (Intent) -> Unit) {
+private fun NoResults(
+    query: String,
+    onIntent: (Intent) -> Unit,
+) {
     CenteredContent {
         HeroMessage(
             icon = Icons.Filled.SearchOff,
@@ -552,14 +648,21 @@ private val SORTS: List<Pair<ItemSort, StringResource>> = listOf(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SortSheet(selected: ItemSort, onIntent: (Intent) -> Unit) {
+private fun SortSheet(
+    selected: ItemSort,
+    onIntent: (Intent) -> Unit,
+) {
     ModalBottomSheet(onDismissRequest = { onIntent(Intent.DismissSheet) }) {
         SheetTitle(stringResource(Res.string.sheet_sort_title))
         SORTS.forEach { (sort, label) ->
             Row(
-                Modifier.fillMaxWidth()
-                    .selectable(selected = sort == selected, role = Role.RadioButton, onClick = { onIntent(Intent.SortChanged(sort)) })
-                    .heightIn(min = Dimens.dp56)
+                Modifier
+                    .fillMaxWidth()
+                    .selectable(
+                        selected = sort == selected,
+                        role = Role.RadioButton,
+                        onClick = { onIntent(Intent.SortChanged(sort)) },
+                    ).heightIn(min = Dimens.dp56)
                     .padding(horizontal = Dimens.dp24),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(Dimens.dp16),
@@ -574,7 +677,10 @@ private fun SortSheet(selected: ItemSort, onIntent: (Intent) -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ItemActionsSheet(state: State, onIntent: (Intent) -> Unit) {
+private fun ItemActionsSheet(
+    state: State,
+    onIntent: (Intent) -> Unit,
+) {
     val item = state.selected ?: return
     ModalBottomSheet(onDismissRequest = { onIntent(Intent.DismissSheet) }) {
         Row(
@@ -587,7 +693,11 @@ private fun ItemActionsSheet(state: State, onIntent: (Intent) -> Unit) {
                 Text(item.title, style = MaterialTheme.typography.bodyLarge)
                 val subtitle = summarySubtitle(item)
                 if (subtitle.isNotBlank()) {
-                    Text(subtitle, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(
+                        subtitle,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
                 }
             }
         }
@@ -630,8 +740,19 @@ private val CopyField.actionIcon: ImageVector
     }
 
 @Composable
-private fun SheetAction(icon: ImageVector, text: String, color: Color = MaterialTheme.colorScheme.onSurface, onClick: () -> Unit) {
-    ListRow(title = text, leadingIcon = icon, contentColor = color, modifier = Modifier.padding(horizontal = Dimens.dp8), onClick = onClick)
+private fun SheetAction(
+    icon: ImageVector,
+    text: String,
+    color: Color = MaterialTheme.colorScheme.onSurface,
+    onClick: () -> Unit,
+) {
+    ListRow(
+        title = text,
+        leadingIcon = icon,
+        contentColor = color,
+        modifier = Modifier.padding(horizontal = Dimens.dp8),
+        onClick = onClick,
+    )
 }
 
 @Composable
@@ -645,5 +766,6 @@ internal fun SheetTitle(text: String) {
 
 @Composable
 internal fun SheetBottomSpace() {
-    androidx.compose.foundation.layout.Spacer(Modifier.size(Dimens.dp24))
+    androidx.compose.foundation.layout
+        .Spacer(Modifier.size(Dimens.dp24))
 }

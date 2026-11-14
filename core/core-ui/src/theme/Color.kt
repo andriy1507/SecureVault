@@ -162,7 +162,10 @@ internal val DarkColors: ColorScheme = darkColorScheme(
 
 /** A background / content color pair, e.g. for avatars. */
 @Immutable
-data class ColorPair(val container: Color, val content: Color)
+data class ColorPair(
+    val container: Color,
+    val content: Color,
+)
 
 /** Colors the design uses that Material's ColorScheme doesn't have. */
 @Immutable
@@ -178,38 +181,40 @@ data class ExtendedColors(
     val scannerBackground: Color,
 )
 
-internal fun lightExtendedColors(scheme: ColorScheme) = ExtendedColors(
-    success = Palette.LightSuccess,
-    warning = Palette.LightWarning,
-    avatars = listOf(
-        ColorPair(scheme.primaryContainer, scheme.onPrimaryContainer),
-        ColorPair(scheme.tertiaryContainer, scheme.onTertiaryContainer),
-        ColorPair(Palette.LightGreenContainer, Palette.LightOnGreenContainer),
-        ColorPair(scheme.secondaryContainer, scheme.onSecondaryContainer),
-        ColorPair(Palette.LightOrangeContainer, Palette.LightOnOrangeContainer),
-    ),
-    cardGradientStart = scheme.primary,
-    cardGradientEnd = Palette.CardGradientEnd,
-    onCard = Palette.OnCard,
-    qrBackground = Palette.QrBackground,
-    scannerBackground = Palette.ScannerBackground,
-)
+internal fun lightExtendedColors(scheme: ColorScheme) =
+    ExtendedColors(
+        success = Palette.LightSuccess,
+        warning = Palette.LightWarning,
+        avatars = listOf(
+            ColorPair(scheme.primaryContainer, scheme.onPrimaryContainer),
+            ColorPair(scheme.tertiaryContainer, scheme.onTertiaryContainer),
+            ColorPair(Palette.LightGreenContainer, Palette.LightOnGreenContainer),
+            ColorPair(scheme.secondaryContainer, scheme.onSecondaryContainer),
+            ColorPair(Palette.LightOrangeContainer, Palette.LightOnOrangeContainer),
+        ),
+        cardGradientStart = scheme.primary,
+        cardGradientEnd = Palette.CardGradientEnd,
+        onCard = Palette.OnCard,
+        qrBackground = Palette.QrBackground,
+        scannerBackground = Palette.ScannerBackground,
+    )
 
-internal fun darkExtendedColors(scheme: ColorScheme) = ExtendedColors(
-    success = Palette.DarkSuccess,
-    warning = Palette.DarkWarning,
-    avatars = listOf(
-        ColorPair(scheme.primaryContainer, scheme.onPrimaryContainer),
-        ColorPair(scheme.tertiaryContainer, scheme.onTertiaryContainer),
-        ColorPair(Palette.DarkGreenContainer, Palette.DarkOnGreenContainer),
-        ColorPair(scheme.secondaryContainer, scheme.onSecondaryContainer),
-        ColorPair(Palette.DarkOrangeContainer, Palette.DarkOnOrangeContainer),
-    ),
-    cardGradientStart = scheme.primaryContainer,
-    cardGradientEnd = Palette.CardGradientEnd,
-    onCard = Palette.OnCard,
-    qrBackground = Palette.QrBackground,
-    scannerBackground = Palette.ScannerBackground,
-)
+internal fun darkExtendedColors(scheme: ColorScheme) =
+    ExtendedColors(
+        success = Palette.DarkSuccess,
+        warning = Palette.DarkWarning,
+        avatars = listOf(
+            ColorPair(scheme.primaryContainer, scheme.onPrimaryContainer),
+            ColorPair(scheme.tertiaryContainer, scheme.onTertiaryContainer),
+            ColorPair(Palette.DarkGreenContainer, Palette.DarkOnGreenContainer),
+            ColorPair(scheme.secondaryContainer, scheme.onSecondaryContainer),
+            ColorPair(Palette.DarkOrangeContainer, Palette.DarkOnOrangeContainer),
+        ),
+        cardGradientStart = scheme.primaryContainer,
+        cardGradientEnd = Palette.CardGradientEnd,
+        onCard = Palette.OnCard,
+        qrBackground = Palette.QrBackground,
+        scannerBackground = Palette.ScannerBackground,
+    )
 
 val LocalExtendedColors = staticCompositionLocalOf { lightExtendedColors(LightColors) }

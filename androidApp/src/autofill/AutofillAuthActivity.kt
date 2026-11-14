@@ -1,7 +1,5 @@
 package dev.spaceapps.secvault.autofill
 
-import dev.spaceapps.secvault.R
-
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -16,10 +14,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import dev.spaceapps.secvault.SettingsTheme
 import androidx.core.content.IntentCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
+import dev.spaceapps.secvault.R
+import dev.spaceapps.secvault.SettingsTheme
 import dev.spaceapps.secvault.core.domain.error.VaultError
 import dev.spaceapps.secvault.core.domain.model.LockState
 import dev.spaceapps.secvault.core.domain.repository.VaultKeysRepository
@@ -35,8 +34,9 @@ import org.koin.core.component.inject
  * Opened when the user taps "Unlock SecureVault" in another app.
  * Unlocks with the device lock, finds logins for that app/site, returns the chosen one, then locks again.
  */
-class AutofillAuthActivity : FragmentActivity(), KoinComponent {
-
+class AutofillAuthActivity :
+    FragmentActivity(),
+    KoinComponent {
     private val keys: VaultKeysRepository by inject()
     private val findMatches: FindAutofillMatchesUseCase by inject()
     private var lockWhenDone = false
@@ -49,7 +49,10 @@ class AutofillAuthActivity : FragmentActivity(), KoinComponent {
 
         val usernameIds = ids(EXTRA_USERNAME_IDS)
         val passwordIds = ids(EXTRA_PASSWORD_IDS)
-        val target = AutofillTarget.from(intent.getStringExtra(EXTRA_PACKAGE).orEmpty(), intent.getStringExtra(EXTRA_WEB_DOMAIN))
+        val target = AutofillTarget.from(
+            intent.getStringExtra(EXTRA_PACKAGE).orEmpty(),
+            intent.getStringExtra(EXTRA_WEB_DOMAIN),
+        )
         setContent {
             SettingsTheme {
                 AutofillSheet(screen, onPick = { finishWith(it, usernameIds, passwordIds) }, onCancel = ::cancel)
@@ -85,7 +88,11 @@ class AutofillAuthActivity : FragmentActivity(), KoinComponent {
         }
     }
 
-    private fun finishWith(item: VaultItem, usernameIds: List<AutofillId>, passwordIds: List<AutofillId>) {
+    private fun finishWith(
+        item: VaultItem,
+        usernameIds: List<AutofillId>,
+        passwordIds: List<AutofillId>,
+    ) {
         // A username-only form and a login without a username: nothing to fill
         if (passwordIds.isEmpty() && item.username.isEmpty()) return cancel()
         val values = buildList {
@@ -117,16 +124,23 @@ class AutofillAuthActivity : FragmentActivity(), KoinComponent {
         private const val EXTRA_PASSWORD_IDS = "password_ids"
         private var requestCode = 0
 
-        fun intentSender(context: Context, form: ParsedForm): IntentSender {
+        fun intentSender(
+            context: Context,
+            form: ParsedForm,
+        ): IntentSender {
             val intent = Intent(context, AutofillAuthActivity::class.java)
                 .putExtra(EXTRA_PACKAGE, form.packageName)
                 .putExtra(EXTRA_WEB_DOMAIN, form.webDomain)
                 .putParcelableArrayListExtra(EXTRA_USERNAME_IDS, ArrayList(form.usernameIds))
                 .putParcelableArrayListExtra(EXTRA_PASSWORD_IDS, ArrayList(form.passwordIds))
             // MUTABLE: the autofill framework adds its own extras when it starts the activity.
-            return PendingIntent.getActivity(
-                context, requestCode++, intent, PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_MUTABLE,
-            ).intentSender
+            return PendingIntent
+                .getActivity(
+                    context,
+                    requestCode++,
+                    intent,
+                    PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_MUTABLE,
+                ).intentSender
         }
     }
 }

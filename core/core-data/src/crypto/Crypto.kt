@@ -17,13 +17,19 @@ enum class HmacAlgorithm { Sha1, Sha256, Sha512 }
 object Hmac {
     // SHA-1 is what most TOTP issuers use; HMAC-SHA1 is still sound for this.
     @OptIn(DelicateCryptographyApi::class)
-    suspend fun compute(algorithm: HmacAlgorithm, key: ByteArray, data: ByteArray): ByteArray {
+    suspend fun compute(
+        algorithm: HmacAlgorithm,
+        key: ByteArray,
+        data: ByteArray,
+    ): ByteArray {
         val digest = when (algorithm) {
             HmacAlgorithm.Sha1 -> SHA1
             HmacAlgorithm.Sha256 -> SHA256
             HmacAlgorithm.Sha512 -> SHA512
         }
-        return Crypto.provider.get(HMAC).keyDecoder(digest)
+        return Crypto.provider
+            .get(HMAC)
+            .keyDecoder(digest)
             .decodeFromByteArray(HMAC.Key.Format.RAW, key)
             .signatureGenerator()
             .generateSignature(data)
@@ -45,18 +51,31 @@ internal object Crypto {
 
     suspend fun sha256(data: ByteArray): ByteArray = provider.get(SHA256).hasher().hash(data)
 
-    suspend fun hkdf(input: ByteArray, info: String, size: Int = 32): ByteArray =
-        provider.get(HKDF)
+    suspend fun hkdf(
+        input: ByteArray,
+        info: String,
+        size: Int = 32,
+    ): ByteArray =
+        provider
+            .get(HKDF)
             .secretDerivation(SHA256, (size * 8).bits, salt = null, info = info.encodeToByteArray())
             .deriveSecretToByteArray(input)
 
     /** AES-256-GCM. Output: [version | 12-byte random IV | ciphertext | 16-byte tag]. */
-    suspend fun encrypt(key: ByteArray, plain: ByteArray, ad: String): ByteArray {
+    suspend fun encrypt(
+        key: ByteArray,
+        plain: ByteArray,
+        ad: String,
+    ): ByteArray {
         val cipher = aesKey(key).cipher()
         return byteArrayOf(FORMAT_VERSION) + cipher.encrypt(plain, ad.encodeToByteArray())
     }
 
-    suspend fun decrypt(key: ByteArray, blob: ByteArray, ad: String): ByteArray {
+    suspend fun decrypt(
+        key: ByteArray,
+        blob: ByteArray,
+        ad: String,
+    ): ByteArray {
         require(blob.size > 1 + 12 + 16 && blob[0] == FORMAT_VERSION) { "Unsupported format" }
         val cipher = aesKey(key).cipher()
         return cipher.decrypt(blob.copyOfRange(1, blob.size), ad.encodeToByteArray())

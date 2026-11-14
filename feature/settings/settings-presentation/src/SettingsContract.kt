@@ -10,7 +10,6 @@ import dev.spaceapps.secvault.feature.settings.domain.ClipboardClear
 import dev.spaceapps.secvault.feature.settings.domain.DELETE_CONFIRMATION
 
 object SettingsContract {
-
     enum class Dialog { None, Theme, AutoLock, ClipboardClear, DeleteAccount }
 
     data class State(
@@ -25,18 +24,43 @@ object SettingsContract {
 
     sealed interface Intent : UiIntent {
         data object CopyId : Intent
-        data class ShowDialog(val dialog: Dialog) : Intent
-        data class ThemeChosen(val theme: AppTheme) : Intent
-        data class DynamicColorChanged(val enabled: Boolean) : Intent
-        data class AutoLockChosen(val autoLock: AutoLock) : Intent
-        data class ClipboardClearChosen(val clear: ClipboardClear) : Intent
-        data class BlockScreenshotsChanged(val enabled: Boolean) : Intent
-        data class DeleteConfirmationChanged(val text: String) : Intent
+
+        data class ShowDialog(
+            val dialog: Dialog,
+        ) : Intent
+
+        data class ThemeChosen(
+            val theme: AppTheme,
+        ) : Intent
+
+        data class DynamicColorChanged(
+            val enabled: Boolean,
+        ) : Intent
+
+        data class AutoLockChosen(
+            val autoLock: AutoLock,
+        ) : Intent
+
+        data class ClipboardClearChosen(
+            val clear: ClipboardClear,
+        ) : Intent
+
+        data class BlockScreenshotsChanged(
+            val enabled: Boolean,
+        ) : Intent
+
+        data class DeleteConfirmationChanged(
+            val text: String,
+        ) : Intent
+
         data object ConfirmDeleteAccount : Intent
+
         data object LockNow : Intent
     }
 
     sealed interface Effect : UiEffect {
-        data class CopyId(val id: String) : Effect
+        data class CopyId(
+            val id: String,
+        ) : Effect
     }
 }

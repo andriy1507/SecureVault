@@ -12,18 +12,19 @@ actual fun rememberTextFileSaver(onResult: (Boolean) -> Unit): TextFileSaver {
     val context = LocalContext.current
     val callback = rememberUpdatedState(onResult)
     val pending = remember { arrayOfNulls<String>(1) }
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument(TextFileFormat.MIME_TYPE)) { uri ->
-        val content = pending[0]
-        pending[0] = null
-        if (uri == null || content == null) {
-            callback.value(false)
-            return@rememberLauncherForActivityResult
+    val launcher =
+        rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument(TextFileFormat.MIME_TYPE)) { uri ->
+            val content = pending[0]
+            pending[0] = null
+            if (uri == null || content == null) {
+                callback.value(false)
+                return@rememberLauncherForActivityResult
+            }
+            val ok = runCatching {
+                context.contentResolver.openOutputStream(uri)?.use { it.write(content.encodeToByteArray()) } != null
+            }.getOrDefault(false)
+            callback.value(ok)
         }
-        val ok = runCatching {
-            context.contentResolver.openOutputStream(uri)?.use { it.write(content.encodeToByteArray()) } != null
-        }.getOrDefault(false)
-        callback.value(ok)
-    }
     return remember(launcher) {
         TextFileSaver { name, content ->
             pending[0] = content

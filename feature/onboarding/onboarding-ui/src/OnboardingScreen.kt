@@ -63,6 +63,11 @@ import dev.spaceapps.secvault.core.ui.components.SegmentBar
 import dev.spaceapps.secvault.core.ui.components.TonalButton
 import dev.spaceapps.secvault.core.ui.files.rememberTextFileSaver
 import dev.spaceapps.secvault.core.ui.navigation.PlatformBackHandler
+import dev.spaceapps.secvault.core.ui.resources.Res as CoreRes
+import dev.spaceapps.secvault.core.ui.resources.action_continue
+import dev.spaceapps.secvault.core.ui.resources.action_copy
+import dev.spaceapps.secvault.core.ui.resources.copied
+import dev.spaceapps.secvault.core.ui.resources.copied_clears_in
 import dev.spaceapps.secvault.core.ui.theme.Dimens
 import dev.spaceapps.secvault.feature.onboarding.presentation.OnboardingContract.CREATE_STEPS
 import dev.spaceapps.secvault.feature.onboarding.presentation.OnboardingContract.Effect
@@ -112,11 +117,6 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import dev.spaceapps.secvault.core.ui.resources.Res as CoreRes
-import dev.spaceapps.secvault.core.ui.resources.action_continue
-import dev.spaceapps.secvault.core.ui.resources.action_copy
-import dev.spaceapps.secvault.core.ui.resources.copied
-import dev.spaceapps.secvault.core.ui.resources.copied_clears_in
 
 /** Seconds the recovery key may stay on the clipboard. Short on purpose: it opens the whole vault. */
 private const val RECOVERY_CLIPBOARD_SECONDS = 60
@@ -148,7 +148,9 @@ internal fun OnboardingContent(
     onOpenTerms: () -> Unit,
     onOpenPrivacy: () -> Unit,
 ) {
-    PlatformBackHandler(enabled = state.step in CREATE_STEPS || state.step == Step.DeviceNotSecure) { onIntent(Intent.Back) }
+    PlatformBackHandler(enabled = state.step in CREATE_STEPS || state.step == Step.DeviceNotSecure) {
+        onIntent(Intent.Back)
+    }
     when (state.step) {
         Step.Welcome -> WelcomeStep(state.error, onIntent, onOpenTerms, onOpenPrivacy)
         Step.DeviceNotSecure -> DeviceNotSecureStep(onOpenSecuritySettings, onIntent)
@@ -158,18 +160,24 @@ internal fun OnboardingContent(
 }
 
 @Composable
-private fun errorText(error: Error?): String? = when (error) {
-    null -> null
-    Error.UnlockNeeded -> stringResource(Res.string.error_unlock_needed)
-    is Error.CreateFailed -> stringResource(Res.string.error_create_failed, error.reason.orEmpty())
-    Error.WordsDontMatch -> stringResource(Res.string.error_words_dont_match)
-    is Error.FinishFailed -> stringResource(Res.string.error_finish_failed, error.reason.orEmpty())
-}
+private fun errorText(error: Error?): String? =
+    when (error) {
+        null -> null
+        Error.UnlockNeeded -> stringResource(Res.string.error_unlock_needed)
+        is Error.CreateFailed -> stringResource(Res.string.error_create_failed, error.reason.orEmpty())
+        Error.WordsDontMatch -> stringResource(Res.string.error_words_dont_match)
+        is Error.FinishFailed -> stringResource(Res.string.error_finish_failed, error.reason.orEmpty())
+    }
 
 // --- 00 · Welcome ---------------------------------------------------------------------------
 
 @Composable
-private fun WelcomeStep(error: Error?, onIntent: (Intent) -> Unit, onOpenTerms: () -> Unit, onOpenPrivacy: () -> Unit) {
+private fun WelcomeStep(
+    error: Error?,
+    onIntent: (Intent) -> Unit,
+    onOpenTerms: () -> Unit,
+    onOpenPrivacy: () -> Unit,
+) {
     Column(Modifier.fillMaxSize().safeDrawingPadding()) {
         Column(
             Modifier.weight(1f).fillMaxWidth().padding(horizontal = Dimens.heroPadding),
@@ -210,8 +218,12 @@ private fun WelcomeStep(error: Error?, onIntent: (Intent) -> Unit, onOpenTerms: 
 }
 
 @Composable
-private fun LegalText(onOpenTerms: () -> Unit, onOpenPrivacy: () -> Unit) {
-    val linkStyle = TextLinkStyles(SpanStyle(color = MaterialTheme.colorScheme.primary, textDecoration = TextDecoration.Underline))
+private fun LegalText(
+    onOpenTerms: () -> Unit,
+    onOpenPrivacy: () -> Unit,
+) {
+    val linkStyle =
+        TextLinkStyles(SpanStyle(color = MaterialTheme.colorScheme.primary, textDecoration = TextDecoration.Underline))
     val prefix = stringResource(Res.string.welcome_legal_prefix)
     val terms = stringResource(Res.string.welcome_legal_terms)
     val and = stringResource(Res.string.welcome_legal_and)
@@ -234,7 +246,10 @@ private fun LegalText(onOpenTerms: () -> Unit, onOpenPrivacy: () -> Unit) {
 // --- Device has no screen lock ---------------------------------------------------------------
 
 @Composable
-private fun DeviceNotSecureStep(onOpenSettings: () -> Unit, onIntent: (Intent) -> Unit) {
+private fun DeviceNotSecureStep(
+    onOpenSettings: () -> Unit,
+    onIntent: (Intent) -> Unit,
+) {
     Column(Modifier.fillMaxSize().safeDrawingPadding()) {
         Column(Modifier.weight(1f).fillMaxWidth(), verticalArrangement = Arrangement.Center) {
             HeroMessage(
@@ -253,10 +268,19 @@ private fun DeviceNotSecureStep(onOpenSettings: () -> Unit, onIntent: (Intent) -
 // --- 11–13 · Create account -------------------------------------------------------------------
 
 @Composable
-private fun CreateFlow(state: State, onIntent: (Intent) -> Unit) {
+private fun CreateFlow(
+    state: State,
+    onIntent: (Intent) -> Unit,
+) {
     val snackbar = remember { SnackbarHostState() }
     Scaffold(
-        topBar = { AppTopBar(stringResource(Res.string.create_title), navIcon = NavIcon.Back, onNavigate = { onIntent(Intent.Back) }) },
+        topBar = {
+            AppTopBar(
+                stringResource(Res.string.create_title),
+                navIcon = NavIcon.Back,
+                onNavigate = { onIntent(Intent.Back) },
+            )
+        },
         snackbarHost = { SnackbarHost(snackbar) },
     ) { padding ->
         Column(Modifier.fillMaxSize().padding(padding)) {
@@ -275,7 +299,11 @@ private fun CreateFlow(state: State, onIntent: (Intent) -> Unit) {
 }
 
 @Composable
-private fun IdStep(state: State, onIntent: (Intent) -> Unit, snackbar: SnackbarHostState) {
+private fun IdStep(
+    state: State,
+    onIntent: (Intent) -> Unit,
+    snackbar: SnackbarHostState,
+) {
     val clipboard = rememberSecureClipboard()
     val scope = rememberCoroutineScope()
     Column(Modifier.fillMaxSize()) {
@@ -313,21 +341,35 @@ private fun IdStep(state: State, onIntent: (Intent) -> Unit, snackbar: SnackbarH
 }
 
 @Composable
-private fun PhraseStep(state: State, onIntent: (Intent) -> Unit, snackbar: SnackbarHostState) {
+private fun PhraseStep(
+    state: State,
+    onIntent: (Intent) -> Unit,
+    snackbar: SnackbarHostState,
+) {
     val clipboard = rememberSecureClipboard()
     val scope = rememberCoroutineScope()
     val saver = rememberTextFileSaver { saved ->
         scope.launch {
-            snackbar.showSnackbar(getString(if (saved) Res.string.create_key_file_saved else Res.string.create_key_file_failed))
+            snackbar.showSnackbar(
+                getString(if (saved) Res.string.create_key_file_saved else Res.string.create_key_file_failed),
+            )
         }
     }
     Column(Modifier.fillMaxSize()) {
         Column(
-            Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(start = Dimens.dp24, end = Dimens.dp24, top = Dimens.dp24),
+            Modifier
+                .weight(
+                    1f,
+                ).verticalScroll(rememberScrollState())
+                .padding(start = Dimens.dp24, end = Dimens.dp24, top = Dimens.dp24),
             verticalArrangement = Arrangement.spacedBy(Dimens.dp16),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(stringResource(Res.string.create_key_title), style = MaterialTheme.typography.headlineSmall, textAlign = TextAlign.Center)
+            Text(
+                stringResource(Res.string.create_key_title),
+                style = MaterialTheme.typography.headlineSmall,
+                textAlign = TextAlign.Center,
+            )
             Text(
                 stringResource(Res.string.create_key_body, state.words.size),
                 style = MaterialTheme.typography.bodyMedium,
@@ -343,9 +385,15 @@ private fun PhraseStep(state: State, onIntent: (Intent) -> Unit, snackbar: Snack
                     text = stringResource(CoreRes.string.action_copy),
                     icon = Icons.Outlined.ContentCopy,
                     onClick = {
-                        clipboard.copy(state.words.joinToString(" "), sensitive = true, clearAfterSeconds = RECOVERY_CLIPBOARD_SECONDS)
+                        clipboard.copy(
+                            state.words.joinToString(" "),
+                            sensitive = true,
+                            clearAfterSeconds = RECOVERY_CLIPBOARD_SECONDS,
+                        )
                         scope.launch {
-                            snackbar.showSnackbar(getString(CoreRes.string.copied_clears_in, copyLabel, RECOVERY_CLIPBOARD_SECONDS))
+                            snackbar.showSnackbar(
+                                getString(CoreRes.string.copied_clears_in, copyLabel, RECOVERY_CLIPBOARD_SECONDS),
+                            )
                         }
                     },
                 )
@@ -354,8 +402,16 @@ private fun PhraseStep(state: State, onIntent: (Intent) -> Unit, snackbar: Snack
                     icon = Icons.Outlined.Description,
                     onClick = {
                         scope.launch {
-                            val lines = state.words.mapIndexed { i, w -> getString(Res.string.recovery_word_line, i + 1, w) }
-                            saver.save(fileName, getString(Res.string.recovery_file_content, state.accountId, lines.joinToString("\n")))
+                            val lines = state.words.mapIndexed {
+                                i,
+                                w,
+                                ->
+                                getString(Res.string.recovery_word_line, i + 1, w)
+                            }
+                            saver.save(
+                                fileName,
+                                getString(Res.string.recovery_file_content, state.accountId, lines.joinToString("\n")),
+                            )
                         }
                     },
                 )
@@ -370,7 +426,9 @@ private fun PhraseStep(state: State, onIntent: (Intent) -> Unit, snackbar: Snack
                 Checkbox(checked = state.phraseSaved, onCheckedChange = { onIntent(Intent.PhraseSavedChanged(it)) })
                 Text(stringResource(Res.string.create_key_saved_check), style = MaterialTheme.typography.bodyMedium)
             }
-            PrimaryButton(stringResource(CoreRes.string.action_continue), { onIntent(Intent.PhraseWrittenDown) }, enabled = state.phraseSaved)
+            PrimaryButton(stringResource(CoreRes.string.action_continue), {
+                onIntent(Intent.PhraseWrittenDown)
+            }, enabled = state.phraseSaved)
         }
     }
 }
@@ -421,10 +479,17 @@ private fun WarningCard(text: String) {
 }
 
 @Composable
-private fun ConfirmStep(state: State, onIntent: (Intent) -> Unit) {
+private fun ConfirmStep(
+    state: State,
+    onIntent: (Intent) -> Unit,
+) {
     Column(Modifier.fillMaxSize()) {
         Column(
-            Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(start = Dimens.dp24, end = Dimens.dp24, top = Dimens.dp24),
+            Modifier
+                .weight(
+                    1f,
+                ).verticalScroll(rememberScrollState())
+                .padding(start = Dimens.dp24, end = Dimens.dp24, top = Dimens.dp24),
             verticalArrangement = Arrangement.spacedBy(Dimens.dp20),
         ) {
             Text(
@@ -468,7 +533,13 @@ private fun ConfirmStep(state: State, onIntent: (Intent) -> Unit) {
                             FilterChip(
                                 selected = word in state.answers,
                                 onClick = { onIntent(Intent.ChoiceTapped(word)) },
-                                label = { Text(word, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center) },
+                                label = {
+                                    Text(
+                                        word,
+                                        modifier = Modifier.fillMaxWidth(),
+                                        textAlign = TextAlign.Center,
+                                    )
+                                },
                                 modifier = Modifier.weight(1f),
                             )
                         }
