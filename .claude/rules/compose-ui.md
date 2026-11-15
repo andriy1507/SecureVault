@@ -10,4 +10,4 @@ description: Compose UI conventions for SecureVault screens, theme tokens, strin
 - Strings: every user-facing string goes in `composeResources/values/strings.xml` **and** `values-uk/strings.xml` for the same module.
 - Screens are split: `*Screen.kt` (UI, stateless composables) and `*ViewModel.kt` / `*Contract.kt` (state). Screens take state and lambdas, never a ViewModel directly, so previews work.
 - Previews: keep them in the same file or `CardPreview.kt`-style files, using `SecureVaultTheme` in both light and dark.
-- Design reference: `docs/design/FIGMA.html` (open only when matching a screen to its design). Do not copy its inline CSS into Compose.
+- Design reference: `docs/design/FIGMA.html` (git-ignored, local-only; open only when matching a screen to its design). Do not copy its inline CSS into Compose.
