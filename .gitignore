@@ -78,3 +78,6 @@ $RECYCLE.BIN/
 
 # ── Lint tool cache (ktlint/detekt jars) ──
 .lint-cache/
+
+# ── graphify knowledge graph output (rebuildable) ──
+graphify-out/
