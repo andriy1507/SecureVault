@@ -12,5 +12,5 @@ description: Knowledge graph use. Applies at the start of every session and for 
 
 Notes:
 - `graphify-out/` is generated and git-ignored. Its cache (`graphify-out/cache/`) is excluded from search.
-- Git worktrees (`.claude/worktrees/`) do not contain `graphify-out/`. Read it from the main checkout: `C:/Users/AndriyGoryachok/AndroidStudioProjects/SecureVault/graphify-out/`.
+- Git worktrees (`.claude/worktrees/`) do not contain `graphify-out/`. Read it from the main checkout: the `graphify-out/` folder next to the main repo's `.git` (the parent of `git rev-parse --path-format=absolute --git-common-dir`).
 - If the graph looks stale after large changes, say so. Do not rebuild it unless asked.
