@@ -47,6 +47,7 @@ import dev.spaceapps.secvault.feature.settings.ui.SettingsPlatform
 import dev.spaceapps.secvault.feature.settings.ui.SettingsScreen
 import dev.spaceapps.secvault.feature.vault.domain.model.ItemType
 import dev.spaceapps.secvault.feature.vault.domain.usecase.RestoreFromTrashUseCase
+import dev.spaceapps.secvault.feature.vault.ui.BackupScreen
 import dev.spaceapps.secvault.feature.vault.ui.ItemDetailScreen
 import dev.spaceapps.secvault.feature.vault.ui.ItemEditScreen
 import dev.spaceapps.secvault.feature.vault.ui.ScanCodeScreen
@@ -97,6 +98,8 @@ private sealed interface Route {
     data object ScanCode : Route
 
     data object Trash : Route
+
+    data object Backup : Route
 
     data class Legal(
         val document: LegalDocument,
@@ -217,6 +220,7 @@ internal fun VaultNavHost(
                             platform = settingsPlatform,
                             onOpenTerms = { stack.push(Route.Legal(LegalDocument.Terms)) },
                             onOpenPrivacy = { stack.push(Route.Legal(LegalDocument.Privacy)) },
+                            onOpenBackup = { stack.push(Route.Backup) },
                         )
                     },
                 )
@@ -261,6 +265,8 @@ private fun PushedScreen(
         )
 
         Route.Trash -> TrashScreen(onBack = stack::pop)
+
+        Route.Backup -> BackupScreen(onBack = stack::pop)
 
         Route.ScanCode -> ScanCodeScreen(
             onFound = { stack.replaceTop(Route.ItemEdit(null, ItemType.Login, it.issuer, it.account, it.secret)) },

@@ -64,6 +64,13 @@ class VaultItemRepositoryTest {
 
         override suspend fun completeOnboarding() = Unit
 
+        override suspend fun restoreVault(
+            words: List<String>,
+            accountId: String,
+            recoveryBlob: ByteArray,
+            populate: suspend () -> Unit,
+        ) = populate()
+
         override suspend fun unlock() {
             lockState.value = LockState.Unlocked
         }

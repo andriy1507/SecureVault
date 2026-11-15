@@ -158,4 +158,24 @@
     <string name="cd_delete_passkey">Delete passkey</string>
     <string name="passkey_delete_title">Delete passkey?</string>
     <string name="passkey_delete_text">You won't be able to sign in to %1$s with this passkey anymore. Remove it in that site's account settings too.</string>
+
+    <string name="backup_title">Backup &amp; import</string>
+    <string name="backup_export_header">Export</string>
+    <string name="backup_export_body">Saves all your items (not the trash) to an encrypted file. Only your 24-word recovery key can open it, so keep the key safe. Use the file to restore your account on a new phone.</string>
+    <string name="backup_export_action">Export backup</string>
+    <string name="backup_exported">Backup saved · %1$d items</string>
+    <string name="backup_import_header">Import</string>
+    <string name="backup_import_body">Add the items from a Vault backup to this vault. Items you already have (same name, username and website) are skipped.</string>
+    <string name="backup_import_action">Choose backup file</string>
+    <string name="backup_import_account">Account ID</string>
+    <string name="backup_import_items">Items in backup</string>
+    <string name="backup_import_other_account">This backup is from another account. Enter that account's recovery key.</string>
+    <string name="backup_import_submit">Import</string>
+    <string name="backup_imported">Imported %1$d items · %2$d already here</string>
+    <string name="backup_error_export_failed">Couldn't export: %1$s</string>
+    <string name="backup_error_not_saved">The backup wasn't saved</string>
+    <string name="backup_error_unreadable">This file isn't a Vault backup, or it's damaged.</string>
+    <string name="backup_error_invalid_phrase">That isn't a valid 24-word recovery key. Check each word.</string>
+    <string name="backup_error_phrase_mismatch">This recovery key doesn't belong to the backup's account.</string>
+    <string name="backup_error_import_failed">Couldn't import: %1$s</string>
 </resources>

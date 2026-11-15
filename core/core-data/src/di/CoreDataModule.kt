@@ -1,5 +1,7 @@
 package dev.spaceapps.secvault.core.data.di
 
+import dev.spaceapps.secvault.core.data.cipher.BackupCipher
+import dev.spaceapps.secvault.core.data.cipher.BackupCipherImpl
 import dev.spaceapps.secvault.core.data.cipher.VaultCipher
 import dev.spaceapps.secvault.core.data.cipher.VaultCipherImpl
 import dev.spaceapps.secvault.core.data.database.AppDatabase
@@ -23,5 +25,6 @@ val coreDataModule = module {
     single { get<AppDatabase>().vaultItemDao() }
     single<VaultKeysRepository> { VaultKeysRepositoryImpl(get(), get(), get(), get(), get()) }
     single<VaultCipher> { VaultCipherImpl(get()) }
+    single<BackupCipher> { BackupCipherImpl(get(), get(), get()) }
     single<SecureRandomSource> { CryptoSecureRandom() }
 }

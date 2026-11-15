@@ -21,4 +21,8 @@
     <string name="strength_strong">Strong</string>
     <string name="strength_very_strong">Very strong</string>
     <string name="error_unexpected">Something went wrong: %1$s</string>
+    <string name="recovery_phrase_label">Recovery key</string>
+    <string name="recovery_phrase_placeholder">word1 word2 word3 …</string>
+    <string name="recovery_phrase_word_count">%1$d / %2$d words</string>
+    <string name="recovery_phrase_open_file">Open recovery key file</string>
 </resources>

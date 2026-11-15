@@ -40,4 +40,21 @@
     <string name="error_create_failed">Не вдалося створити сховище: %1$s</string>
     <string name="error_words_dont_match">Слова не збігаються. Перевірте ключ відновлення і спробуйте ще раз.</string>
     <string name="error_finish_failed">Не вдалося завершити налаштування: %1$s</string>
+
+    <string name="welcome_restore_title">Відновити з резервної копії</string>
+    <string name="welcome_restore_subtitle">Файл резервної копії і ваш ключ відновлення</string>
+    <string name="restore_title">Відновлення з копії</string>
+    <string name="restore_pick_title">Виберіть резервну копію</string>
+    <string name="restore_pick_body">Виберіть файл резервної копії, експортований з Vault. Ваш акаунт із тим самим ID і всі записи буде відновлено на цьому телефоні.</string>
+    <string name="restore_pick_action">Вибрати файл копії</string>
+    <string name="restore_phrase_title">Введіть ключ відновлення</string>
+    <string name="restore_phrase_body">Цю копію можна відкрити лише ключем відновлення з 24 слів, який ви зберегли під час створення акаунта.</string>
+    <string name="restore_backup_account">ID акаунта</string>
+    <string name="restore_backup_items">Записів у копії</string>
+    <string name="restore_action">Відновити</string>
+    <string name="error_backup_unreadable">Це не резервна копія Vault, або файл пошкоджено.</string>
+    <string name="error_invalid_phrase">Це не дійсний ключ відновлення з 24 слів. Перевірте кожне слово.</string>
+    <string name="error_phrase_mismatch">Цей ключ відновлення не належить акаунту з копії.</string>
+    <string name="error_device_lock_needed">Спершу встановіть блокування екрана: воно захищає сховище на цьому телефоні.</string>
+    <string name="error_restore_failed">Не вдалося відновити: %1$s</string>
 </resources>

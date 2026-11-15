@@ -19,6 +19,7 @@ import androidx.compose.material.icons.outlined.AddCircle
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Description
+import androidx.compose.material.icons.outlined.SettingsBackupRestore
 import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.FilterChip
@@ -54,6 +55,7 @@ import dev.spaceapps.secvault.core.ui.components.CollectEffects
 import dev.spaceapps.secvault.core.ui.components.ErrorText
 import dev.spaceapps.secvault.core.ui.components.FullScreenProgress
 import dev.spaceapps.secvault.core.ui.components.HeroMessage
+import dev.spaceapps.secvault.core.ui.components.ListDivider
 import dev.spaceapps.secvault.core.ui.components.ListGroup
 import dev.spaceapps.secvault.core.ui.components.ListRow
 import dev.spaceapps.secvault.core.ui.components.NavIcon
@@ -61,6 +63,7 @@ import dev.spaceapps.secvault.core.ui.components.PrimaryButton
 import dev.spaceapps.secvault.core.ui.components.SecondaryButton
 import dev.spaceapps.secvault.core.ui.components.SegmentBar
 import dev.spaceapps.secvault.core.ui.components.TonalButton
+import dev.spaceapps.secvault.core.ui.files.TextFileFormat
 import dev.spaceapps.secvault.core.ui.files.rememberTextFileSaver
 import dev.spaceapps.secvault.core.ui.navigation.PlatformBackHandler
 import dev.spaceapps.secvault.core.ui.resources.Res as CoreRes
@@ -73,6 +76,7 @@ import dev.spaceapps.secvault.feature.onboarding.presentation.OnboardingContract
 import dev.spaceapps.secvault.feature.onboarding.presentation.OnboardingContract.Effect
 import dev.spaceapps.secvault.feature.onboarding.presentation.OnboardingContract.Error
 import dev.spaceapps.secvault.feature.onboarding.presentation.OnboardingContract.Intent
+import dev.spaceapps.secvault.feature.onboarding.presentation.OnboardingContract.RESTORE_STEPS
 import dev.spaceapps.secvault.feature.onboarding.presentation.OnboardingContract.State
 import dev.spaceapps.secvault.feature.onboarding.presentation.OnboardingContract.Step
 import dev.spaceapps.secvault.feature.onboarding.presentation.OnboardingViewModel
@@ -99,8 +103,13 @@ import dev.spaceapps.secvault.feature.onboarding.resources.device_not_secure_bod
 import dev.spaceapps.secvault.feature.onboarding.resources.device_not_secure_open_settings
 import dev.spaceapps.secvault.feature.onboarding.resources.device_not_secure_retry
 import dev.spaceapps.secvault.feature.onboarding.resources.device_not_secure_title
+import dev.spaceapps.secvault.feature.onboarding.resources.error_backup_unreadable
 import dev.spaceapps.secvault.feature.onboarding.resources.error_create_failed
+import dev.spaceapps.secvault.feature.onboarding.resources.error_device_lock_needed
 import dev.spaceapps.secvault.feature.onboarding.resources.error_finish_failed
+import dev.spaceapps.secvault.feature.onboarding.resources.error_invalid_phrase
+import dev.spaceapps.secvault.feature.onboarding.resources.error_phrase_mismatch
+import dev.spaceapps.secvault.feature.onboarding.resources.error_restore_failed
 import dev.spaceapps.secvault.feature.onboarding.resources.error_unlock_needed
 import dev.spaceapps.secvault.feature.onboarding.resources.error_words_dont_match
 import dev.spaceapps.secvault.feature.onboarding.resources.recovery_file_content
@@ -112,6 +121,8 @@ import dev.spaceapps.secvault.feature.onboarding.resources.welcome_legal_and
 import dev.spaceapps.secvault.feature.onboarding.resources.welcome_legal_prefix
 import dev.spaceapps.secvault.feature.onboarding.resources.welcome_legal_privacy
 import dev.spaceapps.secvault.feature.onboarding.resources.welcome_legal_terms
+import dev.spaceapps.secvault.feature.onboarding.resources.welcome_restore_subtitle
+import dev.spaceapps.secvault.feature.onboarding.resources.welcome_restore_title
 import dev.spaceapps.secvault.feature.onboarding.resources.welcome_tagline
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
@@ -148,25 +159,32 @@ internal fun OnboardingContent(
     onOpenTerms: () -> Unit,
     onOpenPrivacy: () -> Unit,
 ) {
-    PlatformBackHandler(enabled = state.step in CREATE_STEPS || state.step == Step.DeviceNotSecure) {
+    val backEnabled = state.step in CREATE_STEPS || state.step in RESTORE_STEPS || state.step == Step.DeviceNotSecure
+    PlatformBackHandler(enabled = backEnabled) {
         onIntent(Intent.Back)
     }
     when (state.step) {
         Step.Welcome -> WelcomeStep(state.error, onIntent, onOpenTerms, onOpenPrivacy)
         Step.DeviceNotSecure -> DeviceNotSecureStep(onOpenSecuritySettings, onIntent)
-        Step.Creating, Step.Finishing -> FullScreenProgress()
+        Step.Creating, Step.Finishing, Step.Restoring -> FullScreenProgress()
+        Step.RestorePickFile, Step.RestorePhrase -> RestoreFlow(state, onIntent)
         Step.ShowId, Step.ShowPhrase, Step.ConfirmPhrase -> CreateFlow(state, onIntent)
     }
 }
 
 @Composable
-private fun errorText(error: Error?): String? =
+internal fun errorText(error: Error?): String? =
     when (error) {
         null -> null
         Error.UnlockNeeded -> stringResource(Res.string.error_unlock_needed)
         is Error.CreateFailed -> stringResource(Res.string.error_create_failed, error.reason.orEmpty())
         Error.WordsDontMatch -> stringResource(Res.string.error_words_dont_match)
         is Error.FinishFailed -> stringResource(Res.string.error_finish_failed, error.reason.orEmpty())
+        Error.BackupUnreadable -> stringResource(Res.string.error_backup_unreadable)
+        Error.InvalidPhrase -> stringResource(Res.string.error_invalid_phrase)
+        Error.PhraseDoesNotMatch -> stringResource(Res.string.error_phrase_mismatch)
+        Error.DeviceLockNeeded -> stringResource(Res.string.error_device_lock_needed)
+        is Error.RestoreFailed -> stringResource(Res.string.error_restore_failed, error.reason.orEmpty())
     }
 
 // --- 00 · Welcome ---------------------------------------------------------------------------
@@ -203,13 +221,21 @@ private fun WelcomeStep(
         ) {
             ErrorText(errorText(error), Modifier.fillMaxWidth(), TextAlign.Center)
             ListGroup {
-                // Linking another device and restoring need cloud sync: not in the local-only MVP.
+                // Linking another device needs cloud sync: not in the local-only MVP. Restoring uses a backup file.
                 ListRow(
                     title = stringResource(Res.string.welcome_create_title),
                     subtitle = stringResource(Res.string.welcome_create_subtitle),
                     leadingIcon = Icons.Outlined.AddCircle,
                     trailing = { ChevronTrailing() },
                     onClick = { onIntent(Intent.Start) },
+                )
+                ListDivider()
+                ListRow(
+                    title = stringResource(Res.string.welcome_restore_title),
+                    subtitle = stringResource(Res.string.welcome_restore_subtitle),
+                    leadingIcon = Icons.Outlined.SettingsBackupRestore,
+                    trailing = { ChevronTrailing() },
+                    onClick = { onIntent(Intent.StartRestore) },
                 )
             }
             LegalText(onOpenTerms, onOpenPrivacy)
@@ -348,7 +374,7 @@ private fun PhraseStep(
 ) {
     val clipboard = rememberSecureClipboard()
     val scope = rememberCoroutineScope()
-    val saver = rememberTextFileSaver { saved ->
+    val saver = rememberTextFileSaver(TextFileFormat.RecoveryKey) { saved ->
         scope.launch {
             snackbar.showSnackbar(
                 getString(if (saved) Res.string.create_key_file_saved else Res.string.create_key_file_failed),
