@@ -82,5 +82,10 @@ $RECYCLE.BIN/
 # ── graphify knowledge graph output (rebuildable) ──
 graphify-out/
 
-# ── Figma design and Confluence docs ──
-docs/
+# ── Raw exports: keep local (plans, architecture, rules and CONFLUENCE.md are tracked) ──
+docs/design/FIGMA.html
+docs/product/confluence-export/
+
+# ── Claude Code personal settings ──
+.claude/settings.local.json
+.claude/worktrees/
