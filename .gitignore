@@ -82,5 +82,5 @@ $RECYCLE.BIN/
 # ── graphify knowledge graph output (rebuildable) ──
 graphify-out/
 
-# ── Vault backups (contain encrypted vault data) ──
-*.svbackup
+# ── Figma design and Confluence docs ──
+docs/
