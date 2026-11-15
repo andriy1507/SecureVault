@@ -81,3 +81,6 @@ $RECYCLE.BIN/
 
 # ── graphify knowledge graph output (rebuildable) ──
 graphify-out/
+
+# ── Figma design and Confluence docs ──
+docs/
