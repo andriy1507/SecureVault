@@ -22,6 +22,23 @@ interface VaultKeysRepository {
     /** User confirmed the recovery phrase: vault becomes active and unlocked. */
     suspend fun completeOnboarding()
 
+    /**
+     * Restores an existing account on this device from its recovery phrase and the recovery data
+     * carried in a backup. Keeps the account ID; device keys are fresh. Replaces any vault on this device.
+     *
+     * [populate] runs with the keys loaded (e.g. to import the backup's items). If it fails, the
+     * restored vault is wiped again. The vault becomes unlocked only after it succeeds.
+     *
+     * Throws [dev.spaceapps.secvault.core.domain.error.VaultError.InvalidRecoveryPhrase] or
+     * [dev.spaceapps.secvault.core.domain.error.VaultError.RecoveryPhraseMismatch] before touching anything.
+     */
+    suspend fun restoreVault(
+        words: List<String>,
+        accountId: String,
+        recoveryBlob: ByteArray,
+        populate: suspend () -> Unit,
+    )
+
     /** Shows the OS prompt and loads keys into memory. */
     suspend fun unlock()
 

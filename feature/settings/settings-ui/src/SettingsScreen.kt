@@ -23,6 +23,7 @@ import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Policy
 import androidx.compose.material.icons.outlined.ScreenshotMonitor
+import androidx.compose.material.icons.outlined.SettingsBackupRestore
 import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -72,6 +73,8 @@ import dev.spaceapps.secvault.feature.settings.resources.auto_lock_device
 import dev.spaceapps.secvault.feature.settings.resources.auto_lock_immediately
 import dev.spaceapps.secvault.feature.settings.resources.autofill
 import dev.spaceapps.secvault.feature.settings.resources.autofill_subtitle
+import dev.spaceapps.secvault.feature.settings.resources.backup
+import dev.spaceapps.secvault.feature.settings.resources.backup_subtitle
 import dev.spaceapps.secvault.feature.settings.resources.block_screenshots
 import dev.spaceapps.secvault.feature.settings.resources.block_screenshots_subtitle
 import dev.spaceapps.secvault.feature.settings.resources.clear_10_s
@@ -93,6 +96,7 @@ import dev.spaceapps.secvault.feature.settings.resources.privacy
 import dev.spaceapps.secvault.feature.settings.resources.section_about
 import dev.spaceapps.secvault.feature.settings.resources.section_appearance
 import dev.spaceapps.secvault.feature.settings.resources.section_autofill
+import dev.spaceapps.secvault.feature.settings.resources.section_backup
 import dev.spaceapps.secvault.feature.settings.resources.section_danger
 import dev.spaceapps.secvault.feature.settings.resources.section_security
 import dev.spaceapps.secvault.feature.settings.resources.settings_title
@@ -148,6 +152,7 @@ fun SettingsScreen(
     platform: SettingsPlatform,
     onOpenTerms: () -> Unit,
     onOpenPrivacy: () -> Unit,
+    onOpenBackup: () -> Unit,
     viewModel: SettingsViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -160,7 +165,7 @@ fun SettingsScreen(
             }
         }
     }
-    SettingsContent(state, platform, viewModel::onIntent, onOpenTerms, onOpenPrivacy)
+    SettingsContent(state, platform, viewModel::onIntent, onOpenTerms, onOpenPrivacy, onOpenBackup)
 }
 
 @Composable
@@ -170,6 +175,7 @@ internal fun SettingsContent(
     onIntent: (Intent) -> Unit,
     onOpenTerms: () -> Unit,
     onOpenPrivacy: () -> Unit,
+    onOpenBackup: () -> Unit,
 ) {
     val s = state.settings
     Scaffold(topBar = { AppTopBar(stringResource(Res.string.settings_title)) }) { padding ->
@@ -258,6 +264,17 @@ internal fun SettingsContent(
                     leadingIcon = Icons.Outlined.Lock,
                     contentColor = MaterialTheme.colorScheme.error,
                     onClick = { onIntent(Intent.LockNow) },
+                )
+            }
+
+            SectionHeader(stringResource(Res.string.section_backup))
+            ListGroup {
+                ListRow(
+                    title = stringResource(Res.string.backup),
+                    subtitle = stringResource(Res.string.backup_subtitle),
+                    leadingIcon = Icons.Outlined.SettingsBackupRestore,
+                    trailing = { ChevronTrailing() },
+                    onClick = onOpenBackup,
                 )
             }
 

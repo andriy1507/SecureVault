@@ -44,4 +44,7 @@
     <string name="delete_account_text">Your vault will be permanently erased from this device. This can’t be undone.\n\nType %1$s to confirm.</string>
     <string name="passkeys">Passkeys</string>
     <string name="passkeys_subtitle">Choose Vault to save and use passkeys</string>
+    <string name="section_backup">Backup</string>
+    <string name="backup">Backup &amp; import</string>
+    <string name="backup_subtitle">Export or import an encrypted backup</string>
 </resources>

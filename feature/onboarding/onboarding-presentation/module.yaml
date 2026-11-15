@@ -5,3 +5,4 @@ product:
 dependencies:
   - //feature/onboarding/onboarding-domain: exported
   - //core/core-presentation: exported
+  - //feature/vault/vault-domain: exported

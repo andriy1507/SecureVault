@@ -22,11 +22,15 @@ import platform.UIKit.UIApplication
 import platform.UIKit.UIDocumentPickerDelegateProtocol
 import platform.UIKit.UIDocumentPickerViewController
 import platform.UIKit.UIViewController
+import platform.UniformTypeIdentifiers.UTTypeData
 import platform.UniformTypeIdentifiers.UTTypePlainText
 import platform.darwin.NSObject
 
 @Composable
-actual fun rememberTextFileSaver(onResult: (Boolean) -> Unit): TextFileSaver {
+actual fun rememberTextFileSaver(
+    kind: TextFileKind,
+    onResult: (Boolean) -> Unit,
+): TextFileSaver {
     val callback = rememberUpdatedState(onResult)
     return remember {
         TextFileSaver { name, content ->
@@ -38,7 +42,7 @@ actual fun rememberTextFileSaver(onResult: (Boolean) -> Unit): TextFileSaver {
             }
             val sheet = UIActivityViewController(activityItems = listOf(url), applicationActivities = null)
             sheet.completionWithItemsHandler = { _, completed, _, _ ->
-                // The file holds the recovery key: never leave it in the temp folder.
+                // The file holds the recovery key or a backup: never leave it in the temp folder.
                 NSFileManager.defaultManager.removeItemAtURL(url, error = null)
                 callback.value(completed)
             }
@@ -48,13 +52,17 @@ actual fun rememberTextFileSaver(onResult: (Boolean) -> Unit): TextFileSaver {
 }
 
 @Composable
-actual fun rememberTextFileOpener(onResult: (String?) -> Unit): TextFileOpener {
+actual fun rememberTextFileOpener(
+    kind: TextFileKind,
+    onResult: (String?) -> Unit,
+): TextFileOpener {
     val callback = rememberUpdatedState(onResult)
-    val delegate = remember { PickerDelegate { callback.value(it) } }
+    val delegate = remember(kind) { PickerDelegate(kind.maxReadBytes) { callback.value(it) } }
+    val contentType = if (kind.isPlainText) UTTypePlainText else UTTypeData
     return remember {
         TextFileOpener {
             val presenter = topViewController() ?: return@TextFileOpener callback.value(null)
-            val picker = UIDocumentPickerViewController(forOpeningContentTypes = listOf(UTTypePlainText), asCopy = true)
+            val picker = UIDocumentPickerViewController(forOpeningContentTypes = listOf(contentType), asCopy = true)
             picker.delegate = delegate
             presenter.presentViewController(picker, animated = true, completion = null)
         }
@@ -62,6 +70,7 @@ actual fun rememberTextFileOpener(onResult: (String?) -> Unit): TextFileOpener {
 }
 
 private class PickerDelegate(
+    private val maxBytes: Int,
     private val onResult: (String?) -> Unit,
 ) : NSObject(),
     UIDocumentPickerDelegateProtocol {
@@ -70,7 +79,7 @@ private class PickerDelegate(
         didPickDocumentsAtURLs: List<*>,
     ) {
         val url = didPickDocumentsAtURLs.firstOrNull() as? NSURL
-        onResult(url?.let(::readText))
+        onResult(url?.let { readText(it, maxBytes) })
     }
 
     override fun documentPickerWasCancelled(controller: UIDocumentPickerViewController) {
@@ -78,9 +87,12 @@ private class PickerDelegate(
     }
 }
 
-private fun readText(url: NSURL): String? {
+private fun readText(
+    url: NSURL,
+    maxBytes: Int,
+): String? {
     val data = NSData.dataWithContentsOfURL(url) ?: return null
-    if (data.length.toInt() > TextFileFormat.MAX_READ_BYTES) return null
+    if (data.length.toLong() > maxBytes) return null
     return NSString.create(data = data, encoding = NSUTF8StringEncoding)?.toString()
 }
 

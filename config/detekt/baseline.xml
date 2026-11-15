@@ -148,6 +148,19 @@
     <ID>InvalidPackageDeclaration:VaultUseCases.kt$package dev.spaceapps.secvault.feature.vault.domain.usecase</ID>
     <ID>InvalidPackageDeclaration:WebAuthn.kt$package dev.spaceapps.secvault.feature.vault.domain.passkey</ID>
     <ID>InvalidPackageDeclaration:WebAuthnTest.kt$package dev.spaceapps.secvault.feature.vault.domain.passkey</ID>
+    <ID>InvalidPackageDeclaration:BackupCipher.kt$package dev.spaceapps.secvault.core.data.cipher</ID>
+    <ID>InvalidPackageDeclaration:BackupRestoreTest.kt$package dev.spaceapps.secvault.core.data.cipher</ID>
+    <ID>InvalidPackageDeclaration:RecoveryPhraseField.kt$package dev.spaceapps.secvault.core.ui.components</ID>
+    <ID>InvalidPackageDeclaration:RestoreSteps.kt$package dev.spaceapps.secvault.feature.onboarding.ui</ID>
+    <ID>InvalidPackageDeclaration:BackupDto.kt$package dev.spaceapps.secvault.feature.vault.data.dto</ID>
+    <ID>InvalidPackageDeclaration:VaultBackupRepositoryImpl.kt$package dev.spaceapps.secvault.feature.vault.data.repository</ID>
+    <ID>InvalidPackageDeclaration:VaultBackupRepositoryTest.kt$package dev.spaceapps.secvault.feature.vault.data.repository</ID>
+    <ID>InvalidPackageDeclaration:Backup.kt$package dev.spaceapps.secvault.feature.vault.domain.model</ID>
+    <ID>InvalidPackageDeclaration:VaultBackupRepository.kt$package dev.spaceapps.secvault.feature.vault.domain.repository</ID>
+    <ID>InvalidPackageDeclaration:BackupUseCases.kt$package dev.spaceapps.secvault.feature.vault.domain.usecase</ID>
+    <ID>InvalidPackageDeclaration:BackupContract.kt$package dev.spaceapps.secvault.feature.vault.presentation.backup</ID>
+    <ID>InvalidPackageDeclaration:BackupViewModel.kt$package dev.spaceapps.secvault.feature.vault.presentation.backup</ID>
+    <ID>InvalidPackageDeclaration:BackupScreen.kt$package dev.spaceapps.secvault.feature.vault.ui</ID>
     <ID>LongMethod:ItemDetailViewModel.kt$ItemDetailViewModel$override fun handleIntent(intent: Intent)</ID>
     <ID>LongMethod:PasskeyUseCases.kt$CreatePasskeyUseCase$@OptIn(ExperimentalTime::class, ExperimentalUuidApi::class) suspend operator fun invoke(request: PasskeyCreationRequest): CreatedPasskey</ID>
     <ID>LongMethod:VaultItemPayloadDto.kt$internal fun VaultItem.toPayload(previous: VaultItemPayloadDto?): VaultItemPayloadDto</ID>

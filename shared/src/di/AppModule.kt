@@ -42,16 +42,22 @@ import dev.spaceapps.secvault.feature.vault.domain.passkey.DeletePasskeyUseCase
 import dev.spaceapps.secvault.feature.vault.domain.passkey.FindPasskeysUseCase
 import dev.spaceapps.secvault.feature.vault.domain.usecase.DeleteVaultItemUseCase
 import dev.spaceapps.secvault.feature.vault.domain.usecase.EmptyTrashUseCase
+import dev.spaceapps.secvault.feature.vault.domain.usecase.ExportVaultUseCase
 import dev.spaceapps.secvault.feature.vault.domain.usecase.GenerateTotpUseCase
+import dev.spaceapps.secvault.feature.vault.domain.usecase.GetVaultAccountIdUseCase
 import dev.spaceapps.secvault.feature.vault.domain.usecase.GetVaultItemUseCase
+import dev.spaceapps.secvault.feature.vault.domain.usecase.ImportBackupUseCase
 import dev.spaceapps.secvault.feature.vault.domain.usecase.MoveToTrashUseCase
 import dev.spaceapps.secvault.feature.vault.domain.usecase.ObserveTrashUseCase
 import dev.spaceapps.secvault.feature.vault.domain.usecase.ObserveVaultItemsUseCase
 import dev.spaceapps.secvault.feature.vault.domain.usecase.ParseScannedCodeUseCase
 import dev.spaceapps.secvault.feature.vault.domain.usecase.PurgeExpiredTrashUseCase
+import dev.spaceapps.secvault.feature.vault.domain.usecase.ReadBackupInfoUseCase
+import dev.spaceapps.secvault.feature.vault.domain.usecase.RestoreFromBackupUseCase
 import dev.spaceapps.secvault.feature.vault.domain.usecase.RestoreFromTrashUseCase
 import dev.spaceapps.secvault.feature.vault.domain.usecase.SaveVaultItemUseCase
 import dev.spaceapps.secvault.feature.vault.domain.usecase.ToggleFavoriteUseCase
+import dev.spaceapps.secvault.feature.vault.presentation.backup.BackupViewModel
 import dev.spaceapps.secvault.feature.vault.presentation.detail.ItemDetailViewModel
 import dev.spaceapps.secvault.feature.vault.presentation.edit.ItemEditViewModel
 import dev.spaceapps.secvault.feature.vault.presentation.list.VaultListViewModel
@@ -98,6 +104,12 @@ private val vaultModule = module {
     factoryOf(::PurgeExpiredTrashUseCase)
     factoryOf(::GenerateTotpUseCase)
     factoryOf(::ParseScannedCodeUseCase)
+    factoryOf(::ExportVaultUseCase)
+    factoryOf(::ReadBackupInfoUseCase)
+    factoryOf(::ImportBackupUseCase)
+    factoryOf(::RestoreFromBackupUseCase)
+    factoryOf(::GetVaultAccountIdUseCase)
+    viewModelOf(::BackupViewModel)
     viewModelOf(::VaultListViewModel)
     viewModelOf(::ItemDetailViewModel)
     viewModelOf(::ItemEditViewModel)

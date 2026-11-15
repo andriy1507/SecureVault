@@ -14,6 +14,8 @@ import dev.spaceapps.secvault.feature.onboarding.presentation.OnboardingContract
 import dev.spaceapps.secvault.feature.onboarding.presentation.OnboardingContract.Intent
 import dev.spaceapps.secvault.feature.onboarding.presentation.OnboardingContract.State
 import dev.spaceapps.secvault.feature.onboarding.presentation.OnboardingContract.Step
+import dev.spaceapps.secvault.feature.vault.domain.usecase.ReadBackupInfoUseCase
+import dev.spaceapps.secvault.feature.vault.domain.usecase.RestoreFromBackupUseCase
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
@@ -24,42 +26,37 @@ class OnboardingViewModel(
     private val pickConfirmationWords: PickConfirmationWordsUseCase,
     private val buildConfirmationChoices: BuildConfirmationChoicesUseCase,
     private val verifyConfirmationWords: VerifyConfirmationWordsUseCase,
+    private val readBackupInfo: ReadBackupInfoUseCase,
+    private val restoreFromBackup: RestoreFromBackupUseCase,
 ) : MviViewModel<Intent, State, Effect>(State()) {
     override fun handleIntent(intent: Intent) {
         when (intent) {
             Intent.Start -> start()
-
             Intent.IdSeen -> setState { copy(step = Step.ShowPhrase, error = null) }
-
             is Intent.PhraseSavedChanged -> setState { copy(phraseSaved = intent.saved) }
-
             Intent.PhraseWrittenDown -> if (currentState.phraseSaved) startConfirmation()
-
-            is Intent.ChoiceTapped -> setState {
-                val slot = answers.indexOfFirst { it == null }
-                if (slot < 0 || intent.word in answers) {
-                    this
-                } else {
-                    copy(answers = answers.toMutableList().also { it[slot] = intent.word }, error = null)
-                }
-            }
-
-            is Intent.SlotCleared -> setState {
-                copy(
-                    answers = answers.toMutableList().also {
-                        if (intent.slot in
-                            it.indices
-                        ) {
-                            it[intent.slot] = null
-                        }
-                    },
-                    error = null,
-                )
-            }
-
+            is Intent.ChoiceTapped -> choiceTapped(intent.word)
+            is Intent.SlotCleared -> slotCleared(intent.slot)
             Intent.SubmitConfirmation -> submit()
-
             Intent.Back -> back()
+            is Intent.RestoreIntent -> handleRestoreIntent(intent)
+        }
+    }
+
+    private fun choiceTapped(word: String) {
+        setState {
+            val slot = answers.indexOfFirst { it == null }
+            if (slot < 0 || word in answers) {
+                this
+            } else {
+                copy(answers = answers.toMutableList().also { it[slot] = word }, error = null)
+            }
+        }
+    }
+
+    private fun slotCleared(slot: Int) {
+        setState {
+            copy(answers = answers.toMutableList().also { if (slot in it.indices) it[slot] = null }, error = null)
         }
     }
 
@@ -112,6 +109,10 @@ class OnboardingViewModel(
 
                 Step.ConfirmPhrase -> copy(step = Step.ShowPhrase, error = null)
 
+                Step.RestorePickFile -> State()
+
+                Step.RestorePhrase -> copy(step = Step.RestorePickFile, restorePhrase = "", error = null)
+
                 else -> this
             }
         }
@@ -137,6 +138,70 @@ class OnboardingViewModel(
             }
         }
     }
+
+    // --- Restore from backup -------------------------------------------------------------------
+
+    private fun handleRestoreIntent(intent: Intent.RestoreIntent) {
+        when (intent) {
+            Intent.StartRestore -> setState { State(step = Step.RestorePickFile) }
+            is Intent.BackupPicked -> backupPicked(intent.content)
+            is Intent.RestorePhraseChanged -> setState { copy(restorePhrase = intent.text, error = null) }
+            Intent.SubmitRestore -> submitRestore()
+        }
+    }
+
+    private fun backupPicked(content: String) {
+        val info = try {
+            readBackupInfo(content)
+        } catch (expected: VaultError.UnsupportedBackup) {
+            null
+        }
+        setState {
+            if (info == null) {
+                copy(backupContent = null, backupInfo = null, error = Error.BackupUnreadable)
+            } else {
+                copy(step = Step.RestorePhrase, backupContent = content, backupInfo = info, error = null)
+            }
+        }
+    }
+
+    private fun submitRestore() {
+        val state = currentState
+        val content = state.backupContent ?: return
+        if (!state.canSubmitRestore || state.step == Step.Restoring) return
+        if (!checkDeviceSecurity()) {
+            setState { copy(error = Error.DeviceLockNeeded) }
+            sendEffect(Effect.OpenSecuritySettings)
+            return
+        }
+        setState { copy(step = Step.Restoring, error = null) }
+        viewModelScope.launch {
+            try {
+                restoreFromBackup(content, state.restoreWords) // lock state becomes Unlocked; the app navigates away
+                setState { State(step = Step.Restoring) } // drop the phrase from memory
+            } catch (e: CancellationException) {
+                throw e
+            } catch (expected: Exception) {
+                val error = restoreError(expected)
+                setState {
+                    copy(
+                        step = if (error == Error.BackupUnreadable) Step.RestorePickFile else Step.RestorePhrase,
+                        error = error,
+                    )
+                }
+            }
+        }
+    }
+
+    private fun restoreError(e: Exception): Error =
+        when (e) {
+            is VaultError.InvalidRecoveryPhrase -> Error.InvalidPhrase
+            is VaultError.RecoveryPhraseMismatch -> Error.PhraseDoesNotMatch
+            is VaultError.UnsupportedBackup -> Error.BackupUnreadable
+            is VaultError.DeviceNotSecure -> Error.DeviceLockNeeded
+            is VaultError.AuthCancelled -> Error.UnlockNeeded
+            else -> Error.RestoreFailed(e.message)
+        }
 
     override fun onCleared() {
         setState { State() }

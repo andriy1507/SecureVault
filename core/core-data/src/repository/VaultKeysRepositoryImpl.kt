@@ -93,6 +93,34 @@ internal class VaultKeysRepositoryImpl(
             _lockState.value = LockState.Unlocked
         }
 
+    override suspend fun restoreVault(
+        words: List<String>,
+        accountId: String,
+        recoveryBlob: ByteArray,
+        populate: suspend () -> Unit,
+    ) = mutex.withLock {
+        if (!guard.isDeviceSecure()) throw VaultError.DeviceNotSecure()
+        // Checks the phrase before anything on this device is touched.
+        val bundle = KeyHierarchy.restoreFromRecovery(words, recoveryBlob, accountId, Bip39(wordlist.load()))
+
+        pending?.wipe()
+        pending = null
+        wipeVault()
+        try {
+            val sealed = guard.seal(bundle.serialize())
+            // Stays unconfirmed until populated: an interrupted restore is wiped by refresh() on next start.
+            storage.saveNewVault(accountId, sealed, recoveryBlob)
+            session.open(bundle)
+            populate()
+        } catch (e: Throwable) {
+            bundle.wipe()
+            wipeVault()
+            throw e
+        }
+        storage.setRecoveryConfirmed()
+        _lockState.value = LockState.Unlocked
+    }
+
     override suspend fun unlock() =
         mutex.withLock {
             val sealed = storage.read().sealedBundle ?: throw VaultError.NoVault()

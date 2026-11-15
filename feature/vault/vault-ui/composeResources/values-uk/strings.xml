@@ -158,4 +158,24 @@
     <string name="cd_delete_passkey">Видалити ключ доступу</string>
     <string name="passkey_delete_title">Видалити ключ доступу?</string>
     <string name="passkey_delete_text">Ви більше не зможете входити на %1$s з цим ключем. Видаліть його також у налаштуваннях акаунта на сайті.</string>
+
+    <string name="backup_title">Резервна копія та імпорт</string>
+    <string name="backup_export_header">Експорт</string>
+    <string name="backup_export_body">Зберігає всі записи (крім кошика) у зашифрований файл. Відкрити його можна лише вашим ключем відновлення з 24 слів, тож бережіть ключ. За допомогою файлу можна відновити акаунт на новому телефоні.</string>
+    <string name="backup_export_action">Експортувати копію</string>
+    <string name="backup_exported">Копію збережено · записів: %1$d</string>
+    <string name="backup_import_header">Імпорт</string>
+    <string name="backup_import_body">Додає записи з резервної копії Vault у це сховище. Записи, які вже є (та сама назва, ім’я користувача й сайт), пропускаються.</string>
+    <string name="backup_import_action">Вибрати файл копії</string>
+    <string name="backup_import_account">ID акаунта</string>
+    <string name="backup_import_items">Записів у копії</string>
+    <string name="backup_import_other_account">Ця копія з іншого акаунта. Введіть ключ відновлення того акаунта.</string>
+    <string name="backup_import_submit">Імпортувати</string>
+    <string name="backup_imported">Імпортовано: %1$d · вже були: %2$d</string>
+    <string name="backup_error_export_failed">Не вдалося експортувати: %1$s</string>
+    <string name="backup_error_not_saved">Копію не збережено</string>
+    <string name="backup_error_unreadable">Це не резервна копія Vault, або файл пошкоджено.</string>
+    <string name="backup_error_invalid_phrase">Це не дійсний ключ відновлення з 24 слів. Перевірте кожне слово.</string>
+    <string name="backup_error_phrase_mismatch">Цей ключ відновлення не належить акаунту з копії.</string>
+    <string name="backup_error_import_failed">Не вдалося імпортувати: %1$s</string>
 </resources>

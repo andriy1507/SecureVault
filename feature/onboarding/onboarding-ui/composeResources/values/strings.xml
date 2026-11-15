@@ -40,4 +40,21 @@
     <string name="error_create_failed">Couldn't create the vault: %1$s</string>
     <string name="error_words_dont_match">Those words don't match. Check your recovery key and try again.</string>
     <string name="error_finish_failed">Couldn't finish setup: %1$s</string>
+
+    <string name="welcome_restore_title">Restore from backup</string>
+    <string name="welcome_restore_subtitle">Use a backup file and your recovery key</string>
+    <string name="restore_title">Restore from backup</string>
+    <string name="restore_pick_title">Choose your backup</string>
+    <string name="restore_pick_body">Pick the backup file you exported from Vault. Your account, with the same account ID, and all its items will be restored on this phone.</string>
+    <string name="restore_pick_action">Choose backup file</string>
+    <string name="restore_phrase_title">Enter your recovery key</string>
+    <string name="restore_phrase_body">Only the 24-word recovery key you saved when the account was created can open this backup.</string>
+    <string name="restore_backup_account">Account ID</string>
+    <string name="restore_backup_items">Items in backup</string>
+    <string name="restore_action">Restore</string>
+    <string name="error_backup_unreadable">This file isn't a Vault backup, or it's damaged.</string>
+    <string name="error_invalid_phrase">That isn't a valid 24-word recovery key. Check each word.</string>
+    <string name="error_phrase_mismatch">This recovery key doesn't belong to the backup's account.</string>
+    <string name="error_device_lock_needed">Set a screen lock first: it protects your vault on this phone.</string>
+    <string name="error_restore_failed">Couldn't restore: %1$s</string>
 </resources>

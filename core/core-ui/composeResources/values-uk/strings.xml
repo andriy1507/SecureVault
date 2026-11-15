@@ -21,4 +21,8 @@
     <string name="strength_strong">Надійний</string>
     <string name="strength_very_strong">Дуже надійний</string>
     <string name="error_unexpected">Щось пішло не так: %1$s</string>
+    <string name="recovery_phrase_label">Ключ відновлення</string>
+    <string name="recovery_phrase_placeholder">слово1 слово2 слово3 …</string>
+    <string name="recovery_phrase_word_count">%1$d / %2$d слів</string>
+    <string name="recovery_phrase_open_file">Відкрити файл ключа відновлення</string>
 </resources>

@@ -44,4 +44,7 @@
     <string name="delete_account_text">Сховище буде назавжди стерто з цього пристрою. Цю дію не можна скасувати.\n\nВведіть %1$s для підтвердження.</string>
     <string name="passkeys">Ключі доступу</string>
     <string name="passkeys_subtitle">Виберіть Vault, щоб зберігати й використовувати ключі доступу</string>
+    <string name="section_backup">Резервна копія</string>
+    <string name="backup">Резервна копія та імпорт</string>
+    <string name="backup_subtitle">Експорт або імпорт зашифрованої копії</string>
 </resources>
