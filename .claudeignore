@@ -1,0 +1,40 @@
+# Build and generated output
+build/
+.kotlin/
+.amper/
+.gradle/
+out/
+captures/
+graphify-out/cache/
+.lint-cache/
+**/schemas/
+
+# Worktrees and IDE
+.claude/worktrees/
+.idea/
+.vscode/
+.fleet/
+*.iml
+
+# Binaries and large assets
+*.apk
+*.aab
+*.keystore
+*.jks
+*.png
+*.jpg
+*.webp
+*.ttf
+*.otf
+docs/design/FIGMA.html
+
+# Secrets and local config (never read)
+local.properties
+keystore.properties
+signing.properties
+.env
+.env.*
+vault-recovery-key-*.txt
+
+# Large or noisy text
+*.log
