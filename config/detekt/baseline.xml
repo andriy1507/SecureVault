@@ -86,7 +86,7 @@
     <ID>InvalidPackageDeclaration:OnboardingViewModel.kt$package dev.spaceapps.secvault.feature.onboarding.presentation</ID>
     <ID>InvalidPackageDeclaration:OtpAuth.kt$package dev.spaceapps.secvault.feature.vault.domain.model</ID>
     <ID>InvalidPackageDeclaration:OtpAuthUriTest.kt$package dev.spaceapps.secvault.feature.vault.domain.model</ID>
-    <ID>InvalidPackageDeclaration:Passkey.kt$package dev.spaceapps.secvault.feature.vault.domain.model</ID>
+    <ID>InvalidPackageDeclaration:Passkey.kt$package dev.spaceapps.secvault.core.domain.model</ID>
     <ID>InvalidPackageDeclaration:PasskeyActivities.kt$package dev.spaceapps.secvault.passkey</ID>
     <ID>InvalidPackageDeclaration:PasskeyCrypto.kt$package dev.spaceapps.secvault.feature.vault.domain.repository</ID>
     <ID>InvalidPackageDeclaration:PasskeyCryptoImpl.kt$package dev.spaceapps.secvault.feature.vault.data.passkey</ID>
@@ -94,8 +94,8 @@
     <ID>InvalidPackageDeclaration:PasskeyJson.kt$package dev.spaceapps.secvault.passkey</ID>
     <ID>InvalidPackageDeclaration:PasskeyLog.kt$package dev.spaceapps.secvault.passkey</ID>
     <ID>InvalidPackageDeclaration:PasskeyUseCases.kt$package dev.spaceapps.secvault.feature.vault.domain.passkey</ID>
-    <ID>InvalidPackageDeclaration:PaymentCard.kt$package dev.spaceapps.secvault.feature.vault.domain.model</ID>
-    <ID>InvalidPackageDeclaration:PaymentCardTest.kt$package dev.spaceapps.secvault.feature.vault.domain.model</ID>
+    <ID>InvalidPackageDeclaration:PaymentCard.kt$package dev.spaceapps.secvault.core.domain.model</ID>
+    <ID>InvalidPackageDeclaration:PaymentCardTest.kt$package dev.spaceapps.secvault.core.domain.model</ID>
     <ID>InvalidPackageDeclaration:Platform.android.kt$package dev.spaceapps.secvault</ID>
     <ID>InvalidPackageDeclaration:Platform.ios.kt$package dev.spaceapps.secvault</ID>
     <ID>InvalidPackageDeclaration:Platform.kt$package dev.spaceapps.secvault</ID>
@@ -139,9 +139,9 @@
     <ID>InvalidPackageDeclaration:VaultCredentialProviderService.kt$package dev.spaceapps.secvault.passkey</ID>
     <ID>InvalidPackageDeclaration:VaultDataModule.kt$package dev.spaceapps.secvault.feature.vault.data.di</ID>
     <ID>InvalidPackageDeclaration:VaultError.kt$package dev.spaceapps.secvault.core.domain.error</ID>
-    <ID>InvalidPackageDeclaration:VaultItem.kt$package dev.spaceapps.secvault.feature.vault.domain.model</ID>
+    <ID>InvalidPackageDeclaration:VaultItem.kt$package dev.spaceapps.secvault.core.domain.model</ID>
     <ID>InvalidPackageDeclaration:VaultItemPayloadDto.kt$package dev.spaceapps.secvault.feature.vault.data.dto</ID>
-    <ID>InvalidPackageDeclaration:VaultItemRepository.kt$package dev.spaceapps.secvault.feature.vault.domain.repository</ID>
+    <ID>InvalidPackageDeclaration:VaultItemRepository.kt$package dev.spaceapps.secvault.core.domain.repository</ID>
     <ID>InvalidPackageDeclaration:VaultItemRepositoryImpl.kt$package dev.spaceapps.secvault.feature.vault.data.repository</ID>
     <ID>InvalidPackageDeclaration:VaultItemRepositoryTest.kt$package dev.spaceapps.secvault.feature.vault.data.repository</ID>
     <ID>InvalidPackageDeclaration:VaultKeyStorage.kt$package dev.spaceapps.secvault.core.data.storage</ID>
@@ -163,7 +163,7 @@
     <ID>InvalidPackageDeclaration:BackupDto.kt$package dev.spaceapps.secvault.feature.vault.data.dto</ID>
     <ID>InvalidPackageDeclaration:VaultBackupRepositoryImpl.kt$package dev.spaceapps.secvault.feature.vault.data.repository</ID>
     <ID>InvalidPackageDeclaration:VaultBackupRepositoryTest.kt$package dev.spaceapps.secvault.feature.vault.data.repository</ID>
-    <ID>InvalidPackageDeclaration:Backup.kt$package dev.spaceapps.secvault.feature.vault.domain.model</ID>
+    <ID>InvalidPackageDeclaration:Backup.kt$package dev.spaceapps.secvault.core.domain.model</ID>
     <ID>InvalidPackageDeclaration:VaultBackupRepository.kt$package dev.spaceapps.secvault.feature.vault.domain.repository</ID>
     <ID>InvalidPackageDeclaration:BackupUseCases.kt$package dev.spaceapps.secvault.feature.vault.domain.usecase</ID>
     <ID>InvalidPackageDeclaration:BackupContract.kt$package dev.spaceapps.secvault.feature.vault.presentation.backup</ID>
