@@ -164,6 +164,7 @@
     <ID>InvalidPackageDeclaration:VaultBackupRepositoryImpl.kt$package dev.spaceapps.secvault.feature.vault.data.repository</ID>
     <ID>InvalidPackageDeclaration:VaultBackupRepositoryTest.kt$package dev.spaceapps.secvault.feature.vault.data.repository</ID>
     <ID>InvalidPackageDeclaration:Backup.kt$package dev.spaceapps.secvault.core.domain.model</ID>
+    <ID>InvalidPackageDeclaration:Backup.kt$package dev.spaceapps.secvault.feature.vault.domain.model</ID>
     <ID>InvalidPackageDeclaration:VaultBackupRepository.kt$package dev.spaceapps.secvault.feature.vault.domain.repository</ID>
     <ID>InvalidPackageDeclaration:BackupUseCases.kt$package dev.spaceapps.secvault.feature.vault.domain.usecase</ID>
     <ID>InvalidPackageDeclaration:BackupContract.kt$package dev.spaceapps.secvault.feature.vault.presentation.backup</ID>
