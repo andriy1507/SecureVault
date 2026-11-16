@@ -44,7 +44,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.spaceapps.secvault.core.domain.model.PasswordOptions
+import dev.spaceapps.secvault.core.domain.model.PasswordStrength
 import dev.spaceapps.secvault.core.ui.clipboard.rememberCopyAction
 import dev.spaceapps.secvault.core.ui.components.AppTopBar
 import dev.spaceapps.secvault.core.ui.components.ChevronTrailing
@@ -66,13 +67,10 @@ import dev.spaceapps.secvault.feature.generator.domain.model.GeneratedValue
 import dev.spaceapps.secvault.feature.generator.domain.model.GeneratorMode
 import dev.spaceapps.secvault.feature.generator.domain.model.PassphraseOptions
 import dev.spaceapps.secvault.feature.generator.domain.model.PassphraseSeparator
-import dev.spaceapps.secvault.feature.generator.domain.model.PasswordOptions
-import dev.spaceapps.secvault.feature.generator.domain.model.PasswordStrength
 import dev.spaceapps.secvault.feature.generator.domain.model.UsernameType
 import dev.spaceapps.secvault.feature.generator.presentation.GeneratorContract.Effect
 import dev.spaceapps.secvault.feature.generator.presentation.GeneratorContract.Intent
 import dev.spaceapps.secvault.feature.generator.presentation.GeneratorContract.State
-import dev.spaceapps.secvault.feature.generator.presentation.GeneratorViewModel
 import dev.spaceapps.secvault.feature.generator.resources.Res
 import dev.spaceapps.secvault.feature.generator.resources.avoid_ambiguous
 import dev.spaceapps.secvault.feature.generator.resources.avoid_ambiguous_desc
@@ -124,11 +122,11 @@ import kotlin.time.Clock
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.ExperimentalTime
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
 
 private val MODES = listOf(
     GeneratorMode.Password to Res.string.mode_password,
@@ -161,11 +159,14 @@ private fun PasswordStrength.toLevel(): StrengthLevel =
 
 /** 02 · Generator, 39 · passphrase, 40 · username, 41 · history sheet. */
 @Composable
-fun GeneratorScreen(viewModel: GeneratorViewModel = koinViewModel()) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
+fun GeneratorScreen(
+    state: State,
+    effects: Flow<Effect>,
+    onIntent: (Intent) -> Unit,
+) {
     val copy = rememberCopyAction()
     val scope = rememberCoroutineScope()
-    CollectEffects(viewModel.effects) { effect ->
+    CollectEffects(effects) { effect ->
         when (effect) {
             is Effect.Copy -> scope.launch {
                 copy.copy(
@@ -176,7 +177,7 @@ fun GeneratorScreen(viewModel: GeneratorViewModel = koinViewModel()) {
             }
         }
     }
-    GeneratorContent(state, viewModel::onIntent)
+    GeneratorContent(state, onIntent)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

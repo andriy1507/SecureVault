@@ -1,9 +1,9 @@
 package dev.spaceapps.secvault.feature.vault.presentation.list
 
 import androidx.lifecycle.viewModelScope
+import dev.spaceapps.secvault.core.domain.model.ItemType
 import dev.spaceapps.secvault.core.presentation.mvi.MviViewModel
 import dev.spaceapps.secvault.feature.vault.domain.model.ItemFilter
-import dev.spaceapps.secvault.feature.vault.domain.model.ItemType
 import dev.spaceapps.secvault.feature.vault.domain.usecase.GenerateTotpUseCase
 import dev.spaceapps.secvault.feature.vault.domain.usecase.GetVaultItemUseCase
 import dev.spaceapps.secvault.feature.vault.domain.usecase.MoveToTrashUseCase
@@ -186,7 +186,7 @@ class VaultListViewModel(
     }
 
     /** Runs [block] with the selected item and closes the actions sheet. */
-    private inline fun selected(block: (dev.spaceapps.secvault.feature.vault.domain.model.VaultItemSummary) -> Unit) {
+    private inline fun selected(block: (dev.spaceapps.secvault.core.domain.model.VaultItemSummary) -> Unit) {
         val item = currentState.selected ?: return
         setState { copy(sheet = Sheet.None, selected = null) }
         block(item)
@@ -194,7 +194,7 @@ class VaultListViewModel(
 
     private fun withItem(
         id: String,
-        block: (dev.spaceapps.secvault.feature.vault.domain.model.VaultItem) -> Unit,
+        block: (dev.spaceapps.secvault.core.domain.model.VaultItem) -> Unit,
     ) {
         viewModelScope.launch { getItem(id)?.let(block) }
     }

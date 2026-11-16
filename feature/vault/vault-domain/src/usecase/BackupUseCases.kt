@@ -1,39 +1,18 @@
 package dev.spaceapps.secvault.feature.vault.domain.usecase
 
 import dev.spaceapps.secvault.core.domain.error.VaultError
+import dev.spaceapps.secvault.core.domain.model.BackupFormat
+import dev.spaceapps.secvault.core.domain.model.BackupInfo
+import dev.spaceapps.secvault.core.domain.model.VaultItem
+import dev.spaceapps.secvault.core.domain.repository.VaultItemRepository
 import dev.spaceapps.secvault.core.domain.repository.VaultKeysRepository
 import dev.spaceapps.secvault.feature.vault.domain.model.BackupFile
-import dev.spaceapps.secvault.feature.vault.domain.model.BackupInfo
 import dev.spaceapps.secvault.feature.vault.domain.model.ImportResult
-import dev.spaceapps.secvault.feature.vault.domain.model.VaultItem
 import dev.spaceapps.secvault.feature.vault.domain.repository.VaultBackupRepository
-import dev.spaceapps.secvault.feature.vault.domain.repository.VaultItemRepository
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
-
-/** Backup file naming and phrase parsing shared by export, import and restore. */
-object BackupFormat {
-    const val EXTENSION = ".svbackup"
-    const val PHRASE_WORDS = 24
-
-    fun fileName(accountId: String) = "secvault-backup-$accountId$EXTENSION"
-
-    /** "12. word" lines, as in the recovery key file saved during onboarding. */
-    private val NUMBERED_WORD = Regex("""^\s*\d+[.)]\s*([A-Za-z]+)\s*$""", RegexOption.MULTILINE)
-    private val NON_LETTERS = Regex("[^a-z]+")
-
-    /**
-     * Words of a typed or pasted phrase, or of the whole recovery key file. Case, numbering and
-     * punctuation are ignored.
-     */
-    fun parsePhrase(text: String): List<String> {
-        val numbered = NUMBERED_WORD.findAll(text).map { it.groupValues[1].lowercase() }.toList()
-        if (numbered.isNotEmpty()) return numbered
-        return text.lowercase().split(NON_LETTERS).filter { it.isNotEmpty() }
-    }
-}
 
 /** Writes all items not in the trash into an encrypted backup. */
 class ExportVaultUseCase(

@@ -10,8 +10,8 @@ import android.service.autofill.SaveInfo
 import android.service.autofill.SaveRequest
 import android.view.autofill.AutofillValue
 import dev.spaceapps.secvault.R
-import dev.spaceapps.secvault.feature.generator.domain.model.PasswordOptions
-import dev.spaceapps.secvault.feature.generator.domain.usecase.GeneratePasswordUseCase
+import dev.spaceapps.secvault.core.domain.model.PasswordOptions
+import dev.spaceapps.secvault.core.domain.usecase.GeneratePasswordUseCase
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 

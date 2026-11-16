@@ -3,15 +3,17 @@ package dev.spaceapps.secvault.di
 import dev.spaceapps.secvault.ComposeResourceWordlist
 import dev.spaceapps.secvault.core.data.crypto.WordlistSource
 import dev.spaceapps.secvault.core.data.di.coreDataModule
+import dev.spaceapps.secvault.core.domain.repository.BackupRestorer
+import dev.spaceapps.secvault.core.domain.usecase.EstimateStrengthUseCase
+import dev.spaceapps.secvault.core.domain.usecase.GeneratePasswordUseCase
+import dev.spaceapps.secvault.core.domain.usecase.SaveVaultItemUseCase
 import dev.spaceapps.secvault.feature.autofill.domain.FindAutofillMatchesUseCase
 import dev.spaceapps.secvault.feature.autofill.domain.SaveAutofillCredentialUseCase
 import dev.spaceapps.secvault.feature.generator.data.generatorDataModule
 import dev.spaceapps.secvault.feature.generator.domain.repository.GeneratorWordsSource
 import dev.spaceapps.secvault.feature.generator.domain.usecase.AddToGeneratorHistoryUseCase
 import dev.spaceapps.secvault.feature.generator.domain.usecase.ClearGeneratorHistoryUseCase
-import dev.spaceapps.secvault.feature.generator.domain.usecase.EstimateStrengthUseCase
 import dev.spaceapps.secvault.feature.generator.domain.usecase.GeneratePassphraseUseCase
-import dev.spaceapps.secvault.feature.generator.domain.usecase.GeneratePasswordUseCase
 import dev.spaceapps.secvault.feature.generator.domain.usecase.GenerateUsernameUseCase
 import dev.spaceapps.secvault.feature.generator.domain.usecase.ObserveGeneratorHistoryUseCase
 import dev.spaceapps.secvault.feature.generator.presentation.GeneratorViewModel
@@ -26,6 +28,8 @@ import dev.spaceapps.secvault.feature.onboarding.domain.usecase.CheckDeviceSecur
 import dev.spaceapps.secvault.feature.onboarding.domain.usecase.CompleteOnboardingUseCase
 import dev.spaceapps.secvault.feature.onboarding.domain.usecase.CreateVaultUseCase
 import dev.spaceapps.secvault.feature.onboarding.domain.usecase.PickConfirmationWordsUseCase
+import dev.spaceapps.secvault.feature.onboarding.domain.usecase.ReadRestoreInfoUseCase
+import dev.spaceapps.secvault.feature.onboarding.domain.usecase.RestoreAccountUseCase
 import dev.spaceapps.secvault.feature.onboarding.domain.usecase.VerifyConfirmationWordsUseCase
 import dev.spaceapps.secvault.feature.onboarding.presentation.OnboardingViewModel
 import dev.spaceapps.secvault.feature.settings.data.settingsDataModule
@@ -55,8 +59,8 @@ import dev.spaceapps.secvault.feature.vault.domain.usecase.PurgeExpiredTrashUseC
 import dev.spaceapps.secvault.feature.vault.domain.usecase.ReadBackupInfoUseCase
 import dev.spaceapps.secvault.feature.vault.domain.usecase.RestoreFromBackupUseCase
 import dev.spaceapps.secvault.feature.vault.domain.usecase.RestoreFromTrashUseCase
-import dev.spaceapps.secvault.feature.vault.domain.usecase.SaveVaultItemUseCase
 import dev.spaceapps.secvault.feature.vault.domain.usecase.ToggleFavoriteUseCase
+import dev.spaceapps.secvault.feature.vault.domain.usecase.VaultBackupRestorer
 import dev.spaceapps.secvault.feature.vault.presentation.backup.BackupViewModel
 import dev.spaceapps.secvault.feature.vault.presentation.detail.ItemDetailViewModel
 import dev.spaceapps.secvault.feature.vault.presentation.edit.ItemEditViewModel
@@ -71,9 +75,11 @@ private val onboardingModule = module {
     factoryOf(::CheckDeviceSecurityUseCase)
     factoryOf(::CreateVaultUseCase)
     factoryOf(::CompleteOnboardingUseCase)
-    factory { PickConfirmationWordsUseCase() }
-    factory { BuildConfirmationChoicesUseCase() }
+    factoryOf(::PickConfirmationWordsUseCase)
+    factoryOf(::BuildConfirmationChoicesUseCase)
     factoryOf(::VerifyConfirmationWordsUseCase)
+    factoryOf(::ReadRestoreInfoUseCase)
+    factoryOf(::RestoreAccountUseCase)
     viewModelOf(::OnboardingViewModel)
 }
 
@@ -108,6 +114,7 @@ private val vaultModule = module {
     factoryOf(::ReadBackupInfoUseCase)
     factoryOf(::ImportBackupUseCase)
     factoryOf(::RestoreFromBackupUseCase)
+    factory<BackupRestorer> { VaultBackupRestorer(get(), get()) }
     factoryOf(::GetVaultAccountIdUseCase)
     viewModelOf(::BackupViewModel)
     viewModelOf(::VaultListViewModel)

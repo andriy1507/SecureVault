@@ -5,7 +5,6 @@ product:
 dependencies:
   - //feature/lock/lock-presentation
   - //core/core-ui
-  - $libs.koin.compose.viewmodel
 
 settings:
   compose:

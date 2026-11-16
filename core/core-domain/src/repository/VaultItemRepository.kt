@@ -1,7 +1,7 @@
-package dev.spaceapps.secvault.feature.vault.domain.repository
+package dev.spaceapps.secvault.core.domain.repository
 
-import dev.spaceapps.secvault.feature.vault.domain.model.VaultItem
-import dev.spaceapps.secvault.feature.vault.domain.model.VaultItemSummary
+import dev.spaceapps.secvault.core.domain.model.VaultItem
+import dev.spaceapps.secvault.core.domain.model.VaultItemSummary
 import kotlinx.coroutines.flow.Flow
 
 interface VaultItemRepository {

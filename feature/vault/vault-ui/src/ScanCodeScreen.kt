@@ -30,7 +30,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.spaceapps.secvault.core.ui.components.AppTopBar
 import dev.spaceapps.secvault.core.ui.components.BottomActions
 import dev.spaceapps.secvault.core.ui.components.CenteredContent
@@ -49,7 +48,6 @@ import dev.spaceapps.secvault.feature.vault.presentation.scan.CodePrefill
 import dev.spaceapps.secvault.feature.vault.presentation.scan.ScanCodeContract.Effect
 import dev.spaceapps.secvault.feature.vault.presentation.scan.ScanCodeContract.Intent
 import dev.spaceapps.secvault.feature.vault.presentation.scan.ScanCodeContract.State
-import dev.spaceapps.secvault.feature.vault.presentation.scan.ScanCodeViewModel
 import dev.spaceapps.secvault.feature.vault.resources.Res
 import dev.spaceapps.secvault.feature.vault.resources.cd_torch
 import dev.spaceapps.secvault.feature.vault.resources.scan_hint
@@ -59,8 +57,8 @@ import dev.spaceapps.secvault.feature.vault.resources.scan_permission_allow
 import dev.spaceapps.secvault.feature.vault.resources.scan_permission_body
 import dev.spaceapps.secvault.feature.vault.resources.scan_permission_title
 import dev.spaceapps.secvault.feature.vault.resources.scan_title
+import kotlinx.coroutines.flow.Flow
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
 
 /** Alpha of the hint text over the camera preview. */
 private const val HINT_ALPHA = 0.8f
@@ -68,17 +66,17 @@ private const val HINT_ALPHA = 0.8f
 /** 17 · Scan pairing code, reused for 2FA QR codes. */
 @Composable
 fun ScanCodeScreen(
+    state: State,
+    effects: Flow<Effect>,
+    onIntent: (Intent) -> Unit,
     onFound: (CodePrefill) -> Unit,
     onEnterManually: () -> Unit,
     onClose: () -> Unit,
-    viewModelKey: String = "scan",
-    viewModel: ScanCodeViewModel = koinViewModel(key = viewModelKey),
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
     // Bumped to recreate the camera view (and its "already delivered" flag) after a non-2FA QR.
     var scanSession by remember { mutableIntStateOf(0) }
     PlatformBackHandler { onClose() }
-    CollectEffects(viewModel.effects) { effect ->
+    CollectEffects(effects) { effect ->
         when (effect) {
             is Effect.Found -> onFound(effect.prefill)
             Effect.ScanAgain -> scanSession++
@@ -86,7 +84,7 @@ fun ScanCodeScreen(
             Effect.Close -> onClose()
         }
     }
-    ScanCodeContent(state, scanSession, viewModel::onIntent)
+    ScanCodeContent(state, scanSession, onIntent)
 }
 
 @Composable

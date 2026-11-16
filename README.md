@@ -1,18 +1,16 @@
-This is a Kotlin Multiplatform project targeting Android, iOS, built with the [Kotlin Toolchain](https://kotlin-toolchain.org/dev/).
+# Claude project template
 
-- [/androidApp](./androidApp) contains the Android application.
-- [/iosApp](./iosApp) contains the iOS application.
-- [/shared](./shared) holds the code shared across your applications — Compose UI, business logic, and platform-specific implementations. [src](./shared/src) is for common code; the sibling `src@<platform>` folders (for example `src@android`) hold code compiled only for the platform named in the folder.
+Clean Claude Code setup derived from the SecureVault conventions (local-first, security-first, layered KMP).
 
-The `kotlin` (macOS/Linux) and `kotlin.bat` (Windows) scripts in the project root are self-bootstrapping wrappers for the Kotlin Toolchain: they download the pinned toolchain version on first use, so no separate installation is required. Build the whole project with `./kotlin build`.
+## Use
+1. Copy this folder's contents into the new project root.
+2. `CLAUDE.md` and `.claude/rules/*.md` are filled in for SecureVault (Kotlin Toolchain, Koin, Compose, en + uk). For another project, replace the SecureVault names and delete rules that do not apply (e.g. `ui.md`).
+3. Run `git init`, then `/graphify .` to build the graph, then `graphify claude install` and optionally `graphify hook install`.
+4. Adjust `ECC_HOOK_PROFILE` in `.claude/settings.json` (`minimal` | `standard` | `strict`).
 
-### Running
-
-Use the run configurations provided by the run widget in your IDE's toolbar. You can also run each module from the command line:
-
-- Android app: `./kotlin run -m androidApp`
-- iOS app: `./kotlin run -m iosApp`
-
----
-
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html), [Kotlin Toolchain](https://kotlin-toolchain.org/dev/), [Compose Multiplatform](https://kotlinlang.org/compose-multiplatform/).
+## Layout
+- `CLAUDE.md`: short entry point (commands, structure, working rules).
+- `.claude/rules/`: `graphify`, `security`, `architecture`, `build-and-lint`, `ui`, `ecc-hooks`.
+- `.claude/settings.json`: read deny-list, ECC profile, graphify nudge hook.
+- `.claude/hooks/graphify-nudge.js`: reminds Claude to use the graph instead of scanning files.
+- `docs/{product,plans,architecture,design}/`: placeholders; plans gate any network/sync work.

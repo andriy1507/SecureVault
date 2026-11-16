@@ -1,4 +1,4 @@
-package dev.spaceapps.secvault.feature.vault.domain.model
+package dev.spaceapps.secvault.core.domain.model
 
 /**
  * A WebAuthn passkey stored in the vault (encrypted with its login item).

@@ -21,7 +21,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.spaceapps.secvault.core.ui.components.BottomActions
 import dev.spaceapps.secvault.core.ui.components.ErrorText
 import dev.spaceapps.secvault.core.ui.components.HeroMessage
@@ -32,7 +31,6 @@ import dev.spaceapps.secvault.core.ui.theme.Dimens
 import dev.spaceapps.secvault.feature.lock.presentation.LockContract.Error
 import dev.spaceapps.secvault.feature.lock.presentation.LockContract.Intent
 import dev.spaceapps.secvault.feature.lock.presentation.LockContract.State
-import dev.spaceapps.secvault.feature.lock.presentation.LockViewModel
 import dev.spaceapps.secvault.feature.lock.resources.Res
 import dev.spaceapps.secvault.feature.lock.resources.account_id_mask
 import dev.spaceapps.secvault.feature.lock.resources.lock_error_failed
@@ -40,17 +38,19 @@ import dev.spaceapps.secvault.feature.lock.resources.lock_error_key_invalidated
 import dev.spaceapps.secvault.feature.lock.resources.lock_hint
 import dev.spaceapps.secvault.feature.lock.resources.lock_title
 import dev.spaceapps.secvault.feature.lock.resources.lock_unlock
+import kotlinx.coroutines.flow.Flow
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
 
 private const val ID_SEPARATOR = "-"
 
 @Composable
-fun LockScreen(viewModel: LockViewModel = koinViewModel()) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
+fun LockScreen(
+    state: State,
+    onIntent: (Intent) -> Unit,
+) {
     // Show the OS prompt right away; the buttons are there for retries.
-    LaunchedEffect(Unit) { viewModel.onIntent(Intent.Unlock) }
-    LockContent(state, viewModel::onIntent)
+    LaunchedEffect(Unit) { onIntent(Intent.Unlock) }
+    LockContent(state, onIntent)
 }
 
 /** 15 · Unlock — phone unlock (device credential / biometrics) via the system prompt. */

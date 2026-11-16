@@ -1,11 +1,6 @@
 package dev.spaceapps.secvault.feature.vault.domain.model
 
-/** What can be shown about a backup file before the recovery phrase is entered. */
-data class BackupInfo(
-    val accountId: String,
-    val createdAt: Long,
-    val itemCount: Int,
-)
+import dev.spaceapps.secvault.core.domain.model.VaultItem
 
 /** A backup opened with its recovery phrase. Holds secrets: keep it short-lived. */
 data class DecryptedBackup(

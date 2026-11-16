@@ -3,7 +3,7 @@ product:
   platforms: [ android, iosArm64, iosSimulatorArm64 ]
 
 dependencies:
-  - //feature/vault/vault-domain: exported
+  - //core/core-domain: exported
 
 test-dependencies:
   - $libs.kotlinx.coroutines.test

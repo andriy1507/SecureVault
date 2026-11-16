@@ -1,20 +1,45 @@
 {
+  "env": {
+    "ECC_HOOK_PROFILE": "standard"
+  },
   "permissions": {
     "deny": [
-      "Read(./build/**)",
-      "Read(./.kotlin/**)",
-      "Read(./.amper/**)",
-      "Read(./.gradle/**)",
-      "Read(./graphify-out/cache/**)",
+      "Read(**/build/**)",
+      "Read(**/.kotlin/**)",
+      "Read(**/.amper/**)",
+      "Read(**/.gradle/**)",
+      "Read(**/out/**)",
+      "Read(**/captures/**)",
+      "Read(**/schemas/**)",
       "Read(./.lint-cache/**)",
+      "Read(./graphify-out/cache/**)",
       "Read(./.claude/worktrees/**)",
-      "Read(./local.properties)",
-      "Read(./keystore.properties)",
-      "Read(./signing.properties)",
-      "Read(./.env)",
-      "Read(./.env.*)",
-      "Read(./*.jks)",
-      "Read(./*.keystore)"
+      "Read(./.idea/**)",
+      "Read(**/*.log)",
+      "Read(**/local.properties)",
+      "Read(**/keystore.properties)",
+      "Read(**/signing.properties)",
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(**/*.jks)",
+      "Read(**/*.keystore)",
+      "Read(**/*.p12)",
+      "Read(**/*.p8)",
+      "Read(**/*.mobileprovision)",
+      "Read(**/vault-recovery-key-*.txt)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Glob|Grep",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/graphify-nudge.js\""
+          }
+        ]
+      }
     ]
   }
 }

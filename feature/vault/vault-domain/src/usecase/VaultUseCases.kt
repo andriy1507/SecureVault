@@ -1,19 +1,19 @@
 package dev.spaceapps.secvault.feature.vault.domain.usecase
 
-import dev.spaceapps.secvault.feature.vault.domain.model.CardValidation
-import dev.spaceapps.secvault.feature.vault.domain.model.ItemDraft
+import dev.spaceapps.secvault.core.domain.model.CardValidation
+import dev.spaceapps.secvault.core.domain.model.ItemDraft
+import dev.spaceapps.secvault.core.domain.model.ItemType
+import dev.spaceapps.secvault.core.domain.model.PasswordHistoryEntry
+import dev.spaceapps.secvault.core.domain.model.PaymentCard
+import dev.spaceapps.secvault.core.domain.model.VaultItem
+import dev.spaceapps.secvault.core.domain.model.VaultItemSummary
+import dev.spaceapps.secvault.core.domain.repository.VaultItemRepository
 import dev.spaceapps.secvault.feature.vault.domain.model.ItemFilter
 import dev.spaceapps.secvault.feature.vault.domain.model.ItemSort
-import dev.spaceapps.secvault.feature.vault.domain.model.ItemType
 import dev.spaceapps.secvault.feature.vault.domain.model.OtpAuthInfo
 import dev.spaceapps.secvault.feature.vault.domain.model.OtpAuthUri
-import dev.spaceapps.secvault.feature.vault.domain.model.PasswordHistoryEntry
-import dev.spaceapps.secvault.feature.vault.domain.model.PaymentCard
 import dev.spaceapps.secvault.feature.vault.domain.model.TotpCode
-import dev.spaceapps.secvault.feature.vault.domain.model.VaultItem
-import dev.spaceapps.secvault.feature.vault.domain.model.VaultItemSummary
 import dev.spaceapps.secvault.feature.vault.domain.repository.TotpGenerator
-import dev.spaceapps.secvault.feature.vault.domain.repository.VaultItemRepository
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.days
 import kotlin.time.ExperimentalTime
@@ -27,9 +27,6 @@ object TrashPolicy {
     const val RETENTION_DAYS = 30
     val retentionMillis: Long = RETENTION_DAYS.days.inWholeMilliseconds
 }
-
-/** How many previous passwords a login keeps. */
-const val PASSWORD_HISTORY_LIMIT = 10
 
 /** Items not in the trash. */
 class ObserveVaultItemsUseCase(
@@ -84,82 +81,6 @@ class GetVaultItemUseCase(
     suspend operator fun invoke(id: String): VaultItem? = repository.get(id)
 }
 
-class SaveVaultItemUseCase(
-    private val repository: VaultItemRepository,
-) {
-    sealed class Result {
-        data class Saved(
-            val id: String,
-        ) : Result()
-
-        data object TitleRequired : Result()
-
-        /** Card fields that are filled in but wrong; nothing was saved. */
-        data class InvalidCard(
-            val validation: CardValidation,
-        ) : Result()
-    }
-
-    @OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
-    suspend operator fun invoke(
-        existing: VaultItem?,
-        draft: ItemDraft,
-    ): Result {
-        if (draft.title.isBlank()) return Result.TitleRequired
-        val now = Clock.System.now().toEpochMilliseconds()
-        val type = draft.type
-        val isLogin = type == ItemType.Login
-        val isCard = type == ItemType.Card
-        val cardNumber = if (isCard) PaymentCard.sanitizeNumber(draft.cardNumber) else ""
-        val cardExpiry = if (isCard) PaymentCard.sanitizeExpiry(draft.cardExpiry) else ""
-        val cardCvv = if (isCard) PaymentCard.sanitizeCvv(draft.cardCvv, cardNumber) else ""
-        if (isCard) {
-            val validation = PaymentCard.validate(cardNumber, cardExpiry, cardCvv, PaymentCard.yearMonthOf(now))
-            if (!validation.isValid) return Result.InvalidCard(validation)
-        }
-        val password = if (isLogin) draft.password else ""
-        val history = existing?.passwordHistory.orEmpty().let { old ->
-            val previous = existing?.password.orEmpty()
-            if (isLogin && previous.isNotEmpty() && previous != password) {
-                (listOf(PasswordHistoryEntry(previous, now)) + old).take(PASSWORD_HISTORY_LIMIT)
-            } else {
-                old
-            }
-        }
-        val item = VaultItem(
-            id = existing?.id ?: Uuid.random().toString(),
-            type = type,
-            title = draft.title.trim(),
-            username = if (isLogin) draft.username.trim() else "",
-            password = password,
-            url = if (isLogin) draft.url.trim() else "",
-            notes = draft.notes,
-            favorite = draft.favorite,
-            createdAt = existing?.createdAt ?: now,
-            updatedAt = now,
-            uris = if (isLogin) {
-                draft.uris
-                    .map { it.trim() }
-                    .filter { it.isNotEmpty() }
-                    .distinct()
-            } else {
-                emptyList()
-            },
-            totpSecret = if (isLogin) draft.totpSecret.trim() else "",
-            cardholderName = if (isCard) draft.cardholderName.trim() else "",
-            cardNumber = cardNumber,
-            cardExpiry = if (cardExpiry.isEmpty()) "" else PaymentCard.formatExpiry(cardExpiry),
-            cardCvv = cardCvv,
-            passwordHistory = if (isLogin) history else emptyList(),
-            // Passkeys aren't edited in the form; keep the ones the login already has.
-            passkeys = if (isLogin) existing?.passkeys.orEmpty() else emptyList(),
-            trashedAt = existing?.trashedAt,
-        )
-        repository.save(item)
-        return Result.Saved(item.id)
-    }
-}
-
 class ToggleFavoriteUseCase(
     private val repository: VaultItemRepository,
 ) {
@@ -211,7 +132,7 @@ class PurgeExpiredTrashUseCase(
     suspend operator fun invoke(items: List<VaultItemSummary>) {
         val now = Clock.System.now().toEpochMilliseconds()
         items
-            .filter { it.trashedAt != null && now - it.trashedAt >= TrashPolicy.retentionMillis }
+            .filter { item -> item.trashedAt?.let { now - it >= TrashPolicy.retentionMillis } == true }
             .forEach { repository.delete(it.id) }
     }
 }

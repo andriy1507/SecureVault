@@ -1,4 +1,4 @@
-package dev.spaceapps.secvault.feature.vault.domain.model
+package dev.spaceapps.secvault.core.domain.model
 
 /**
  * Card networks that change how a number is grouped and checked. Everything that isn't American

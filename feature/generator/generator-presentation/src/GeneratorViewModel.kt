@@ -1,14 +1,14 @@
 package dev.spaceapps.secvault.feature.generator.presentation
 
 import androidx.lifecycle.viewModelScope
+import dev.spaceapps.secvault.core.domain.usecase.EstimateStrengthUseCase
+import dev.spaceapps.secvault.core.domain.usecase.GeneratePasswordUseCase
 import dev.spaceapps.secvault.core.presentation.mvi.MviViewModel
 import dev.spaceapps.secvault.feature.generator.domain.model.GeneratorMode
 import dev.spaceapps.secvault.feature.generator.domain.model.UsernameOptions
 import dev.spaceapps.secvault.feature.generator.domain.usecase.AddToGeneratorHistoryUseCase
 import dev.spaceapps.secvault.feature.generator.domain.usecase.ClearGeneratorHistoryUseCase
-import dev.spaceapps.secvault.feature.generator.domain.usecase.EstimateStrengthUseCase
 import dev.spaceapps.secvault.feature.generator.domain.usecase.GeneratePassphraseUseCase
-import dev.spaceapps.secvault.feature.generator.domain.usecase.GeneratePasswordUseCase
 import dev.spaceapps.secvault.feature.generator.domain.usecase.GenerateUsernameUseCase
 import dev.spaceapps.secvault.feature.generator.domain.usecase.ObserveGeneratorHistoryUseCase
 import dev.spaceapps.secvault.feature.generator.domain.usecase.passphraseStrength

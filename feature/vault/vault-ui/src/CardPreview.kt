@@ -20,10 +20,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.font.FontFamily
+import dev.spaceapps.secvault.core.domain.model.CARD_VISIBLE_DIGITS
+import dev.spaceapps.secvault.core.domain.model.PaymentCard
 import dev.spaceapps.secvault.core.ui.theme.AppTheme
 import dev.spaceapps.secvault.core.ui.theme.Dimens
-import dev.spaceapps.secvault.feature.vault.domain.model.CARD_VISIBLE_DIGITS
-import dev.spaceapps.secvault.feature.vault.domain.model.PaymentCard
 import dev.spaceapps.secvault.feature.vault.resources.Res
 import dev.spaceapps.secvault.feature.vault.resources.card_preview_expiry_placeholder
 import dev.spaceapps.secvault.feature.vault.resources.card_preview_name_placeholder

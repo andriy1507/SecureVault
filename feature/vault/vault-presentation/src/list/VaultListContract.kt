@@ -1,13 +1,13 @@
 package dev.spaceapps.secvault.feature.vault.presentation.list
 
+import dev.spaceapps.secvault.core.domain.model.ItemType
+import dev.spaceapps.secvault.core.domain.model.VaultItemSummary
 import dev.spaceapps.secvault.core.presentation.mvi.UiEffect
 import dev.spaceapps.secvault.core.presentation.mvi.UiIntent
 import dev.spaceapps.secvault.core.presentation.mvi.UiState
 import dev.spaceapps.secvault.feature.vault.domain.model.ItemFilter
 import dev.spaceapps.secvault.feature.vault.domain.model.ItemSort
-import dev.spaceapps.secvault.feature.vault.domain.model.ItemType
 import dev.spaceapps.secvault.feature.vault.domain.model.TotpCode
-import dev.spaceapps.secvault.feature.vault.domain.model.VaultItemSummary
 import dev.spaceapps.secvault.feature.vault.presentation.common.CopyRequest
 
 object VaultListContract {

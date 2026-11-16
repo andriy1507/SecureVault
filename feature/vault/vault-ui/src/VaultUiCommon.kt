@@ -23,14 +23,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.text.style.TextOverflow
+import dev.spaceapps.secvault.core.domain.model.ItemType
+import dev.spaceapps.secvault.core.domain.model.VaultItemSummary
 import dev.spaceapps.secvault.core.ui.components.ItemAvatar
 import dev.spaceapps.secvault.core.ui.components.avatarColorFor
 import dev.spaceapps.secvault.core.ui.components.avatarLetter
 import dev.spaceapps.secvault.core.ui.theme.AppTheme
 import dev.spaceapps.secvault.core.ui.theme.ColorPair
 import dev.spaceapps.secvault.core.ui.theme.Dimens
-import dev.spaceapps.secvault.feature.vault.domain.model.ItemType
-import dev.spaceapps.secvault.feature.vault.domain.model.VaultItemSummary
 import dev.spaceapps.secvault.feature.vault.presentation.common.CopyField
 import dev.spaceapps.secvault.feature.vault.resources.Res
 import dev.spaceapps.secvault.feature.vault.resources.edited_days_ago

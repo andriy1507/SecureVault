@@ -16,7 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.spaceapps.secvault.core.domain.model.BackupFormat
 import dev.spaceapps.secvault.core.ui.components.AppTopBar
 import dev.spaceapps.secvault.core.ui.components.CollectEffects
 import dev.spaceapps.secvault.core.ui.components.ErrorText
@@ -36,12 +36,10 @@ import dev.spaceapps.secvault.core.ui.files.rememberTextFileSaver
 import dev.spaceapps.secvault.core.ui.resources.Res as CoreRes
 import dev.spaceapps.secvault.core.ui.resources.action_cancel
 import dev.spaceapps.secvault.core.ui.theme.Dimens
-import dev.spaceapps.secvault.feature.vault.domain.usecase.BackupFormat
 import dev.spaceapps.secvault.feature.vault.presentation.backup.BackupContract.Effect
 import dev.spaceapps.secvault.feature.vault.presentation.backup.BackupContract.Error
 import dev.spaceapps.secvault.feature.vault.presentation.backup.BackupContract.Intent
 import dev.spaceapps.secvault.feature.vault.presentation.backup.BackupContract.State
-import dev.spaceapps.secvault.feature.vault.presentation.backup.BackupViewModel
 import dev.spaceapps.secvault.feature.vault.resources.Res
 import dev.spaceapps.secvault.feature.vault.resources.backup_error_export_failed
 import dev.spaceapps.secvault.feature.vault.resources.backup_error_import_failed
@@ -62,23 +60,24 @@ import dev.spaceapps.secvault.feature.vault.resources.backup_import_other_accoun
 import dev.spaceapps.secvault.feature.vault.resources.backup_import_submit
 import dev.spaceapps.secvault.feature.vault.resources.backup_imported
 import dev.spaceapps.secvault.feature.vault.resources.backup_title
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
 
 /** Settings → Backup & import: encrypted export, and import of a backup with its recovery key. */
 @Composable
 fun BackupScreen(
+    state: State,
+    effects: Flow<Effect>,
+    onIntent: (Intent) -> Unit,
     onBack: () -> Unit,
-    viewModel: BackupViewModel = koinViewModel(),
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbar = LocalSnackbarHostState.current
     val scope = rememberCoroutineScope()
     val saver =
-        rememberTextFileSaver(BackupFileFormat.Backup) { saved -> viewModel.onIntent(Intent.ExportWritten(saved)) }
-    CollectEffects(viewModel.effects) { effect ->
+        rememberTextFileSaver(BackupFileFormat.Backup) { saved -> onIntent(Intent.ExportWritten(saved)) }
+    CollectEffects(effects) { effect ->
         when (effect) {
             is Effect.SaveFile -> saver.save(effect.file.suggestedName, effect.file.content)
 
@@ -95,7 +94,7 @@ fun BackupScreen(
             Effect.Close -> onBack()
         }
     }
-    BackupContent(state, viewModel::onIntent)
+    BackupContent(state, onIntent)
 }
 
 @Composable

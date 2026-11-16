@@ -1,11 +1,11 @@
 package dev.spaceapps.secvault.feature.autofill.domain
 
-import dev.spaceapps.secvault.feature.vault.domain.model.ItemDraft
-import dev.spaceapps.secvault.feature.vault.domain.model.ItemType
-import dev.spaceapps.secvault.feature.vault.domain.model.VaultItem
-import dev.spaceapps.secvault.feature.vault.domain.model.toDraft
-import dev.spaceapps.secvault.feature.vault.domain.repository.VaultItemRepository
-import dev.spaceapps.secvault.feature.vault.domain.usecase.SaveVaultItemUseCase
+import dev.spaceapps.secvault.core.domain.model.ItemDraft
+import dev.spaceapps.secvault.core.domain.model.ItemType
+import dev.spaceapps.secvault.core.domain.model.VaultItem
+import dev.spaceapps.secvault.core.domain.model.toDraft
+import dev.spaceapps.secvault.core.domain.repository.VaultItemRepository
+import dev.spaceapps.secvault.core.domain.usecase.SaveVaultItemUseCase
 
 /** Logins linked to the target, via "Autofill for" entries or the Website field. Needs the vault unlocked. */
 class FindAutofillMatchesUseCase(
