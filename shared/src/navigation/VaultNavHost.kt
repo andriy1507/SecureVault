@@ -38,21 +38,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import dev.spaceapps.secvault.core.domain.model.ItemType
 import dev.spaceapps.secvault.core.ui.components.LocalSnackbarHostState
 import dev.spaceapps.secvault.core.ui.navigation.PlatformBackHandler
-import dev.spaceapps.secvault.feature.generator.ui.GeneratorScreen
 import dev.spaceapps.secvault.feature.legal.ui.LegalDocument
 import dev.spaceapps.secvault.feature.legal.ui.LegalScreen
 import dev.spaceapps.secvault.feature.settings.ui.SettingsPlatform
-import dev.spaceapps.secvault.feature.settings.ui.SettingsScreen
-import dev.spaceapps.secvault.feature.vault.domain.model.ItemType
 import dev.spaceapps.secvault.feature.vault.domain.usecase.RestoreFromTrashUseCase
-import dev.spaceapps.secvault.feature.vault.ui.BackupScreen
-import dev.spaceapps.secvault.feature.vault.ui.ItemDetailScreen
-import dev.spaceapps.secvault.feature.vault.ui.ItemEditScreen
-import dev.spaceapps.secvault.feature.vault.ui.ScanCodeScreen
-import dev.spaceapps.secvault.feature.vault.ui.TrashScreen
-import dev.spaceapps.secvault.feature.vault.ui.VaultListScreen
 import dev.spaceapps.secvault.resources.Res
 import dev.spaceapps.secvault.resources.tab_generator
 import dev.spaceapps.secvault.resources.tab_settings
@@ -205,7 +197,7 @@ internal fun VaultNavHost(
                     snackbar = snackbar,
                     onSelect = stack::selectTab,
                     vault = {
-                        VaultListScreen(
+                        VaultListRoute(
                             onOpenItem = { stack.push(Route.ItemDetail(it)) },
                             onEditItem = { stack.push(Route.ItemEdit(it)) },
                             onNewItem = { type, title -> stack.push(Route.ItemEdit(null, type, title)) },
@@ -216,7 +208,7 @@ internal fun VaultNavHost(
                         )
                     },
                     settings = {
-                        SettingsScreen(
+                        SettingsRoute(
                             platform = settingsPlatform,
                             onOpenTerms = { stack.push(Route.Legal(LegalDocument.Terms)) },
                             onOpenPrivacy = { stack.push(Route.Legal(LegalDocument.Privacy)) },
@@ -245,7 +237,7 @@ private fun PushedScreen(
     onTrashed: (String, String) -> Unit,
 ) {
     when (route) {
-        is Route.ItemDetail -> ItemDetailScreen(
+        is Route.ItemDetail -> ItemDetailRoute(
             itemId = route.id,
             refreshKey = 0,
             onBack = stack::pop,
@@ -253,7 +245,7 @@ private fun PushedScreen(
             onTrashed = onTrashed,
         )
 
-        is Route.ItemEdit -> ItemEditScreen(
+        is Route.ItemEdit -> ItemEditRoute(
             itemId = route.id,
             newType = route.type,
             newTitle = route.title,
@@ -264,11 +256,11 @@ private fun PushedScreen(
             onTrashed = onTrashed,
         )
 
-        Route.Trash -> TrashScreen(onBack = stack::pop)
+        Route.Trash -> TrashRoute(onBack = stack::pop)
 
-        Route.Backup -> BackupScreen(onBack = stack::pop)
+        Route.Backup -> BackupRoute(onBack = stack::pop)
 
-        Route.ScanCode -> ScanCodeScreen(
+        Route.ScanCode -> ScanCodeRoute(
             onFound = { stack.replaceTop(Route.ItemEdit(null, ItemType.Login, it.issuer, it.account, it.secret)) },
             onEnterManually = { stack.replaceTop(Route.ItemEdit(null, ItemType.Login)) },
             onClose = stack::pop,
@@ -312,7 +304,7 @@ private fun Tabs(
                 saveableState.SaveableStateProvider(tabStateKey(tab)) {
                     when (tab) {
                         Tab.Vault -> vault()
-                        Tab.Generator -> GeneratorScreen()
+                        Tab.Generator -> GeneratorRoute()
                         Tab.Settings -> settings()
                     }
                 }

@@ -44,7 +44,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.spaceapps.secvault.core.ui.clipboard.rememberSecureClipboard
 import dev.spaceapps.secvault.core.ui.components.AppLogo
 import dev.spaceapps.secvault.core.ui.components.AppTextField
@@ -79,7 +78,6 @@ import dev.spaceapps.secvault.feature.onboarding.presentation.OnboardingContract
 import dev.spaceapps.secvault.feature.onboarding.presentation.OnboardingContract.RESTORE_STEPS
 import dev.spaceapps.secvault.feature.onboarding.presentation.OnboardingContract.State
 import dev.spaceapps.secvault.feature.onboarding.presentation.OnboardingContract.Step
-import dev.spaceapps.secvault.feature.onboarding.presentation.OnboardingViewModel
 import dev.spaceapps.secvault.feature.onboarding.resources.Res
 import dev.spaceapps.secvault.feature.onboarding.resources.app_title
 import dev.spaceapps.secvault.feature.onboarding.resources.cd_clear_word
@@ -124,10 +122,10 @@ import dev.spaceapps.secvault.feature.onboarding.resources.welcome_legal_terms
 import dev.spaceapps.secvault.feature.onboarding.resources.welcome_restore_subtitle
 import dev.spaceapps.secvault.feature.onboarding.resources.welcome_restore_title
 import dev.spaceapps.secvault.feature.onboarding.resources.welcome_tagline
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
 
 /** Seconds the recovery key may stay on the clipboard. Short on purpose: it opens the whole vault. */
 private const val RECOVERY_CLIPBOARD_SECONDS = 60
@@ -137,18 +135,19 @@ private const val WORD_COLUMNS = 3
 
 @Composable
 fun OnboardingScreen(
+    state: State,
+    effects: Flow<Effect>,
+    onIntent: (Intent) -> Unit,
     onOpenSecuritySettings: () -> Unit,
     onOpenTerms: () -> Unit,
     onOpenPrivacy: () -> Unit,
-    viewModel: OnboardingViewModel = koinViewModel(),
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
-    CollectEffects(viewModel.effects) { effect ->
+    CollectEffects(effects) { effect ->
         when (effect) {
             Effect.OpenSecuritySettings -> onOpenSecuritySettings()
         }
     }
-    OnboardingContent(state, viewModel::onIntent, onOpenSecuritySettings, onOpenTerms, onOpenPrivacy)
+    OnboardingContent(state, onIntent, onOpenSecuritySettings, onOpenTerms, onOpenPrivacy)
 }
 
 @Composable

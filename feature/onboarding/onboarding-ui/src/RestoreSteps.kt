@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import dev.spaceapps.secvault.core.domain.model.BackupFormat
 import dev.spaceapps.secvault.core.ui.components.AppTopBar
 import dev.spaceapps.secvault.core.ui.components.BottomActions
 import dev.spaceapps.secvault.core.ui.components.ErrorText
@@ -42,7 +43,6 @@ import dev.spaceapps.secvault.feature.onboarding.resources.restore_pick_action
 import dev.spaceapps.secvault.feature.onboarding.resources.restore_pick_body
 import dev.spaceapps.secvault.feature.onboarding.resources.restore_pick_title
 import dev.spaceapps.secvault.feature.onboarding.resources.restore_title
-import dev.spaceapps.secvault.feature.vault.domain.usecase.BackupFormat
 import org.jetbrains.compose.resources.stringResource
 
 /** Restore an account from a backup file and its recovery key (new phone, same account ID). */

@@ -4,7 +4,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
-import dev.spaceapps.secvault.feature.vault.domain.model.PaymentCard
+import dev.spaceapps.secvault.core.domain.model.PaymentCard
 
 private const val GROUP_SEPARATOR = " "
 

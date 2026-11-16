@@ -1,7 +1,7 @@
 package dev.spaceapps.secvault.feature.vault.presentation.common
 
-import dev.spaceapps.secvault.feature.vault.domain.model.ItemType
-import dev.spaceapps.secvault.feature.vault.domain.model.VaultItem
+import dev.spaceapps.secvault.core.domain.model.ItemType
+import dev.spaceapps.secvault.core.domain.model.VaultItem
 
 /** A value that can be copied from an item. The UI turns it into a label ("Password copied"). */
 enum class CopyField(

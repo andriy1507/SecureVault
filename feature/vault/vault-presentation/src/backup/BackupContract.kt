@@ -1,12 +1,12 @@
 package dev.spaceapps.secvault.feature.vault.presentation.backup
 
+import dev.spaceapps.secvault.core.domain.model.BackupFormat
+import dev.spaceapps.secvault.core.domain.model.BackupInfo
 import dev.spaceapps.secvault.core.presentation.mvi.UiEffect
 import dev.spaceapps.secvault.core.presentation.mvi.UiIntent
 import dev.spaceapps.secvault.core.presentation.mvi.UiState
 import dev.spaceapps.secvault.feature.vault.domain.model.BackupFile
-import dev.spaceapps.secvault.feature.vault.domain.model.BackupInfo
 import dev.spaceapps.secvault.feature.vault.domain.model.ImportResult
-import dev.spaceapps.secvault.feature.vault.domain.usecase.BackupFormat
 
 object BackupContract {
     /** What went wrong; the UI turns it into a string resource. */

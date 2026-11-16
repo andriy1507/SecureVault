@@ -66,7 +66,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontFamily
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.spaceapps.secvault.core.domain.model.ItemType
 import dev.spaceapps.secvault.core.ui.clipboard.rememberCopyAction
 import dev.spaceapps.secvault.core.ui.components.AppTopBar
 import dev.spaceapps.secvault.core.ui.components.CenteredContent
@@ -86,14 +86,12 @@ import dev.spaceapps.secvault.core.ui.resources.cd_more
 import dev.spaceapps.secvault.core.ui.theme.Dimens
 import dev.spaceapps.secvault.feature.vault.domain.model.ItemFilter
 import dev.spaceapps.secvault.feature.vault.domain.model.ItemSort
-import dev.spaceapps.secvault.feature.vault.domain.model.ItemType
 import dev.spaceapps.secvault.feature.vault.domain.usecase.TrashPolicy
 import dev.spaceapps.secvault.feature.vault.presentation.common.CopyField
 import dev.spaceapps.secvault.feature.vault.presentation.list.VaultListContract.Effect
 import dev.spaceapps.secvault.feature.vault.presentation.list.VaultListContract.Intent
 import dev.spaceapps.secvault.feature.vault.presentation.list.VaultListContract.Sheet
 import dev.spaceapps.secvault.feature.vault.presentation.list.VaultListContract.State
-import dev.spaceapps.secvault.feature.vault.presentation.list.VaultListViewModel
 import dev.spaceapps.secvault.feature.vault.presentation.list.actionCopyFields
 import dev.spaceapps.secvault.feature.vault.resources.Res
 import dev.spaceapps.secvault.feature.vault.resources.action_add_favorite
@@ -156,15 +154,18 @@ import dev.spaceapps.secvault.feature.vault.resources.type_login_desc
 import dev.spaceapps.secvault.feature.vault.resources.type_note
 import dev.spaceapps.secvault.feature.vault.resources.type_note_desc
 import dev.spaceapps.secvault.feature.vault.resources.vault_title
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
 
 /** 01 · Vault, with 19 (empty), 20 (no results), 07/35/36/37 sheets and dialogs. */
 @Composable
 fun VaultListScreen(
+    state: State,
+    effects: Flow<Effect>,
+    onIntent: (Intent) -> Unit,
     onOpenItem: (id: String) -> Unit,
     onEditItem: (id: String) -> Unit,
     onNewItem: (type: ItemType, title: String) -> Unit,
@@ -172,13 +173,11 @@ fun VaultListScreen(
     onOpenTrash: () -> Unit,
     onScanCode: () -> Unit,
     onLock: () -> Unit,
-    viewModel: VaultListViewModel = koinViewModel(),
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
     val copy = rememberCopyAction()
     val uriHandler = LocalUriHandler.current
     val scope = rememberCoroutineScope()
-    CollectEffects(viewModel.effects) { effect ->
+    CollectEffects(effects) { effect ->
         when (effect) {
             is Effect.OpenItem -> onOpenItem(effect.id)
 
@@ -201,7 +200,7 @@ fun VaultListScreen(
             Effect.Lock -> onLock()
         }
     }
-    VaultListContent(state, viewModel::onIntent)
+    VaultListContent(state, onIntent)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -438,7 +437,7 @@ private fun ItemList(
 
 @Composable
 private fun Card(
-    item: dev.spaceapps.secvault.feature.vault.domain.model.VaultItemSummary,
+    item: dev.spaceapps.secvault.core.domain.model.VaultItemSummary,
     onIntent: (Intent) -> Unit,
 ) {
     VaultCard(

@@ -20,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.spaceapps.secvault.core.ui.components.AppTopBar
 import dev.spaceapps.secvault.core.ui.components.CenteredContent
 import dev.spaceapps.secvault.core.ui.components.CollectEffects
@@ -34,7 +33,6 @@ import dev.spaceapps.secvault.feature.vault.domain.usecase.TrashPolicy
 import dev.spaceapps.secvault.feature.vault.presentation.trash.TrashContract.Effect
 import dev.spaceapps.secvault.feature.vault.presentation.trash.TrashContract.Intent
 import dev.spaceapps.secvault.feature.vault.presentation.trash.TrashContract.State
-import dev.spaceapps.secvault.feature.vault.presentation.trash.TrashViewModel
 import dev.spaceapps.secvault.feature.vault.resources.Res
 import dev.spaceapps.secvault.feature.vault.resources.cd_empty_trash
 import dev.spaceapps.secvault.feature.vault.resources.cd_restore
@@ -51,21 +49,22 @@ import dev.spaceapps.secvault.feature.vault.resources.trash_empty_dialog_title
 import dev.spaceapps.secvault.feature.vault.resources.trash_empty_title
 import dev.spaceapps.secvault.feature.vault.resources.trash_info
 import dev.spaceapps.secvault.feature.vault.resources.trash_title
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
 
 /** 38 · Trash. Tap restores; long press deletes forever. */
 @Composable
 fun TrashScreen(
+    state: State,
+    effects: Flow<Effect>,
+    onIntent: (Intent) -> Unit,
     onBack: () -> Unit,
-    viewModel: TrashViewModel = koinViewModel(),
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbar = LocalSnackbarHostState.current
     val scope = rememberCoroutineScope()
-    CollectEffects(viewModel.effects) { effect ->
+    CollectEffects(effects) { effect ->
         when (effect) {
             is Effect.Restored -> scope.launch {
                 snackbar.showSnackbar(
@@ -76,7 +75,7 @@ fun TrashScreen(
             Effect.Close -> onBack()
         }
     }
-    TrashContent(state, viewModel::onIntent)
+    TrashContent(state, onIntent)
 }
 
 @Composable

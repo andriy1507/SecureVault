@@ -1,9 +1,9 @@
 package dev.spaceapps.secvault.feature.vault.data.dto
 
-import dev.spaceapps.secvault.feature.vault.domain.model.ItemType
-import dev.spaceapps.secvault.feature.vault.domain.model.Passkey
-import dev.spaceapps.secvault.feature.vault.domain.model.PasswordHistoryEntry
-import dev.spaceapps.secvault.feature.vault.domain.model.VaultItem
+import dev.spaceapps.secvault.core.domain.model.ItemType
+import dev.spaceapps.secvault.core.domain.model.Passkey
+import dev.spaceapps.secvault.core.domain.model.PasswordHistoryEntry
+import dev.spaceapps.secvault.core.domain.model.VaultItem
 import kotlinx.serialization.Serializable
 
 @Serializable

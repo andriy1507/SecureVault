@@ -1,15 +1,15 @@
 package dev.spaceapps.secvault.feature.vault.data.passkey
 
-import dev.spaceapps.secvault.feature.vault.domain.model.ItemType
-import dev.spaceapps.secvault.feature.vault.domain.model.VaultItem
-import dev.spaceapps.secvault.feature.vault.domain.model.VaultItemSummary
-import dev.spaceapps.secvault.feature.vault.domain.model.toSummary
+import dev.spaceapps.secvault.core.domain.model.ItemType
+import dev.spaceapps.secvault.core.domain.model.VaultItem
+import dev.spaceapps.secvault.core.domain.model.VaultItemSummary
+import dev.spaceapps.secvault.core.domain.model.toSummary
+import dev.spaceapps.secvault.core.domain.repository.VaultItemRepository
 import dev.spaceapps.secvault.feature.vault.domain.passkey.AssertPasskeyUseCase
 import dev.spaceapps.secvault.feature.vault.domain.passkey.CreatePasskeyUseCase
 import dev.spaceapps.secvault.feature.vault.domain.passkey.FindPasskeysUseCase
 import dev.spaceapps.secvault.feature.vault.domain.passkey.PasskeyAlreadyExistsException
 import dev.spaceapps.secvault.feature.vault.domain.passkey.PasskeyCreationRequest
-import dev.spaceapps.secvault.feature.vault.domain.repository.VaultItemRepository
 import dev.whyoleg.cryptography.CryptographyProvider
 import dev.whyoleg.cryptography.algorithms.EC
 import dev.whyoleg.cryptography.algorithms.ECDSA

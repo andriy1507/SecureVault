@@ -8,14 +8,14 @@ import dev.spaceapps.secvault.feature.onboarding.domain.usecase.CheckDeviceSecur
 import dev.spaceapps.secvault.feature.onboarding.domain.usecase.CompleteOnboardingUseCase
 import dev.spaceapps.secvault.feature.onboarding.domain.usecase.CreateVaultUseCase
 import dev.spaceapps.secvault.feature.onboarding.domain.usecase.PickConfirmationWordsUseCase
+import dev.spaceapps.secvault.feature.onboarding.domain.usecase.ReadRestoreInfoUseCase
+import dev.spaceapps.secvault.feature.onboarding.domain.usecase.RestoreAccountUseCase
 import dev.spaceapps.secvault.feature.onboarding.domain.usecase.VerifyConfirmationWordsUseCase
 import dev.spaceapps.secvault.feature.onboarding.presentation.OnboardingContract.Effect
 import dev.spaceapps.secvault.feature.onboarding.presentation.OnboardingContract.Error
 import dev.spaceapps.secvault.feature.onboarding.presentation.OnboardingContract.Intent
 import dev.spaceapps.secvault.feature.onboarding.presentation.OnboardingContract.State
 import dev.spaceapps.secvault.feature.onboarding.presentation.OnboardingContract.Step
-import dev.spaceapps.secvault.feature.vault.domain.usecase.ReadBackupInfoUseCase
-import dev.spaceapps.secvault.feature.vault.domain.usecase.RestoreFromBackupUseCase
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
@@ -26,8 +26,8 @@ class OnboardingViewModel(
     private val pickConfirmationWords: PickConfirmationWordsUseCase,
     private val buildConfirmationChoices: BuildConfirmationChoicesUseCase,
     private val verifyConfirmationWords: VerifyConfirmationWordsUseCase,
-    private val readBackupInfo: ReadBackupInfoUseCase,
-    private val restoreFromBackup: RestoreFromBackupUseCase,
+    private val readBackupInfo: ReadRestoreInfoUseCase,
+    private val restoreFromBackup: RestoreAccountUseCase,
 ) : MviViewModel<Intent, State, Effect>(State()) {
     override fun handleIntent(intent: Intent) {
         when (intent) {

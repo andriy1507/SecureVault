@@ -36,7 +36,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.spaceapps.secvault.core.ui.clipboard.rememberCopyAction
 import dev.spaceapps.secvault.core.ui.components.AppTextField
 import dev.spaceapps.secvault.core.ui.components.AppTopBar
@@ -61,7 +60,6 @@ import dev.spaceapps.secvault.feature.settings.presentation.SettingsContract.Dia
 import dev.spaceapps.secvault.feature.settings.presentation.SettingsContract.Effect
 import dev.spaceapps.secvault.feature.settings.presentation.SettingsContract.Intent
 import dev.spaceapps.secvault.feature.settings.presentation.SettingsContract.State
-import dev.spaceapps.secvault.feature.settings.presentation.SettingsViewModel
 import dev.spaceapps.secvault.feature.settings.resources.Res
 import dev.spaceapps.secvault.feature.settings.resources.account_id_label
 import dev.spaceapps.secvault.feature.settings.resources.account_id_title
@@ -106,11 +104,11 @@ import dev.spaceapps.secvault.feature.settings.resources.theme_dark
 import dev.spaceapps.secvault.feature.settings.resources.theme_light
 import dev.spaceapps.secvault.feature.settings.resources.theme_system
 import dev.spaceapps.secvault.feature.settings.resources.version
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
 
 private val THEMES: List<Pair<AppTheme, StringResource>> = listOf(
     AppTheme.Light to Res.string.theme_light,
@@ -149,23 +147,24 @@ data class SettingsPlatform(
 /** 03 · Settings, 08 · Delete account, 42 · Theme, 43 · Auto-lock, 44 · Clear clipboard. */
 @Composable
 fun SettingsScreen(
+    state: State,
+    effects: Flow<Effect>,
+    onIntent: (Intent) -> Unit,
     platform: SettingsPlatform,
     onOpenTerms: () -> Unit,
     onOpenPrivacy: () -> Unit,
     onOpenBackup: () -> Unit,
-    viewModel: SettingsViewModel = koinViewModel(),
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
     val copy = rememberCopyAction()
     val scope = rememberCoroutineScope()
-    CollectEffects(viewModel.effects) { effect ->
+    CollectEffects(effects) { effect ->
         when (effect) {
             is Effect.CopyId -> scope.launch {
                 copy.copy(effect.id, sensitive = false, label = getString(Res.string.account_id_label))
             }
         }
     }
-    SettingsContent(state, platform, viewModel::onIntent, onOpenTerms, onOpenPrivacy, onOpenBackup)
+    SettingsContent(state, platform, onIntent, onOpenTerms, onOpenPrivacy, onOpenBackup)
 }
 
 @Composable

@@ -21,10 +21,10 @@ import dev.spaceapps.secvault.R
 import dev.spaceapps.secvault.SettingsTheme
 import dev.spaceapps.secvault.core.domain.error.VaultError
 import dev.spaceapps.secvault.core.domain.model.LockState
+import dev.spaceapps.secvault.core.domain.model.VaultItem
 import dev.spaceapps.secvault.core.domain.repository.VaultKeysRepository
 import dev.spaceapps.secvault.feature.autofill.domain.AutofillTarget
 import dev.spaceapps.secvault.feature.autofill.domain.FindAutofillMatchesUseCase
-import dev.spaceapps.secvault.feature.vault.domain.model.VaultItem
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent

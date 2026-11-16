@@ -1,4 +1,4 @@
-package dev.spaceapps.secvault.feature.vault.domain.model
+package dev.spaceapps.secvault.core.domain.model
 
 import kotlin.test.Test
 import kotlin.test.assertEquals

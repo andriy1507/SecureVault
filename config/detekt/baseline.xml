@@ -6,8 +6,16 @@
     <ID>CyclomaticComplexMethod:ItemDetailScreen.kt$@OptIn(ExperimentalMaterial3Api::class) @Composable internal fun ItemDetailContent( state: State, onIntent: (Intent) -&gt; Unit, )</ID>
     <ID>CyclomaticComplexMethod:ItemDetailViewModel.kt$ItemDetailViewModel$override fun handleIntent(intent: Intent)</ID>
     <ID>CyclomaticComplexMethod:VaultListViewModel.kt$VaultListViewModel$override fun handleIntent(intent: Intent)</ID>
-    <ID>CyclomaticComplexMethod:VaultUseCases.kt$SaveVaultItemUseCase$@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class) suspend operator fun invoke( existing: VaultItem?, draft: ItemDraft, ): Result</ID>
+    <ID>CyclomaticComplexMethod:SaveVaultItemUseCase.kt$SaveVaultItemUseCase$@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class) suspend operator fun invoke( existing: VaultItem?, draft: ItemDraft, ): Result</ID>
     <ID>InstanceOfCheckForException:PasskeyActivities.kt$PasskeyUnlockActivity$e !is VaultError.AuthCancelled</ID>
+    <ID>InvalidPackageDeclaration:BackupRestorer.kt$package dev.spaceapps.secvault.core.domain.repository</ID>
+    <ID>InvalidPackageDeclaration:SaveVaultItemUseCase.kt$package dev.spaceapps.secvault.core.domain.usecase</ID>
+    <ID>InvalidPackageDeclaration:PasswordUseCases.kt$package dev.spaceapps.secvault.core.domain.usecase</ID>
+    <ID>InvalidPackageDeclaration:PasswordOptions.kt$package dev.spaceapps.secvault.core.domain.model</ID>
+    <ID>InvalidPackageDeclaration:GeneratePassphraseUseCaseTest.kt$package dev.spaceapps.secvault.feature.generator.domain.usecase</ID>
+    <ID>InvalidPackageDeclaration:VaultBackupRestorer.kt$package dev.spaceapps.secvault.feature.vault.domain.usecase</ID>
+    <ID>InvalidPackageDeclaration:ItemListModels.kt$package dev.spaceapps.secvault.feature.vault.domain.model</ID>
+    <ID>InvalidPackageDeclaration:Routes.kt$package dev.spaceapps.secvault.navigation</ID>
     <ID>InvalidPackageDeclaration:AndroidDataModule.kt$package dev.spaceapps.secvault.core.data.di</ID>
     <ID>InvalidPackageDeclaration:AndroidHardwareKeyGuard.kt$package dev.spaceapps.secvault.core.data.security</ID>
     <ID>InvalidPackageDeclaration:App.kt$package dev.spaceapps.secvault</ID>
@@ -43,7 +51,7 @@
     <ID>InvalidPackageDeclaration:DynamicColor.android.kt$package dev.spaceapps.secvault.core.ui.theme</ID>
     <ID>InvalidPackageDeclaration:DynamicColor.ios.kt$package dev.spaceapps.secvault.core.ui.theme</ID>
     <ID>InvalidPackageDeclaration:Fields.kt$package dev.spaceapps.secvault.core.ui.components</ID>
-    <ID>InvalidPackageDeclaration:GeneratePasswordUseCaseTest.kt$package dev.spaceapps.secvault.feature.generator.domain.usecase</ID>
+    <ID>InvalidPackageDeclaration:GeneratePasswordUseCaseTest.kt$package dev.spaceapps.secvault.core.domain.usecase</ID>
     <ID>InvalidPackageDeclaration:GeneratorContract.kt$package dev.spaceapps.secvault.feature.generator.presentation</ID>
     <ID>InvalidPackageDeclaration:GeneratorModels.kt$package dev.spaceapps.secvault.feature.generator.domain.model</ID>
     <ID>InvalidPackageDeclaration:GeneratorRepositories.kt$package dev.spaceapps.secvault.feature.generator.domain.repository</ID>
@@ -78,7 +86,7 @@
     <ID>InvalidPackageDeclaration:OnboardingViewModel.kt$package dev.spaceapps.secvault.feature.onboarding.presentation</ID>
     <ID>InvalidPackageDeclaration:OtpAuth.kt$package dev.spaceapps.secvault.feature.vault.domain.model</ID>
     <ID>InvalidPackageDeclaration:OtpAuthUriTest.kt$package dev.spaceapps.secvault.feature.vault.domain.model</ID>
-    <ID>InvalidPackageDeclaration:Passkey.kt$package dev.spaceapps.secvault.feature.vault.domain.model</ID>
+    <ID>InvalidPackageDeclaration:Passkey.kt$package dev.spaceapps.secvault.core.domain.model</ID>
     <ID>InvalidPackageDeclaration:PasskeyActivities.kt$package dev.spaceapps.secvault.passkey</ID>
     <ID>InvalidPackageDeclaration:PasskeyCrypto.kt$package dev.spaceapps.secvault.feature.vault.domain.repository</ID>
     <ID>InvalidPackageDeclaration:PasskeyCryptoImpl.kt$package dev.spaceapps.secvault.feature.vault.data.passkey</ID>
@@ -86,8 +94,8 @@
     <ID>InvalidPackageDeclaration:PasskeyJson.kt$package dev.spaceapps.secvault.passkey</ID>
     <ID>InvalidPackageDeclaration:PasskeyLog.kt$package dev.spaceapps.secvault.passkey</ID>
     <ID>InvalidPackageDeclaration:PasskeyUseCases.kt$package dev.spaceapps.secvault.feature.vault.domain.passkey</ID>
-    <ID>InvalidPackageDeclaration:PaymentCard.kt$package dev.spaceapps.secvault.feature.vault.domain.model</ID>
-    <ID>InvalidPackageDeclaration:PaymentCardTest.kt$package dev.spaceapps.secvault.feature.vault.domain.model</ID>
+    <ID>InvalidPackageDeclaration:PaymentCard.kt$package dev.spaceapps.secvault.core.domain.model</ID>
+    <ID>InvalidPackageDeclaration:PaymentCardTest.kt$package dev.spaceapps.secvault.core.domain.model</ID>
     <ID>InvalidPackageDeclaration:Platform.android.kt$package dev.spaceapps.secvault</ID>
     <ID>InvalidPackageDeclaration:Platform.ios.kt$package dev.spaceapps.secvault</ID>
     <ID>InvalidPackageDeclaration:Platform.kt$package dev.spaceapps.secvault</ID>
@@ -131,9 +139,9 @@
     <ID>InvalidPackageDeclaration:VaultCredentialProviderService.kt$package dev.spaceapps.secvault.passkey</ID>
     <ID>InvalidPackageDeclaration:VaultDataModule.kt$package dev.spaceapps.secvault.feature.vault.data.di</ID>
     <ID>InvalidPackageDeclaration:VaultError.kt$package dev.spaceapps.secvault.core.domain.error</ID>
-    <ID>InvalidPackageDeclaration:VaultItem.kt$package dev.spaceapps.secvault.feature.vault.domain.model</ID>
+    <ID>InvalidPackageDeclaration:VaultItem.kt$package dev.spaceapps.secvault.core.domain.model</ID>
     <ID>InvalidPackageDeclaration:VaultItemPayloadDto.kt$package dev.spaceapps.secvault.feature.vault.data.dto</ID>
-    <ID>InvalidPackageDeclaration:VaultItemRepository.kt$package dev.spaceapps.secvault.feature.vault.domain.repository</ID>
+    <ID>InvalidPackageDeclaration:VaultItemRepository.kt$package dev.spaceapps.secvault.core.domain.repository</ID>
     <ID>InvalidPackageDeclaration:VaultItemRepositoryImpl.kt$package dev.spaceapps.secvault.feature.vault.data.repository</ID>
     <ID>InvalidPackageDeclaration:VaultItemRepositoryTest.kt$package dev.spaceapps.secvault.feature.vault.data.repository</ID>
     <ID>InvalidPackageDeclaration:VaultKeyStorage.kt$package dev.spaceapps.secvault.core.data.storage</ID>
@@ -155,6 +163,7 @@
     <ID>InvalidPackageDeclaration:BackupDto.kt$package dev.spaceapps.secvault.feature.vault.data.dto</ID>
     <ID>InvalidPackageDeclaration:VaultBackupRepositoryImpl.kt$package dev.spaceapps.secvault.feature.vault.data.repository</ID>
     <ID>InvalidPackageDeclaration:VaultBackupRepositoryTest.kt$package dev.spaceapps.secvault.feature.vault.data.repository</ID>
+    <ID>InvalidPackageDeclaration:Backup.kt$package dev.spaceapps.secvault.core.domain.model</ID>
     <ID>InvalidPackageDeclaration:Backup.kt$package dev.spaceapps.secvault.feature.vault.domain.model</ID>
     <ID>InvalidPackageDeclaration:VaultBackupRepository.kt$package dev.spaceapps.secvault.feature.vault.domain.repository</ID>
     <ID>InvalidPackageDeclaration:BackupUseCases.kt$package dev.spaceapps.secvault.feature.vault.domain.usecase</ID>

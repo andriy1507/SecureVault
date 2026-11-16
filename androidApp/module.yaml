@@ -3,6 +3,7 @@ product: android/app
 dependencies:
   - //shared
   - //feature/generator/generator-domain
+  - //feature/vault/vault-domain
   - //core/core-ui
   - $libs.androidx.activity.compose
   - $libs.androidx.fragment

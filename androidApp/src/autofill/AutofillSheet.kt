@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import dev.spaceapps.secvault.R
+import dev.spaceapps.secvault.core.domain.model.VaultItem
 import dev.spaceapps.secvault.core.ui.components.AppLogo
 import dev.spaceapps.secvault.core.ui.components.AppTextButton
 import dev.spaceapps.secvault.core.ui.components.HeroMessage
@@ -39,7 +40,6 @@ import dev.spaceapps.secvault.core.ui.components.avatarColorFor
 import dev.spaceapps.secvault.core.ui.components.avatarLetter
 import dev.spaceapps.secvault.core.ui.theme.AppTheme
 import dev.spaceapps.secvault.core.ui.theme.Dimens
-import dev.spaceapps.secvault.feature.vault.domain.model.VaultItem
 
 /** What the autofill window shows. Unlocking shows nothing: only the system unlock prompt is visible. */
 internal sealed interface AutofillScreen {

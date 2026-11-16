@@ -1,5 +1,7 @@
 package dev.spaceapps.secvault.feature.generator.presentation
 
+import dev.spaceapps.secvault.core.domain.model.PasswordOptions
+import dev.spaceapps.secvault.core.domain.model.PasswordStrength
 import dev.spaceapps.secvault.core.presentation.mvi.UiEffect
 import dev.spaceapps.secvault.core.presentation.mvi.UiIntent
 import dev.spaceapps.secvault.core.presentation.mvi.UiState
@@ -7,8 +9,6 @@ import dev.spaceapps.secvault.feature.generator.domain.model.GeneratedValue
 import dev.spaceapps.secvault.feature.generator.domain.model.GeneratorMode
 import dev.spaceapps.secvault.feature.generator.domain.model.PassphraseOptions
 import dev.spaceapps.secvault.feature.generator.domain.model.PassphraseSeparator
-import dev.spaceapps.secvault.feature.generator.domain.model.PasswordOptions
-import dev.spaceapps.secvault.feature.generator.domain.model.PasswordStrength
 import dev.spaceapps.secvault.feature.generator.domain.model.UsernameType
 
 object GeneratorContract {

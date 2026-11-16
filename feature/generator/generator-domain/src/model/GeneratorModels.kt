@@ -2,22 +2,6 @@ package dev.spaceapps.secvault.feature.generator.domain.model
 
 enum class GeneratorMode { Password, Passphrase, Username }
 
-data class PasswordOptions(
-    val length: Int = DEFAULT_LENGTH,
-    val uppercase: Boolean = true,
-    val lowercase: Boolean = true,
-    val digits: Boolean = true,
-    val symbols: Boolean = true,
-    /** Leave out look-alike characters (l, 1, I, O, 0). */
-    val avoidAmbiguous: Boolean = false,
-) {
-    companion object {
-        const val MIN_LENGTH = 8
-        const val MAX_LENGTH = 64
-        const val DEFAULT_LENGTH = 18
-    }
-}
-
 enum class PassphraseSeparator(
     val value: String,
 ) {
@@ -55,8 +39,6 @@ data class UsernameOptions(
         const val SEPARATOR = "."
     }
 }
-
-enum class PasswordStrength { Weak, Fair, Strong, VeryStrong }
 
 /** A value made in this session (cleared when the vault locks). */
 data class GeneratedValue(

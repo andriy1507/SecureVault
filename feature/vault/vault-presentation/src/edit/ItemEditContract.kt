@@ -1,12 +1,12 @@
 package dev.spaceapps.secvault.feature.vault.presentation.edit
 
+import dev.spaceapps.secvault.core.domain.model.CardValidation
+import dev.spaceapps.secvault.core.domain.model.ItemDraft
+import dev.spaceapps.secvault.core.domain.model.ItemType
+import dev.spaceapps.secvault.core.domain.model.PasswordStrength
 import dev.spaceapps.secvault.core.presentation.mvi.UiEffect
 import dev.spaceapps.secvault.core.presentation.mvi.UiIntent
 import dev.spaceapps.secvault.core.presentation.mvi.UiState
-import dev.spaceapps.secvault.feature.generator.domain.model.PasswordStrength
-import dev.spaceapps.secvault.feature.vault.domain.model.CardValidation
-import dev.spaceapps.secvault.feature.vault.domain.model.ItemDraft
-import dev.spaceapps.secvault.feature.vault.domain.model.ItemType
 
 object ItemEditContract {
     enum class Field { Title, Username, Password, Url, Notes, Totp, CardholderName, CardNumber, CardExpiry, CardCvv }

@@ -5,7 +5,6 @@ product:
 dependencies:
   - //feature/vault/vault-presentation
   - //core/core-ui
-  - $libs.koin.compose.viewmodel
 
 settings:
   compose:

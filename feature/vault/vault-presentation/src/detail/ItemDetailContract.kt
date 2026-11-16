@@ -1,10 +1,10 @@
 package dev.spaceapps.secvault.feature.vault.presentation.detail
 
+import dev.spaceapps.secvault.core.domain.model.VaultItem
 import dev.spaceapps.secvault.core.presentation.mvi.UiEffect
 import dev.spaceapps.secvault.core.presentation.mvi.UiIntent
 import dev.spaceapps.secvault.core.presentation.mvi.UiState
 import dev.spaceapps.secvault.feature.vault.domain.model.TotpCode
-import dev.spaceapps.secvault.feature.vault.domain.model.VaultItem
 import dev.spaceapps.secvault.feature.vault.presentation.common.CopyField
 import dev.spaceapps.secvault.feature.vault.presentation.common.CopyRequest
 

@@ -1,91 +1,25 @@
-# ── Build output (Kotlin Toolchain / Amper, Gradle, Kotlin) ──
+# Generated / local
+graphify-out/
+.claude/
+.lint-cache/
 build/
+.gradle/
 .kotlin/
 .amper/
-.gradle/
-out/
-captures/
-*.apk
-*.aab
-*.ap_
-*.dex
-.externalNativeBuild/
-.cxx/
 
-# ── Local machine config & secrets: never commit ──
-local.properties
-*.jks
-*.keystore
-keystore.properties
-signing.properties
+# Secrets and keys (never commit)
 .env
 .env.*
-# Recovery-key exports (Save as .txt) if one ever lands in the project folder
-vault-recovery-key-*.txt
+local.properties
+keystore.properties
+signing.properties
+*.jks
+*.keystore
+*-recovery-key-*.txt
+*.p12
+*.p8
+*.mobileprovision
 
-# ── IDE: IntelliJ / Android Studio (shared project files stay, see .idea/.gitignore) ──
-*.iml
-*.ipr
-*.iws
-.idea/caches/
-.idea/libraries/
-.idea/modules.xml
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/usage.statistics.xml
-.idea/shelf/
-.idea/dictionaries/
-.idea/assetWizardSettings.xml
-.idea/navEditor.xml
-.idea/deploymentTargetSelector.xml
-.idea/deviceManager.xml
-.idea/AndroidProjectSystem.xml
-.idea/androidTestResultsUserPreferences.xml
-.idea/appInsightsSettings.xml
-.idea/other.xml
-.vscode/
-.fleet/
-
-# ── Xcode / iOS ──
-**/module.xcodeproj/*
-!**/module.xcodeproj/project.pbxproj
-!**/module.xcodeproj/xcshareddata/
-!**/module.xcodeproj/project.xcworkspace/
-**/xcshareddata/WorkspaceSettings.xcsettings
-xcuserdata/
-*.xcuserstate
-DerivedData/
-*.xcscmblueprint
-*.hmap
-*.ipa
-*.dSYM.zip
-*.dSYM
-Pods/
-.swiftpm/
-
-# ── Logs & crash dumps ──
-*.log
-hs_err_pid*
-replay_pid*
-
-# ── OS files ──
-.DS_Store
-Thumbs.db
-ehthumbs.db
-desktop.ini
-$RECYCLE.BIN/
-*~
-
-# ── Lint tool cache (ktlint/detekt jars) ──
-.lint-cache/
-
-# ── graphify knowledge graph output (rebuildable) ──
-graphify-out/
-
-# ── Raw exports: keep local (plans, architecture, rules and CONFLUENCE.md are tracked) ──
+# Local-only references
 docs/design/FIGMA.html
 docs/product/confluence-export/
-
-# ── Claude Code personal settings ──
-.claude/settings.local.json
-.claude/worktrees/

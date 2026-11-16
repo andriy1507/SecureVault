@@ -1,10 +1,10 @@
 package dev.spaceapps.secvault.feature.vault.domain.passkey
 
-import dev.spaceapps.secvault.feature.vault.domain.model.ItemType
-import dev.spaceapps.secvault.feature.vault.domain.model.Passkey
-import dev.spaceapps.secvault.feature.vault.domain.model.VaultItem
+import dev.spaceapps.secvault.core.domain.model.ItemType
+import dev.spaceapps.secvault.core.domain.model.Passkey
+import dev.spaceapps.secvault.core.domain.model.VaultItem
+import dev.spaceapps.secvault.core.domain.repository.VaultItemRepository
 import dev.spaceapps.secvault.feature.vault.domain.repository.PasskeyCrypto
-import dev.spaceapps.secvault.feature.vault.domain.repository.VaultItemRepository
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi

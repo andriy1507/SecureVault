@@ -40,7 +40,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextAlign
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.spaceapps.secvault.core.domain.model.ItemType
+import dev.spaceapps.secvault.core.domain.model.VaultItem
 import dev.spaceapps.secvault.core.ui.clipboard.rememberCopyAction
 import dev.spaceapps.secvault.core.ui.components.AppTopBar
 import dev.spaceapps.secvault.core.ui.components.CenteredContent
@@ -59,15 +60,12 @@ import dev.spaceapps.secvault.core.ui.resources.Res as CoreRes
 import dev.spaceapps.secvault.core.ui.resources.action_delete as coreDelete
 import dev.spaceapps.secvault.core.ui.resources.cd_more
 import dev.spaceapps.secvault.core.ui.theme.Dimens
-import dev.spaceapps.secvault.feature.vault.domain.model.ItemType
 import dev.spaceapps.secvault.feature.vault.domain.model.TotpCode
-import dev.spaceapps.secvault.feature.vault.domain.model.VaultItem
 import dev.spaceapps.secvault.feature.vault.domain.usecase.TrashPolicy
 import dev.spaceapps.secvault.feature.vault.presentation.common.CopyField
 import dev.spaceapps.secvault.feature.vault.presentation.detail.ItemDetailContract.Effect
 import dev.spaceapps.secvault.feature.vault.presentation.detail.ItemDetailContract.Intent
 import dev.spaceapps.secvault.feature.vault.presentation.detail.ItemDetailContract.State
-import dev.spaceapps.secvault.feature.vault.presentation.detail.ItemDetailViewModel
 import dev.spaceapps.secvault.feature.vault.resources.Res
 import dev.spaceapps.secvault.feature.vault.resources.action_delete
 import dev.spaceapps.secvault.feature.vault.resources.cd_copy
@@ -95,10 +93,10 @@ import dev.spaceapps.secvault.feature.vault.resources.passkey_subtitle
 import dev.spaceapps.secvault.feature.vault.resources.passkeys_title
 import dev.spaceapps.secvault.feature.vault.resources.trash_dialog_text
 import dev.spaceapps.secvault.feature.vault.resources.trash_dialog_title
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
 
 private const val MASK_CHAR = '•'
 private const val MASK_MAX = 16
@@ -113,20 +111,22 @@ internal fun formatTotp(code: String) = code.chunked(TOTP_GROUP).joinToString(TO
 /** 10 · Item detail. [refreshKey] changes when the editor saved, to reload. */
 @Composable
 fun ItemDetailScreen(
+    state: State,
+    effects: Flow<Effect>,
+    onIntent: (Intent) -> Unit,
+    onReload: () -> Unit,
     itemId: String,
     refreshKey: Int,
     onBack: () -> Unit,
     onEdit: (String) -> Unit,
     onTrashed: (id: String, title: String) -> Unit,
-    viewModel: ItemDetailViewModel = koinViewModel(key = "detail:$itemId"),
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
     val copy = rememberCopyAction()
     val uriHandler = LocalUriHandler.current
     val scope = rememberCoroutineScope()
-    LaunchedEffect(itemId) { viewModel.onIntent(Intent.Load(itemId)) }
-    LaunchedEffect(refreshKey) { if (refreshKey > 0) viewModel.reload() }
-    CollectEffects(viewModel.effects) { effect ->
+    LaunchedEffect(itemId) { onIntent(Intent.Load(itemId)) }
+    LaunchedEffect(refreshKey) { if (refreshKey > 0) onReload() }
+    CollectEffects(effects) { effect ->
         when (effect) {
             is Effect.Copy -> scope.launch {
                 copy.copy(effect.request.text, effect.request.field.sensitive, getString(effect.request.field.label))
@@ -141,7 +141,7 @@ fun ItemDetailScreen(
             Effect.Close -> onBack()
         }
     }
-    ItemDetailContent(state, viewModel::onIntent)
+    ItemDetailContent(state, onIntent)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

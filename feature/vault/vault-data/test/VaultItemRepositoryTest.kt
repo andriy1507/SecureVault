@@ -4,12 +4,12 @@ import dev.spaceapps.secvault.core.data.cipher.EncryptedRecord
 import dev.spaceapps.secvault.core.data.cipher.VaultCipher
 import dev.spaceapps.secvault.core.data.database.VaultItemDao
 import dev.spaceapps.secvault.core.data.database.VaultItemEntity
+import dev.spaceapps.secvault.core.domain.model.ItemType
 import dev.spaceapps.secvault.core.domain.model.LockState
 import dev.spaceapps.secvault.core.domain.model.VaultCreation
+import dev.spaceapps.secvault.core.domain.model.VaultItem
 import dev.spaceapps.secvault.core.domain.repository.VaultKeysRepository
 import dev.spaceapps.secvault.feature.vault.data.dto.VaultItemPayloadDto
-import dev.spaceapps.secvault.feature.vault.domain.model.ItemType
-import dev.spaceapps.secvault.feature.vault.domain.model.VaultItem
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull

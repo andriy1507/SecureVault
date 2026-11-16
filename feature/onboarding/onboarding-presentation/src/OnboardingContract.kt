@@ -1,10 +1,10 @@
 package dev.spaceapps.secvault.feature.onboarding.presentation
 
+import dev.spaceapps.secvault.core.domain.model.BackupFormat
+import dev.spaceapps.secvault.core.domain.model.BackupInfo
 import dev.spaceapps.secvault.core.presentation.mvi.UiEffect
 import dev.spaceapps.secvault.core.presentation.mvi.UiIntent
 import dev.spaceapps.secvault.core.presentation.mvi.UiState
-import dev.spaceapps.secvault.feature.vault.domain.model.BackupInfo
-import dev.spaceapps.secvault.feature.vault.domain.usecase.BackupFormat
 
 object OnboardingContract {
     enum class Step {

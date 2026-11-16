@@ -5,7 +5,6 @@ product:
 dependencies:
   - //feature/generator/generator-presentation
   - //core/core-ui
-  - $libs.koin.compose.viewmodel
 
 settings:
   compose:

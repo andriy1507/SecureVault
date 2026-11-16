@@ -1,8 +1,8 @@
 package dev.spaceapps.secvault.feature.vault.domain.repository
 
-import dev.spaceapps.secvault.feature.vault.domain.model.BackupInfo
+import dev.spaceapps.secvault.core.domain.model.BackupInfo
+import dev.spaceapps.secvault.core.domain.model.VaultItem
 import dev.spaceapps.secvault.feature.vault.domain.model.DecryptedBackup
-import dev.spaceapps.secvault.feature.vault.domain.model.VaultItem
 
 /** Encrypted backup files. Only the account's recovery phrase can open them. */
 interface VaultBackupRepository {

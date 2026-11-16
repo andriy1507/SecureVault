@@ -29,13 +29,13 @@ import dev.spaceapps.secvault.feature.legal.ui.LegalScreen
 import dev.spaceapps.secvault.feature.lock.domain.usecase.LockVaultUseCase
 import dev.spaceapps.secvault.feature.lock.domain.usecase.ObserveLockStateUseCase
 import dev.spaceapps.secvault.feature.lock.domain.usecase.RefreshLockStateUseCase
-import dev.spaceapps.secvault.feature.lock.ui.LockScreen
-import dev.spaceapps.secvault.feature.onboarding.ui.OnboardingScreen
 import dev.spaceapps.secvault.feature.settings.domain.AppSettings
 import dev.spaceapps.secvault.feature.settings.domain.AppTheme
 import dev.spaceapps.secvault.feature.settings.domain.AutoLock
 import dev.spaceapps.secvault.feature.settings.domain.ObserveSettingsUseCase
 import dev.spaceapps.secvault.feature.settings.ui.SettingsPlatform
+import dev.spaceapps.secvault.navigation.LockRoute
+import dev.spaceapps.secvault.navigation.OnboardingRoute
 import dev.spaceapps.secvault.navigation.ScopedViewModels
 import dev.spaceapps.secvault.navigation.VaultNavHost
 import kotlin.time.Clock
@@ -136,7 +136,7 @@ private fun AppRoot(settings: AppSettings) {
 
         LockState.NoVault -> ScopedViewModels { OnboardingFlow(openSecuritySettings) }
 
-        LockState.Locked -> ScopedViewModels { LockScreen() }
+        LockState.Locked -> ScopedViewModels { LockRoute() }
 
         LockState.Unlocked -> ScopedViewModels {
             VaultNavHost(
@@ -162,7 +162,7 @@ private fun OnboardingFlow(openSecuritySettings: () -> Unit) {
         PlatformBackHandler { legal = null }
         LegalScreen(document, onBack = { legal = null })
     } else {
-        OnboardingScreen(
+        OnboardingRoute(
             onOpenSecuritySettings = openSecuritySettings,
             onOpenTerms = { legal = LegalDocument.Terms },
             onOpenPrivacy = { legal = LegalDocument.Privacy },

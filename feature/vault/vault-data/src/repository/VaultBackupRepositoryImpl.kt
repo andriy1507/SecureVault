@@ -3,14 +3,14 @@ package dev.spaceapps.secvault.feature.vault.data.repository
 import dev.spaceapps.secvault.core.data.cipher.BackupCipher
 import dev.spaceapps.secvault.core.data.cipher.SealedBackup
 import dev.spaceapps.secvault.core.domain.error.VaultError
+import dev.spaceapps.secvault.core.domain.model.BackupInfo
+import dev.spaceapps.secvault.core.domain.model.VaultItem
 import dev.spaceapps.secvault.feature.vault.data.dto.BackupEnvelopeDto
 import dev.spaceapps.secvault.feature.vault.data.dto.BackupItemDto
 import dev.spaceapps.secvault.feature.vault.data.dto.BackupPayloadDto
 import dev.spaceapps.secvault.feature.vault.data.dto.toDomain
 import dev.spaceapps.secvault.feature.vault.data.dto.toPayload
-import dev.spaceapps.secvault.feature.vault.domain.model.BackupInfo
 import dev.spaceapps.secvault.feature.vault.domain.model.DecryptedBackup
-import dev.spaceapps.secvault.feature.vault.domain.model.VaultItem
 import dev.spaceapps.secvault.feature.vault.domain.repository.VaultBackupRepository
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi

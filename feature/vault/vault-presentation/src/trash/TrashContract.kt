@@ -1,9 +1,9 @@
 package dev.spaceapps.secvault.feature.vault.presentation.trash
 
+import dev.spaceapps.secvault.core.domain.model.VaultItemSummary
 import dev.spaceapps.secvault.core.presentation.mvi.UiEffect
 import dev.spaceapps.secvault.core.presentation.mvi.UiIntent
 import dev.spaceapps.secvault.core.presentation.mvi.UiState
-import dev.spaceapps.secvault.feature.vault.domain.model.VaultItemSummary
 
 object TrashContract {
     data class TrashedItem(

@@ -43,7 +43,9 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.spaceapps.secvault.core.domain.model.ItemType
+import dev.spaceapps.secvault.core.domain.model.PasswordStrength
+import dev.spaceapps.secvault.core.domain.model.PaymentCard
 import dev.spaceapps.secvault.core.ui.components.AppTextField
 import dev.spaceapps.secvault.core.ui.components.AppTopBar
 import dev.spaceapps.secvault.core.ui.components.CollectEffects
@@ -64,16 +66,13 @@ import dev.spaceapps.secvault.core.ui.resources.action_delete as coreDelete
 import dev.spaceapps.secvault.core.ui.resources.action_save
 import dev.spaceapps.secvault.core.ui.theme.Dimens
 import dev.spaceapps.secvault.core.ui.theme.Lines
-import dev.spaceapps.secvault.feature.generator.domain.model.PasswordStrength
-import dev.spaceapps.secvault.feature.vault.domain.model.ItemType
-import dev.spaceapps.secvault.feature.vault.domain.model.PaymentCard
 import dev.spaceapps.secvault.feature.vault.domain.usecase.TrashPolicy
 import dev.spaceapps.secvault.feature.vault.presentation.edit.ItemEditContract.Effect
 import dev.spaceapps.secvault.feature.vault.presentation.edit.ItemEditContract.Error
 import dev.spaceapps.secvault.feature.vault.presentation.edit.ItemEditContract.Field
 import dev.spaceapps.secvault.feature.vault.presentation.edit.ItemEditContract.Intent
 import dev.spaceapps.secvault.feature.vault.presentation.edit.ItemEditContract.State
-import dev.spaceapps.secvault.feature.vault.presentation.edit.ItemEditViewModel
+import dev.spaceapps.secvault.feature.vault.presentation.scan.CodePrefill
 import dev.spaceapps.secvault.feature.vault.resources.Res
 import dev.spaceapps.secvault.feature.vault.resources.card_error_cvv
 import dev.spaceapps.secvault.feature.vault.resources.card_error_expiry
@@ -110,9 +109,9 @@ import dev.spaceapps.secvault.feature.vault.resources.field_website
 import dev.spaceapps.secvault.feature.vault.resources.field_website_extra
 import dev.spaceapps.secvault.feature.vault.resources.trash_dialog_text
 import dev.spaceapps.secvault.feature.vault.resources.trash_dialog_title
+import kotlinx.coroutines.flow.Flow
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
 
 internal fun PasswordStrength.toLevel(): StrengthLevel =
     when (this) {
@@ -125,20 +124,23 @@ internal fun PasswordStrength.toLevel(): StrengthLevel =
 /** 06 / 21 / 22 · New login, card, note and 32 · Edit item. [itemId] == null: new item. */
 @Composable
 fun ItemEditScreen(
+    state: State,
+    effects: Flow<Effect>,
+    onIntent: (Intent) -> Unit,
     itemId: String?,
     newType: ItemType,
     newTitle: String,
     onClose: () -> Unit,
     onSaved: (id: String, isNew: Boolean) -> Unit,
     onTrashed: (id: String, title: String) -> Unit,
+    /** The 2FA QR scanner, shown instead of the form while scanning. */
+    scanCode: @Composable (onFound: (CodePrefill) -> Unit, onClose: () -> Unit) -> Unit,
     newUsername: String = "",
     newTotpSecret: String = "",
-    viewModel: ItemEditViewModel = koinViewModel(key = "edit:${itemId ?: "new"}"),
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
     var scanning by remember { mutableStateOf(false) }
-    LaunchedEffect(itemId) { viewModel.onIntent(Intent.Load(itemId, newType, newTitle, newUsername, newTotpSecret)) }
-    CollectEffects(viewModel.effects) { effect ->
+    LaunchedEffect(itemId) { onIntent(Intent.Load(itemId, newType, newTitle, newUsername, newTotpSecret)) }
+    CollectEffects(effects) { effect ->
         when (effect) {
             is Effect.Saved -> onSaved(effect.id, effect.isNew)
             is Effect.Trashed -> onTrashed(effect.id, effect.title)
@@ -146,17 +148,15 @@ fun ItemEditScreen(
         }
     }
     if (scanning) {
-        ScanCodeScreen(
-            onFound = {
-                viewModel.onIntent(Intent.TotpScanned(it.issuer, it.account, it.secret))
+        scanCode(
+            {
+                onIntent(Intent.TotpScanned(it.issuer, it.account, it.secret))
                 scanning = false
             },
-            onEnterManually = { scanning = false },
-            onClose = { scanning = false },
-            viewModelKey = "scan:edit",
+            { scanning = false },
         )
     } else {
-        ItemEditContent(state, viewModel::onIntent, onScanTotp = { scanning = true })
+        ItemEditContent(state, onIntent, onScanTotp = { scanning = true })
     }
 }
 
