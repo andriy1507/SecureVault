@@ -51,7 +51,7 @@
     <ID>InvalidPackageDeclaration:DynamicColor.android.kt$package dev.spaceapps.secvault.core.ui.theme</ID>
     <ID>InvalidPackageDeclaration:DynamicColor.ios.kt$package dev.spaceapps.secvault.core.ui.theme</ID>
     <ID>InvalidPackageDeclaration:Fields.kt$package dev.spaceapps.secvault.core.ui.components</ID>
-    <ID>InvalidPackageDeclaration:GeneratePasswordUseCaseTest.kt$package dev.spaceapps.secvault.feature.generator.domain.usecase</ID>
+    <ID>InvalidPackageDeclaration:GeneratePasswordUseCaseTest.kt$package dev.spaceapps.secvault.core.domain.usecase</ID>
     <ID>InvalidPackageDeclaration:GeneratorContract.kt$package dev.spaceapps.secvault.feature.generator.presentation</ID>
     <ID>InvalidPackageDeclaration:GeneratorModels.kt$package dev.spaceapps.secvault.feature.generator.domain.model</ID>
     <ID>InvalidPackageDeclaration:GeneratorRepositories.kt$package dev.spaceapps.secvault.feature.generator.domain.repository</ID>
