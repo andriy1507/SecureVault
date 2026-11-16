@@ -6,8 +6,16 @@
     <ID>CyclomaticComplexMethod:ItemDetailScreen.kt$@OptIn(ExperimentalMaterial3Api::class) @Composable internal fun ItemDetailContent( state: State, onIntent: (Intent) -&gt; Unit, )</ID>
     <ID>CyclomaticComplexMethod:ItemDetailViewModel.kt$ItemDetailViewModel$override fun handleIntent(intent: Intent)</ID>
     <ID>CyclomaticComplexMethod:VaultListViewModel.kt$VaultListViewModel$override fun handleIntent(intent: Intent)</ID>
-    <ID>CyclomaticComplexMethod:VaultUseCases.kt$SaveVaultItemUseCase$@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class) suspend operator fun invoke( existing: VaultItem?, draft: ItemDraft, ): Result</ID>
+    <ID>CyclomaticComplexMethod:SaveVaultItemUseCase.kt$SaveVaultItemUseCase$@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class) suspend operator fun invoke( existing: VaultItem?, draft: ItemDraft, ): Result</ID>
     <ID>InstanceOfCheckForException:PasskeyActivities.kt$PasskeyUnlockActivity$e !is VaultError.AuthCancelled</ID>
+    <ID>InvalidPackageDeclaration:BackupRestorer.kt$package dev.spaceapps.secvault.core.domain.repository</ID>
+    <ID>InvalidPackageDeclaration:SaveVaultItemUseCase.kt$package dev.spaceapps.secvault.core.domain.usecase</ID>
+    <ID>InvalidPackageDeclaration:PasswordUseCases.kt$package dev.spaceapps.secvault.core.domain.usecase</ID>
+    <ID>InvalidPackageDeclaration:PasswordOptions.kt$package dev.spaceapps.secvault.core.domain.model</ID>
+    <ID>InvalidPackageDeclaration:GeneratePassphraseUseCaseTest.kt$package dev.spaceapps.secvault.feature.generator.domain.usecase</ID>
+    <ID>InvalidPackageDeclaration:VaultBackupRestorer.kt$package dev.spaceapps.secvault.feature.vault.domain.usecase</ID>
+    <ID>InvalidPackageDeclaration:ItemListModels.kt$package dev.spaceapps.secvault.feature.vault.domain.model</ID>
+    <ID>InvalidPackageDeclaration:Routes.kt$package dev.spaceapps.secvault.navigation</ID>
     <ID>InvalidPackageDeclaration:AndroidDataModule.kt$package dev.spaceapps.secvault.core.data.di</ID>
     <ID>InvalidPackageDeclaration:AndroidHardwareKeyGuard.kt$package dev.spaceapps.secvault.core.data.security</ID>
     <ID>InvalidPackageDeclaration:App.kt$package dev.spaceapps.secvault</ID>
