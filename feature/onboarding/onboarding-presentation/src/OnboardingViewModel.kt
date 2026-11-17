@@ -7,9 +7,11 @@ import dev.spaceapps.secvault.feature.onboarding.domain.usecase.BuildConfirmatio
 import dev.spaceapps.secvault.feature.onboarding.domain.usecase.CheckDeviceSecurityUseCase
 import dev.spaceapps.secvault.feature.onboarding.domain.usecase.CompleteOnboardingUseCase
 import dev.spaceapps.secvault.feature.onboarding.domain.usecase.CreateVaultUseCase
+import dev.spaceapps.secvault.feature.onboarding.domain.usecase.HasPendingVaultUseCase
 import dev.spaceapps.secvault.feature.onboarding.domain.usecase.PickConfirmationWordsUseCase
 import dev.spaceapps.secvault.feature.onboarding.domain.usecase.ReadRestoreInfoUseCase
 import dev.spaceapps.secvault.feature.onboarding.domain.usecase.RestoreAccountUseCase
+import dev.spaceapps.secvault.feature.onboarding.domain.usecase.ResumeVaultUseCase
 import dev.spaceapps.secvault.feature.onboarding.domain.usecase.VerifyConfirmationWordsUseCase
 import dev.spaceapps.secvault.feature.onboarding.presentation.OnboardingContract.Effect
 import dev.spaceapps.secvault.feature.onboarding.presentation.OnboardingContract.Error
@@ -28,10 +30,26 @@ class OnboardingViewModel(
     private val verifyConfirmationWords: VerifyConfirmationWordsUseCase,
     private val readBackupInfo: ReadRestoreInfoUseCase,
     private val restoreFromBackup: RestoreAccountUseCase,
+    private val hasPendingVault: HasPendingVaultUseCase,
+    private val resumeVault: ResumeVaultUseCase,
 ) : MviViewModel<Intent, State, Effect>(State()) {
+    init {
+        viewModelScope.launch {
+            val canResume = try {
+                hasPendingVault()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (expected: Exception) {
+                false
+            }
+            setState { copy(canResume = canResume) }
+        }
+    }
+
     override fun handleIntent(intent: Intent) {
         when (intent) {
             Intent.Start -> start()
+            Intent.Resume -> resume()
             Intent.IdSeen -> setState { copy(step = Step.ShowPhrase, error = null) }
             is Intent.PhraseSavedChanged -> setState { copy(phraseSaved = intent.saved) }
             Intent.PhraseWrittenDown -> if (currentState.phraseSaved) startConfirmation()
@@ -80,6 +98,28 @@ class OnboardingViewModel(
                 setState { copy(step = Step.DeviceNotSecure) }
             } catch (e: VaultError.AuthCancelled) {
                 setState { copy(step = Step.Welcome, error = Error.UnlockNeeded) }
+            } catch (e: Exception) {
+                setState { copy(step = Step.Welcome, error = Error.CreateFailed(e.message)) }
+            }
+        }
+    }
+
+    private fun resume() {
+        if (currentState.step == Step.Creating) return
+        setState { copy(step = Step.Creating, error = null) }
+        viewModelScope.launch {
+            try {
+                val creation = resumeVault()
+                setState {
+                    State(step = Step.ShowPhrase, accountId = creation.accountId, words = creation.recoveryWords)
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: VaultError.AuthCancelled) {
+                setState { copy(step = Step.Welcome, error = Error.UnlockNeeded) }
+            } catch (e: VaultError.NoVault) {
+                // expired or already confirmed: nothing to continue
+                setState { copy(step = Step.Welcome, canResume = false) }
             } catch (e: Exception) {
                 setState { copy(step = Step.Welcome, error = Error.CreateFailed(e.message)) }
             }

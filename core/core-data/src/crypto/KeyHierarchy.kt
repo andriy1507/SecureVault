@@ -9,6 +9,8 @@ internal class NewAccount(
     val recoveryWords: List<String>,
     /** Identity + vault keys encrypted with the recovery key (for backup / later server). */
     val recoveryBlob: ByteArray,
+    /** Recovery entropy encrypted under a key derived from the vault key (resume after the app was killed). */
+    val pendingRecovery: ByteArray,
 )
 
 /**
@@ -21,6 +23,7 @@ internal object KeyHierarchy {
     private const val RECOVERY_FORMAT: Byte = 1
     private const val RECOVERY_FIELDS = 5
     private const val BACKUP_INFO = "secvault-backup-v1"
+    private const val PENDING_RECOVERY_INFO = "secvault-pending-recovery-v1"
     private const val ACCOUNT_ID_BYTES = 8
     private const val ACCOUNT_ID_GROUP = 4
     private const val ACCOUNT_ID_SEPARATOR = "-"
@@ -36,9 +39,43 @@ internal object KeyHierarchy {
         val words = bip39.entropyToWords(recoveryEntropy)
         val accountId = deriveAccountId(identity.signPublic)
         val recoveryBlob = sealForRecovery(recoveryEntropy, identity, vaultKey, accountId)
+        val pendingRecovery = sealPendingRecovery(recoveryEntropy, vaultKey, accountId)
         recoveryEntropy.fill(0)
 
-        return NewAccount(accountId, KeyBundle(identity, device, vaultKey), words, recoveryBlob)
+        return NewAccount(accountId, KeyBundle(identity, device, vaultKey), words, recoveryBlob, pendingRecovery)
+    }
+
+    /** Recovery words of an unconfirmed vault, from the data saved by [createAccount]. */
+    suspend fun openPendingRecovery(
+        pendingRecovery: ByteArray,
+        vaultKey: ByteArray,
+        accountId: String,
+        bip39: Bip39,
+    ): List<String> {
+        val key = Crypto.hkdf(vaultKey, PENDING_RECOVERY_INFO)
+        val entropy = try {
+            Crypto.decrypt(key, pendingRecovery, ad = accountId)
+        } finally {
+            key.fill(0)
+        }
+        return try {
+            bip39.entropyToWords(entropy)
+        } finally {
+            entropy.fill(0)
+        }
+    }
+
+    private suspend fun sealPendingRecovery(
+        entropy: ByteArray,
+        vaultKey: ByteArray,
+        accountId: String,
+    ): ByteArray {
+        val key = Crypto.hkdf(vaultKey, PENDING_RECOVERY_INFO)
+        return try {
+            Crypto.encrypt(key, entropy, ad = accountId)
+        } finally {
+            key.fill(0)
+        }
     }
 
     /**

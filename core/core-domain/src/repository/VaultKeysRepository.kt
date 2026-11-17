@@ -19,6 +19,15 @@ interface VaultKeysRepository {
      */
     suspend fun createVault(): VaultCreation
 
+    /** True when an unconfirmed vault from an earlier run can still be resumed with [resumePendingVault]. */
+    suspend fun hasPendingVault(): Boolean
+
+    /**
+     * Shows the OS prompt and returns the recovery phrase of the unconfirmed vault again, so onboarding
+     * can continue after the app was killed. Finish with [completeOnboarding].
+     */
+    suspend fun resumePendingVault(): VaultCreation
+
     /** User confirmed the recovery phrase: vault becomes active and unlocked. */
     suspend fun completeOnboarding()
 

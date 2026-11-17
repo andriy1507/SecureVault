@@ -26,6 +26,8 @@ import dev.spaceapps.secvault.feature.lock.presentation.LockViewModel
 import dev.spaceapps.secvault.feature.onboarding.domain.usecase.BuildConfirmationChoicesUseCase
 import dev.spaceapps.secvault.feature.onboarding.domain.usecase.CheckDeviceSecurityUseCase
 import dev.spaceapps.secvault.feature.onboarding.domain.usecase.CompleteOnboardingUseCase
+import dev.spaceapps.secvault.feature.onboarding.domain.usecase.HasPendingVaultUseCase
+import dev.spaceapps.secvault.feature.onboarding.domain.usecase.ResumeVaultUseCase
 import dev.spaceapps.secvault.feature.onboarding.domain.usecase.CreateVaultUseCase
 import dev.spaceapps.secvault.feature.onboarding.domain.usecase.PickConfirmationWordsUseCase
 import dev.spaceapps.secvault.feature.onboarding.domain.usecase.ReadRestoreInfoUseCase
@@ -75,6 +77,8 @@ private val onboardingModule = module {
     factoryOf(::CheckDeviceSecurityUseCase)
     factoryOf(::CreateVaultUseCase)
     factoryOf(::CompleteOnboardingUseCase)
+    factoryOf(::HasPendingVaultUseCase)
+    factoryOf(::ResumeVaultUseCase)
     factoryOf(::PickConfirmationWordsUseCase)
     factoryOf(::BuildConfirmationChoicesUseCase)
     factoryOf(::VerifyConfirmationWordsUseCase)

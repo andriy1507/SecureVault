@@ -74,6 +74,8 @@ object OnboardingContract {
         /** Recovery key as typed / pasted for restoring. */
         val restorePhrase: String = "",
         val error: Error? = null,
+        /** An unconfirmed vault from an earlier run can be continued from the recovery-key step. */
+        val canResume: Boolean = false,
     ) : UiState {
         val canSubmitConfirmation: Boolean get() = answers.isNotEmpty() && answers.all { it != null }
 
@@ -88,6 +90,9 @@ object OnboardingContract {
     sealed interface Intent : UiIntent {
         /** "Create new account" tapped, or retry after setting a device lock. */
         data object Start : Intent
+
+        /** "Continue setup" tapped: show the recovery key of the pending vault again. */
+        data object Resume : Intent
 
         data object IdSeen : Intent
 
