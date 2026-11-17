@@ -19,6 +19,7 @@ import androidx.compose.material.icons.outlined.AddCircle
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Description
+import androidx.compose.material.icons.outlined.PlayCircle
 import androidx.compose.material.icons.outlined.SettingsBackupRestore
 import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.Checkbox
@@ -121,6 +122,8 @@ import dev.spaceapps.secvault.feature.onboarding.resources.welcome_legal_privacy
 import dev.spaceapps.secvault.feature.onboarding.resources.welcome_legal_terms
 import dev.spaceapps.secvault.feature.onboarding.resources.welcome_restore_subtitle
 import dev.spaceapps.secvault.feature.onboarding.resources.welcome_restore_title
+import dev.spaceapps.secvault.feature.onboarding.resources.welcome_resume_subtitle
+import dev.spaceapps.secvault.feature.onboarding.resources.welcome_resume_title
 import dev.spaceapps.secvault.feature.onboarding.resources.welcome_tagline
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -163,7 +166,7 @@ internal fun OnboardingContent(
         onIntent(Intent.Back)
     }
     when (state.step) {
-        Step.Welcome -> WelcomeStep(state.error, onIntent, onOpenTerms, onOpenPrivacy)
+        Step.Welcome -> WelcomeStep(state.error, state.canResume, onIntent, onOpenTerms, onOpenPrivacy)
         Step.DeviceNotSecure -> DeviceNotSecureStep(onOpenSecuritySettings, onIntent)
         Step.Creating, Step.Finishing, Step.Restoring -> FullScreenProgress()
         Step.RestorePickFile, Step.RestorePhrase -> RestoreFlow(state, onIntent)
@@ -191,6 +194,7 @@ internal fun errorText(error: Error?): String? =
 @Composable
 private fun WelcomeStep(
     error: Error?,
+    canResume: Boolean,
     onIntent: (Intent) -> Unit,
     onOpenTerms: () -> Unit,
     onOpenPrivacy: () -> Unit,
@@ -220,6 +224,16 @@ private fun WelcomeStep(
         ) {
             ErrorText(errorText(error), Modifier.fillMaxWidth(), TextAlign.Center)
             ListGroup {
+                if (canResume) {
+                    ListRow(
+                        title = stringResource(Res.string.welcome_resume_title),
+                        subtitle = stringResource(Res.string.welcome_resume_subtitle),
+                        leadingIcon = Icons.Outlined.PlayCircle,
+                        trailing = { ChevronTrailing() },
+                        onClick = { onIntent(Intent.Resume) },
+                    )
+                    ListDivider()
+                }
                 // Linking another device needs cloud sync: not in the local-only MVP. Restoring uses a backup file.
                 ListRow(
                     title = stringResource(Res.string.welcome_create_title),

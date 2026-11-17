@@ -41,6 +41,8 @@
     <string name="error_words_dont_match">Слова не збігаються. Перевірте ключ відновлення і спробуйте ще раз.</string>
     <string name="error_finish_failed">Не вдалося завершити налаштування: %1$s</string>
 
+    <string name="welcome_resume_title">Продовжити налаштування</string>
+    <string name="welcome_resume_subtitle">Ваш ключ відновлення очікує підтвердження</string>
     <string name="welcome_restore_title">Відновити з резервної копії</string>
     <string name="welcome_restore_subtitle">Файл резервної копії і ваш ключ відновлення</string>
     <string name="restore_title">Відновлення з копії</string>

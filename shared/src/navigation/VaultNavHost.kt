@@ -31,13 +31,16 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.SaveableStateHolder
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.spaceapps.secvault.core.domain.model.ItemType
 import dev.spaceapps.secvault.core.ui.components.LocalSnackbarHostState
 import dev.spaceapps.secvault.core.ui.navigation.PlatformBackHandler
@@ -313,14 +316,45 @@ private fun Tabs(
     }
 }
 
-/** Provides a ViewModelStore that is cleared when [content] leaves composition. */
+/**
+ * Keeps the [ViewModelStore]s of [ScopedViewModels] in the parent owner (the Activity at the top), so they
+ * survive Activity recreation such as a theme change, rotation or split screen.
+ */
+internal class ScopedStoreHolder : ViewModel() {
+    private val stores = mutableMapOf<Int, ViewModelStore>()
+    private var nextKey = 0
+
+    fun newKey(): Int = nextKey++
+
+    fun storeFor(key: Int): ViewModelStore {
+        nextKey = maxOf(nextKey, key + 1) // keys restored after process death must not be handed out again
+        return stores.getOrPut(key) { ViewModelStore() }
+    }
+
+    fun clear(key: Int) {
+        stores.remove(key)?.clear()
+    }
+
+    override fun onCleared() {
+        stores.values.forEach { it.clear() }
+        stores.clear()
+    }
+}
+
+/**
+ * Provides a ViewModelStore that is cleared when [content] leaves composition for good (lock, onboarding done).
+ * It is kept when the Activity is only recreated, so e.g. the recovery key on screen is not lost.
+ */
 @Composable
 internal fun ScopedViewModels(content: @Composable () -> Unit) {
-    val owner = remember {
+    val holder = viewModel { ScopedStoreHolder() }
+    val key = rememberSaveable { holder.newKey() }
+    val owner = remember(holder, key) {
         object : ViewModelStoreOwner {
-            override val viewModelStore = ViewModelStore()
+            override val viewModelStore = holder.storeFor(key)
         }
     }
-    DisposableEffect(owner) { onDispose { owner.viewModelStore.clear() } }
+    val isChangingConfigurations = rememberIsChangingConfigurations()
+    DisposableEffect(owner) { onDispose { if (!isChangingConfigurations()) holder.clear(key) } }
     CompositionLocalProvider(LocalViewModelStoreOwner provides owner, content = content)
 }

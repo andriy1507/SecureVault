@@ -12,6 +12,7 @@ import dev.spaceapps.secvault.core.domain.error.VaultError
 import dev.spaceapps.secvault.core.domain.model.LockState
 import dev.spaceapps.secvault.core.domain.model.VaultCreation
 import dev.spaceapps.secvault.core.domain.repository.VaultKeysRepository
+import kotlin.time.Clock
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,6 +25,7 @@ internal class VaultKeysRepositoryImpl(
     private val wordlist: WordlistSource,
     private val session: VaultSession,
     private val itemDao: VaultItemDao,
+    private val clock: Clock = Clock.System,
 ) : VaultKeysRepository {
     private val _lockState = MutableStateFlow(LockState.Unknown)
     override val lockState: StateFlow<LockState> = _lockState.asStateFlow()
@@ -49,8 +51,8 @@ internal class VaultKeysRepositoryImpl(
                 }
 
                 !stored.recoveryConfirmed -> {
-                    // Onboarding was interrupted: the phrase was never confirmed, so it may be lost.
-                    wipeVault()
+                    // Onboarding was interrupted. Keep the vault only while its phrase can be shown again.
+                    if (!isResumable(stored)) wipeVault()
                     LockState.NoVault
                 }
 
@@ -79,9 +81,47 @@ internal class VaultKeysRepositoryImpl(
                 account.bundle.wipe()
                 throw e
             }
-            storage.saveNewVault(account.accountId, sealed, account.recoveryBlob)
+            storage.saveNewVault(
+                account.accountId,
+                sealed,
+                account.recoveryBlob,
+                account.pendingRecovery,
+                clock.now().toEpochMilliseconds(),
+            )
             pending = account.bundle
             VaultCreation(account.accountId, account.recoveryWords)
+        }
+
+    override suspend fun hasPendingVault(): Boolean =
+        mutex.withLock {
+            val stored = storage.read()
+            stored.sealedBundle != null && !stored.recoveryConfirmed && isResumable(stored)
+        }
+
+    override suspend fun resumePendingVault(): VaultCreation =
+        mutex.withLock {
+            val stored = storage.read()
+            val resumable = !stored.recoveryConfirmed && isResumable(stored)
+            if (!resumable) throw VaultError.NoVault()
+            val sealed = stored.sealedBundle ?: throw VaultError.NoVault()
+            val accountId = stored.accountId ?: throw VaultError.NoVault()
+            val blob = stored.pendingRecovery ?: throw VaultError.NoVault()
+            val plain = guard.unseal(sealed)
+            val bundle = try {
+                KeyBundle.deserialize(plain)
+            } finally {
+                plain.fill(0)
+            }
+            val words = try {
+                KeyHierarchy.openPendingRecovery(blob, bundle.vaultKey, accountId, Bip39(wordlist.load()))
+            } catch (e: Throwable) {
+                bundle.wipe()
+                throw e
+            }
+            pending?.wipe()
+            pending = bundle
+            _lockState.value = LockState.NoVault
+            VaultCreation(accountId, words)
         }
 
     override suspend fun completeOnboarding() =
@@ -149,11 +189,21 @@ internal class VaultKeysRepositoryImpl(
         _lockState.value = LockState.Locked
     }
 
+    private fun isResumable(stored: VaultKeyStorage.Stored): Boolean {
+        val createdAt = stored.pendingCreatedAt ?: return false
+        if (stored.pendingRecovery == null) return false
+        return clock.now().toEpochMilliseconds() - createdAt in 0..PENDING_MAX_AGE_MS
+    }
+
     /** Items encrypted under old keys are unreadable without them, so they go too. */
     private suspend fun wipeVault() {
         session.close()
         storage.clear()
         guard.reset()
         itemDao.deleteAll()
+    }
+
+    private companion object {
+        const val PENDING_MAX_AGE_MS = 24L * 60 * 60 * 1000
     }
 }

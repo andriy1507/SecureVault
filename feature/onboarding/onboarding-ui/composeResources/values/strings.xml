@@ -41,6 +41,8 @@
     <string name="error_words_dont_match">Those words don't match. Check your recovery key and try again.</string>
     <string name="error_finish_failed">Couldn't finish setup: %1$s</string>
 
+    <string name="welcome_resume_title">Continue setup</string>
+    <string name="welcome_resume_subtitle">Your recovery key is waiting to be confirmed</string>
     <string name="welcome_restore_title">Restore from backup</string>
     <string name="welcome_restore_subtitle">Use a backup file and your recovery key</string>
     <string name="restore_title">Restore from backup</string>

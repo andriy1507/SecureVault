@@ -62,6 +62,10 @@ class VaultItemRepositoryTest {
 
         override suspend fun createVault(): VaultCreation = error("unused")
 
+        override suspend fun hasPendingVault(): Boolean = false
+
+        override suspend fun resumePendingVault(): VaultCreation = error("unused")
+
         override suspend fun completeOnboarding() = Unit
 
         override suspend fun restoreVault(

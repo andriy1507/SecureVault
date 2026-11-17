@@ -18,6 +18,20 @@ class CreateVaultUseCase(
     suspend operator fun invoke(): VaultCreation = repository.createVault()
 }
 
+/** Whether an unconfirmed vault from an earlier run can be resumed (the user left during the recovery-key step). */
+class HasPendingVaultUseCase(
+    private val repository: VaultKeysRepository,
+) {
+    suspend operator fun invoke(): Boolean = repository.hasPendingVault()
+}
+
+/** Shows the recovery key of the pending vault again (OS prompt). */
+class ResumeVaultUseCase(
+    private val repository: VaultKeysRepository,
+) {
+    suspend operator fun invoke(): VaultCreation = repository.resumePendingVault()
+}
+
 class CompleteOnboardingUseCase(
     private val repository: VaultKeysRepository,
 ) {

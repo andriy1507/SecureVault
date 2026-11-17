@@ -9,6 +9,10 @@
     <ID>CyclomaticComplexMethod:SaveVaultItemUseCase.kt$SaveVaultItemUseCase$@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class) suspend operator fun invoke( existing: VaultItem?, draft: ItemDraft, ): Result</ID>
     <ID>InstanceOfCheckForException:PasskeyActivities.kt$PasskeyUnlockActivity$e !is VaultError.AuthCancelled</ID>
     <ID>InvalidPackageDeclaration:BackupRestorer.kt$package dev.spaceapps.secvault.core.domain.repository</ID>
+    <ID>InvalidPackageDeclaration:ConfigurationChanges.android.kt$package dev.spaceapps.secvault.navigation</ID>
+    <ID>InvalidPackageDeclaration:ConfigurationChanges.ios.kt$package dev.spaceapps.secvault.navigation</ID>
+    <ID>InvalidPackageDeclaration:ConfigurationChanges.kt$package dev.spaceapps.secvault.navigation</ID>
+    <ID>InvalidPackageDeclaration:PendingVaultTest.kt$package dev.spaceapps.secvault.core.data.cipher</ID>
     <ID>InvalidPackageDeclaration:SaveVaultItemUseCase.kt$package dev.spaceapps.secvault.core.domain.usecase</ID>
     <ID>InvalidPackageDeclaration:PasswordUseCases.kt$package dev.spaceapps.secvault.core.domain.usecase</ID>
     <ID>InvalidPackageDeclaration:PasswordOptions.kt$package dev.spaceapps.secvault.core.domain.model</ID>
