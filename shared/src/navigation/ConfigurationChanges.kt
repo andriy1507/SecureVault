@@ -1,4 +1,4 @@
-package dev.spaceapps.secvault
+package dev.spaceapps.secvault.navigation
 
 import androidx.compose.runtime.Composable
 

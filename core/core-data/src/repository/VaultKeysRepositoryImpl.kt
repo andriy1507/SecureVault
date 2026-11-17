@@ -12,12 +12,12 @@ import dev.spaceapps.secvault.core.domain.error.VaultError
 import dev.spaceapps.secvault.core.domain.model.LockState
 import dev.spaceapps.secvault.core.domain.model.VaultCreation
 import dev.spaceapps.secvault.core.domain.repository.VaultKeysRepository
+import kotlin.time.Clock
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlin.time.Clock
 
 internal class VaultKeysRepositoryImpl(
     private val guard: HardwareKeyGuard,
@@ -101,11 +101,11 @@ internal class VaultKeysRepositoryImpl(
     override suspend fun resumePendingVault(): VaultCreation =
         mutex.withLock {
             val stored = storage.read()
-            val sealed = stored.sealedBundle
-            val accountId = stored.accountId
-            val blob = stored.pendingRecovery
             val resumable = !stored.recoveryConfirmed && isResumable(stored)
-            if (sealed == null || accountId == null || blob == null || !resumable) throw VaultError.NoVault()
+            if (!resumable) throw VaultError.NoVault()
+            val sealed = stored.sealedBundle ?: throw VaultError.NoVault()
+            val accountId = stored.accountId ?: throw VaultError.NoVault()
+            val blob = stored.pendingRecovery ?: throw VaultError.NoVault()
             val plain = guard.unseal(sealed)
             val bundle = try {
                 KeyBundle.deserialize(plain)

@@ -138,7 +138,11 @@ class PendingVaultTest {
     fun unconfirmedVaultWithoutPendingDataIsStillWiped() =
         runTest {
             // What an interrupted restore leaves behind: sealed keys, never confirmed, no pending phrase.
-            storage.saveNewVault("7F3A-91C2-E04B-D58E", byteArrayOf(1, 2, 3), byteArrayOf(4, 5, 6))
+            storage.saveNewVault(
+                "7F3A-91C2-E04B-D58E",
+                "sealed-keys".encodeToByteArray(),
+                "wrapped-keys".encodeToByteArray(),
+            )
 
             val restarted = app()
             assertFalse(restarted.hasPendingVault())

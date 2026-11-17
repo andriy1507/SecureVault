@@ -30,8 +30,8 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.saveable.SaveableStateHolder
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,7 +53,6 @@ import dev.spaceapps.secvault.resources.tab_generator
 import dev.spaceapps.secvault.resources.tab_settings
 import dev.spaceapps.secvault.resources.tab_vault
 import dev.spaceapps.secvault.resources.trashed_snackbar
-import dev.spaceapps.secvault.rememberIsChangingConfigurations
 import dev.spaceapps.secvault.resources.undo
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource

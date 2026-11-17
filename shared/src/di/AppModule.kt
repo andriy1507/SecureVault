@@ -26,12 +26,12 @@ import dev.spaceapps.secvault.feature.lock.presentation.LockViewModel
 import dev.spaceapps.secvault.feature.onboarding.domain.usecase.BuildConfirmationChoicesUseCase
 import dev.spaceapps.secvault.feature.onboarding.domain.usecase.CheckDeviceSecurityUseCase
 import dev.spaceapps.secvault.feature.onboarding.domain.usecase.CompleteOnboardingUseCase
-import dev.spaceapps.secvault.feature.onboarding.domain.usecase.HasPendingVaultUseCase
-import dev.spaceapps.secvault.feature.onboarding.domain.usecase.ResumeVaultUseCase
 import dev.spaceapps.secvault.feature.onboarding.domain.usecase.CreateVaultUseCase
+import dev.spaceapps.secvault.feature.onboarding.domain.usecase.HasPendingVaultUseCase
 import dev.spaceapps.secvault.feature.onboarding.domain.usecase.PickConfirmationWordsUseCase
 import dev.spaceapps.secvault.feature.onboarding.domain.usecase.ReadRestoreInfoUseCase
 import dev.spaceapps.secvault.feature.onboarding.domain.usecase.RestoreAccountUseCase
+import dev.spaceapps.secvault.feature.onboarding.domain.usecase.ResumeVaultUseCase
 import dev.spaceapps.secvault.feature.onboarding.domain.usecase.VerifyConfirmationWordsUseCase
 import dev.spaceapps.secvault.feature.onboarding.presentation.OnboardingViewModel
 import dev.spaceapps.secvault.feature.settings.data.settingsDataModule
